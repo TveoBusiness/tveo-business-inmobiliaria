@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>TVEO Business Desarrolladora Inmobiliaria</title>
+
+  <meta name="description"
+        content="TVEO Business Desarrolladora Inmobiliaria. Casas, terrenos, urbanizaciones, proyectos inmobiliarios, anticréticos y propiedades en venta.">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+      background: #111;
+      color: white;
+      padding: 18px 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: #d4af37;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: #d4af37;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      min-height: 620px;
+      background:
+        linear-gradient(rgba(0,0,0,.58), rgba(0,0,0,.58)),
+        url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=85")
+        center/cover no-repeat;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      padding: 40px 20px;
+    }
+
+    .hero-content {
+      max-width: 900px;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: #d4af37;
+    }
+
+    .hero p {
+      font-size: 20px;
+      line-height: 1.6;
+      margin-bottom: 35px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 15px 30px;
+      background: #d4af37;
+      color: #111;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      margin: 5px;
+      transition: .3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: #fff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: white;
+      border: 1px solid white;
+    }
+
+    /* =========================
+       BUSCADOR
+    ========================= */
+
+    .search-box {
+      width: 88%;
+      max-width: 1100px;
+      background: white;
+      margin: -55px auto 60px;
+      position: relative;
+      z-index: 10;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.15);
+    }
+
+    .search-box h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .search-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    select,
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .search-button {
+      background: #111;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .search-button:hover {
+      background: #d4af37;
+      color: #111;
+    }
+
+    /* =========================
+       SECCIONES
+    ========================= */
+
+    section {
+      padding: 70px 6%;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 45px;
+    }
+
+    .section-title h2 {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    .section-title p {
+      color: #666;
+    }
+
+    /* =========================
+       CATEGORIAS
+    ========================= */
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .category {
+      background: white;
+      padding: 30px 20px;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 3px 15px rgba(0,0,0,.08);
+      transition: .3s;
+    }
+
+    .category:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,.12);
+    }
+
+    .category-icon {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+
+    .category h3 {
+      margin-bottom: 8px;
+    }
+
+    .category p {
+      color: #777;
+      font-size: 14px;
+    }
+
+    /* =========================
+       PROPIEDADES
+    ========================= */
+
+    .properties {
+      background: #fff;
+    }
+
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+
+    .property-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,.1);
+    }
+
+    .property-image {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+    }
+
+    .property-info {
+      padding: 22px;
+    }
+
+    .property-type {
+      color: #b08b20;
+      font-size: 13px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .property-info h3 {
+      margin: 8px 0;
+      font-size: 21px;
+    }
+
+    .property-location {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .property-price {
+      font-size: 22px;
+      font-weight: bold;
+      color: #111;
+    }
+
+    /* =========================
+       NOSOTROS
+    ========================= */
+
+    .about {
+      background: #111;
+      color: white;
+    }
+
+    .about-container {
+      max-width: 1000px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .about h2 {
+      font-size: 35px;
+      margin-bottom: 20px;
+    }
+
+    .about p {
+      color: #ccc;
+      line-height: 1.8;
+      font-size: 17px;
+    }
+
+    /* =========================
+       CONTACTO
+    ========================= */
+
+    .contact {
+      background: #f5f5f5;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .contact-card {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    }
+
+    .contact-card h3 {
+      margin-bottom: 15px;
+    }
+
+    .contact-card p {
+      color: #666;
+      line-height: 1.7;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      background: #0b0b0b;
+      color: #aaa;
+      text-align: center;
+      padding: 35px 20px;
+    }
+
+    footer strong {
+      color: white;
+    }
+
+    /* =========================
+       WHATSAPP
+    ========================= */
+
+    .whatsapp {
+      position: fixed;
+      right: 25px;
+      bottom: 25px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #25d366;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      text-decoration: none;
+      box-shadow: 0 5px 20px rgba(0,0,0,.3);
+      z-index: 2000;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 900px) {
+
+      nav {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .search-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .categories {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .property-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+
+      .hero {
+        min-height: 550px;
+      }
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .search-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .categories {
+        grid-template-columns: 1fr;
+      }
+
+      .property-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 50px 5%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header>
+
+    <div class="logo">
+      TVEO <span>BUSINESS</span>
+    </div>
+
+    <nav>
+      <a href="#inicio">Inicio</a>
+      <a href="#propiedades">Propiedades</a>
+      <a href="#proyectos">Proyectos</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+
+  </header>
+
+
+  <!-- =========================
+       HERO
+  ========================== -->
+
+  <section class="hero" id="inicio">
+
+    <div class="hero-content">
+
+      <h1>
+        TVEO Business<br>
+        <span>Desarrolladora Inmobiliaria</span>
+      </h1>
+
+      <p>
+        Encuentra tu próxima propiedad,
+        proyecto o inversión inmobiliaria.
+      </p>
+
+      <a href="#propiedades" class="btn">
+        Ver propiedades
+      </a>
+
+      <a href="#contacto" class="btn btn-outline">
+        Contactarnos
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       BUSCADOR
+  ========================== -->
+
+  <div class="search-box">
+
+    <h2>¿Qué estás buscando?</h2>
+
+    <div class="search-grid">
+
+      <select>
+        <option value="">Tipo de inmueble</option>
+        <option>Casa</option>
+        <option>Terreno</option>
+        <option>Urbanización</option>
+        <option>Proyecto inmobiliario</option>
+        <option>Anticrético</option>
+        <option>Oficina</option>
+        <option>Local comercial</option>
+      </select>
+
+      <select>
+        <option value="">Operación</option>
+        <option>Venta</option>
+        <option>Alquiler</option>
+        <option>Anticrético</option>
+      </select>
+
+      <input
+        type="text"
+        placeholder="Zona o ubicación"
+      >
+
+      <button class="search-button">
+        BUSCAR
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       CATEGORIAS
+  ========================== -->
+
+  <section>
+
+    <div class="section-title">
+
+      <h2>Encuentra lo que buscas</h2>
+
+      <p>
+        Diferentes opciones inmobiliarias para ti.
+      </p>
+
+    </div>
+
+    <div class="categories">
+
+      <div class="category">
+        <div class="category-icon">🏠</div>
+        <h3>Casas</h3>
+        <p>Casas en venta y alquiler.</p>
+      </div>
+
+      <div class="category">
+        <div class="category-icon">🌳</div>
+        <h3>Terrenos</h3>
+        <p>Terrenos para inversión y construcción.</p>
+      </div>
+
+      <div class="category">
+        <div class="category-icon">🏘️</div>
+        <h3>Urbanizaciones</h3>
+        <p>Conoce nuestros proyectos urbanísticos.</p>
+      </div>
+
+      <div class="category">
+        <div class="category-icon">🔑</div>
+        <h3>Anticréticos</h3>
+        <p>Opciones disponibles en anticrético.</p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       PROPIEDADES
+  ========================== -->
+
+  <section class="properties" id="propiedades">
+
+    <div class="section-title">
+
+      <h2>Propiedades destacadas</h2>
+
+      <p>
+        Próximamente encontrarás aquí nuestras propiedades disponibles.
+      </p>
+
+    </div>
+
+    <div class="property-grid">
+
+      <div class="property-card">
+
+        <img
+          class="property-image"
+          src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85"
+          alt="Casa moderna"
+        >
+
+        <div class="property-info">
+
+          <div class="property-type">
+            Casa
+          </div>
+
+          <h3>
+            Propiedad destacada
+          </h3>
+
+          <div class="property-location">
+            📍 Santa Cruz de la Sierra
+          </div>
+
+          <div class="property-price">
+            Consultar precio
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="property-card">
+
+        <img
+          class="property-image"
+          src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85"
+          alt="Proyecto inmobiliario"
+        >
+
+        <div class="property-info">
+
+          <div class="property-type">
+            Proyecto
+          </div>
+
+          <h3>
+            Proyecto inmobiliario
+          </h3>
+
+          <div class="property-location">
+            📍 Santa Cruz de la Sierra
+          </div>
+
+          <div class="property-price">
+            Consultar precio
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="property-card">
+
+        <img
+          class="property-image"
+          src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85"
+          alt="Casa en venta"
+        >
+
+        <div class="property-info">
+
+          <div class="property-type">
+            Casa en venta
+          </div>
+
+          <h3>
+            Próxima propiedad
+          </h3>
+
+          <div class="property-location">
+            📍 Santa Cruz de la Sierra
+          </div>
+
+          <div class="property-price">
+            Consultar precio
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       PROYECTOS
+  ========================== -->
+
+  <section id="proyectos">
+
+    <div class="section-title">
+
+      <h2>Nuestros proyectos</h2>
+
+      <p>
+        Desarrollos inmobiliarios y oportunidades de inversión.
+      </p>
+
+    </div>
+
+    <div class="categories">
+
+      <div class="category">
+
+        <div class="category-icon">
+          🏗️
+        </div>
+
+        <h3>
+          Proyectos inmobiliarios
+        </h3>
+
+        <p>
+          Descubre nuestras oportunidades de inversión.
+        </p>
+
+      </div>
+
+      <div class="category">
+
+        <div class="category-icon">
+          🌴
+        </div>
+
+        <h3>
+          Urbanizaciones
+        </h3>
+
+        <p>
+          Espacios pensados para vivir e invertir.
+        </p>
+
+      </div>
+
+      <div class="category">
+
+        <div class="category-icon">
+          📈
+        </div>
+
+        <h3>
+          Inversiones
+        </h3>
+
+        <p>
+          Alternativas inmobiliarias para inversionistas.
+        </p>
+
+      </div>
+
+      <div class="category">
+
+        <div class="category-icon">
+          🏡
+        </div>
+
+        <h3>
+          Viviendas
+        </h3>
+
+        <p>
+          Encuentra el lugar ideal para tu familia.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       NOSOTROS
+  ========================== -->
+
+  <section class="about" id="nosotros">
+
+    <div class="about-container">
+
+      <h2>
+        TVEO Business
+      </h2>
+
+      <p>
+        Somos TVEO Business Desarrolladora Inmobiliaria,
+        dedicados a conectar personas con oportunidades
+        inmobiliarias y proyectos de inversión.
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       CONTACTO
+  ========================== -->
+
+  <section class="contact" id="contacto">
+
+    <div class="section-title">
+
+      <h2>Contáctanos</h2>
+
+      <p>
+        Nuestro equipo está listo para ayudarte.
+      </p>
+
+    </div>
+
+    <div class="contact-grid">
+
+      <div class="contact-card">
+
+        <h3>
+          📲 WhatsApp
+        </h3>
+
+        <p>
+          Escríbenos para recibir información
+          sobre propiedades y proyectos.
+        </p>
+
+      </div>
+
+      <div class="contact-card">
+
+        <h3>
+          📍 Santa Cruz de la Sierra
+        </h3>
+
+        <p>
+          TVEO Business Desarrolladora Inmobiliaria
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer>
+
+    <p>
+      © 2026
+      <strong>
+        TVEO Business Desarrolladora Inmobiliaria
+      </strong>
+    </p>
+
+    <p>
+      Todos los derechos reservados.
+    </p>
+
+  </footer>
+
+
+  <!-- =========================
+       WHATSAPP
+  ========================== -->
+
+  <a
+    class="whatsapp"
+    href="https://wa.me/"
+    target="_blank"
+    title="Contactar por WhatsApp"
+  >
+    ☎
+  </a>
+
+</body>
+</html>
