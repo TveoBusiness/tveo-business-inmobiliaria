@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <title>TVEO Business Desarrolladora Inmobiliaria</title>
 
@@ -446,6 +447,17 @@
         padding: 50px 5%;
       }
     }
+
+    .loading-message { grid-column:1/-1; text-align:center; padding:35px; color:#777; }
+    .property-card { transition:transform .2s ease, box-shadow .2s ease; }
+    .property-card:hover { transform:translateY(-4px); box-shadow:0 10px 28px rgba(0,0,0,.13); }
+    .property-actions { margin-top:16px; }
+    .property-actions a { display:inline-block; padding:10px 14px; border-radius:5px; background:#111; color:#fff; text-decoration:none; font-size:13px; font-weight:bold; }
+    .property-actions a:hover { background:#d4af37; color:#111; }
+    .project-card .property-image { height:260px; }
+    .empty-state { grid-column:1/-1; text-align:center; padding:30px; color:#777; }
+    .search-button:disabled { opacity:.7; cursor:wait; }
+
   </style>
 </head>
 
@@ -608,21 +620,9 @@
 
     </div>
 
-    <div class="property-grid">
-
-      <div class="property-card">
-
-        <img
-          class="property-image"
-          src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85"
-          alt="Casa moderna"
-        >
-
-        <div class="property-info">
-
-          <div class="property-type">
-            Casa
-          </div>
+    <div class="property-grid" id="propertiesGrid">
+      <div class="loading-message">Cargando propiedades...</div>
+    </div>
 
           <h3>
             Propiedad destacada
@@ -723,13 +723,9 @@
 
     </div>
 
-    <div class="categories">
-
-      <div class="category">
-
-        <div class="category-icon">
-          🏗️
-        </div>
+    <div class="property-grid" id="projectsGrid">
+      <div class="loading-message">Cargando proyectos...</div>
+    </div>
 
         <h3>
           Proyectos inmobiliarios
@@ -897,6 +893,97 @@
   >
     ☎
   </a>
+
+
+  <script>
+    const SUPABASE_URL = "https://jefvmwhkalypvrpiwcuj.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_yj7GqpJpBjtzemuSnke7mQ_bXzeReDy";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+    const propertiesGrid = document.getElementById("propertiesGrid");
+    const projectsGrid = document.getElementById("projectsGrid");
+    const searchType = document.querySelector('.search-grid select:nth-child(1)');
+    const searchOperation = document.querySelector('.search-grid select:nth-child(2)');
+    const searchLocation = document.querySelector('.search-grid input');
+    const searchButton = document.querySelector('.search-button');
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+    }
+
+    function getImageUrl(value) {
+      if (!value) return "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85";
+      if (/^https?:\/\//i.test(value)) return value;
+      return supabaseClient.storage.from("inmobiliaria").getPublicUrl(value).data.publicUrl || value;
+    }
+
+    function whatsappUrl(number, title) {
+      const clean = String(number || "").replace(/\D/g,"");
+      const msg = encodeURIComponent("Hola TVEO Business, estoy interesado en: " + (title || "una propiedad"));
+      return clean ? `https://wa.me/${clean}?text=${msg}` : "#contacto";
+    }
+
+    function propertyCard(x) {
+      return `<article class="property-card">
+        <img class="property-image" src="${escapeHtml(getImageUrl(x.imagen_principal))}" alt="${escapeHtml(x.titulo)}" loading="lazy"
+          onerror="this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85'">
+        <div class="property-info">
+          <div class="property-type">${escapeHtml(x.operacion)} · ${escapeHtml(x.tipo)}</div>
+          <h3>${escapeHtml(x.titulo)}</h3>
+          <div class="property-location">📍 ${escapeHtml(x.ubicacion || "Consultar ubicación")}</div>
+          <div class="property-price">${escapeHtml(x.precio || "Consultar precio")}</div>
+          ${x.descripcion ? `<p style="margin-top:10px;color:#666;line-height:1.5;font-size:14px">${escapeHtml(x.descripcion)}</p>` : ""}
+          <div class="property-actions"><a href="${escapeHtml(whatsappUrl(x.whatsapp,x.titulo))}" target="_blank" rel="noopener">Consultar por WhatsApp</a></div>
+        </div>
+      </article>`;
+    }
+
+    function projectCard(x) {
+      return `<article class="property-card project-card">
+        <img class="property-image" src="${escapeHtml(getImageUrl(x.imagen_principal))}" alt="${escapeHtml(x.nombre)}" loading="lazy"
+          onerror="this.src='https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85'">
+        <div class="property-info">
+          <div class="property-type">${escapeHtml(x.categoria || "Proyecto inmobiliario")}</div>
+          <h3>${escapeHtml(x.nombre)}</h3>
+          <div class="property-location">📍 ${escapeHtml(x.ubicacion || "Consultar ubicación")}</div>
+          <div class="property-price">${escapeHtml(x.precio || "Consultar precio")}</div>
+          ${x.descripcion_corta ? `<p style="margin-top:10px;color:#666;line-height:1.5;font-size:14px">${escapeHtml(x.descripcion_corta)}</p>` : ""}
+          <div class="property-actions"><a href="${escapeHtml(whatsappUrl(x.whatsapp,x.nombre))}" target="_blank" rel="noopener">Solicitar información</a></div>
+        </div>
+      </article>`;
+    }
+
+    async function loadProperties(filters={}) {
+      propertiesGrid.innerHTML = '<div class="loading-message">Cargando propiedades...</div>';
+      let q = supabaseClient.from("inmuebles").select("*").neq("estado","Oculto")
+        .order("destacado",{ascending:false}).order("created_at",{ascending:false});
+      if (filters.type && !["Urbanización","Proyecto inmobiliario"].includes(filters.type)) q=q.eq("tipo",filters.type);
+      if (filters.operation) q=q.eq("operacion",filters.operation);
+      if (filters.location) q=q.ilike("ubicacion",`%${filters.location}%`);
+      const {data,error}=await q;
+      if(error){ console.error(error); propertiesGrid.innerHTML='<div class="empty-state">No se pudieron cargar las propiedades en este momento.</div>'; return; }
+      propertiesGrid.innerHTML=data?.length ? data.map(propertyCard).join("") : '<div class="empty-state">No encontramos propiedades con esos criterios.</div>';
+    }
+
+    async function loadProjects() {
+      projectsGrid.innerHTML = '<div class="loading-message">Cargando proyectos...</div>';
+      const {data,error}=await supabaseClient.from("proyectos").select("*").neq("estado","Oculto")
+        .order("destacado",{ascending:false}).order("created_at",{ascending:false});
+      if(error){ console.error(error); projectsGrid.innerHTML='<div class="empty-state">No se pudieron cargar los proyectos en este momento.</div>'; return; }
+      projectsGrid.innerHTML=data?.length ? data.map(projectCard).join("") : '<div class="empty-state">Próximamente publicaremos nuestros proyectos.</div>';
+    }
+
+    searchButton.addEventListener("click", async ()=>{
+      searchButton.disabled=true; searchButton.textContent="BUSCANDO...";
+      await loadProperties({type:searchType.value,operation:searchOperation.value,location:searchLocation.value.trim()});
+      searchButton.disabled=false; searchButton.textContent="BUSCAR";
+      document.getElementById("propiedades").scrollIntoView({behavior:"smooth"});
+    });
+
+    loadProperties();
+    loadProjects();
+  </script>
 
 </body>
 </html>
