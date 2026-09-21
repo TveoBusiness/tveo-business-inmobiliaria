@@ -41,8 +41,30 @@ button,input{font:inherit}.hidden{display:none!important}
 .logo-preview{width:220px;height:130px;margin:0 auto 20px;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#777}
 .upload-btn{display:inline-block;padding:12px 20px;border-radius:10px;background:#fff;color:#102a43;font-weight:bold;cursor:pointer}
 #logoInput{display:none}.message{margin-top:15px;color:#b9d8ff;font-size:14px}
-@media(max-width:950px){.stats{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid rgba(255,255,255,.08)}}
-@media(max-width:600px){.topbar{padding:0 15px}.content{padding:20px 15px}.stats{grid-template-columns:1fr}.sidebar{overflow-x:auto}}
+@media(max-width:950px){.stats{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid rgba(255,255,255,.08)}.property-form-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.topbar{padding:0 15px}.content{padding:20px 15px}.stats{grid-template-columns:1fr}.sidebar{overflow-x:auto}.property-form-grid{grid-template-columns:1fr}}
+.property-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.action-btn{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:800}
+.action-primary{background:linear-gradient(145deg,#fff,#cfdce8);color:#102a43}
+.action-secondary{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.15)}
+.action-danger{background:rgba(255,80,80,.15);color:#ffb4b4;border:1px solid rgba(255,80,80,.25)}
+.property-form{display:none;margin-bottom:20px}
+.property-form.open{display:block}
+.property-form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.property-form .field input,.property-form .field select,.property-form .field textarea{width:100%;padding:12px 13px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:#fff;outline:none}
+.property-form .field textarea{min-height:100px;resize:vertical}
+.property-form .field select option{color:#111}
+.property-checks{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin:8px 0 18px}
+.property-checks label{color:#dce7f0;font-size:14px}
+.property-table-wrap{overflow:auto}
+.property-table{width:100%;border-collapse:collapse;min-width:850px}
+.property-table th,.property-table td{padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.09);text-align:left;font-size:13px;vertical-align:middle}
+.property-table th{color:#9fb0c0;font-size:11px;text-transform:uppercase;letter-spacing:.6px}
+.property-thumb{width:58px;height:46px;border-radius:8px;object-fit:cover;background:#102a43}
+.status{display:inline-block;padding:5px 8px;border-radius:8px;background:rgba(255,255,255,.08);font-size:11px}
+.featured-mark{color:#75d7ff;font-weight:800}
+.property-actions{display:flex;gap:7px;flex-wrap:wrap}
+.form-message{margin-top:12px;color:#b9d8ff;font-size:13px}
 </style>
 </head>
 <body>
@@ -109,7 +131,102 @@ button,input{font:inherit}.hidden{display:none!important}
       <section id="propiedades" class="section">
         <h1 class="page-title">Propiedades</h1>
         <p class="page-subtitle">Casas, terrenos, departamentos, oficinas, locales y otros inmuebles.</p>
-        <div class="panel"><h2>Módulo de propiedades</h2><p class="notice">Aquí construiremos el formulario para registrar, editar, publicar, ocultar y administrar inmuebles.</p></div>
+
+        <div class="panel">
+          <div class="property-toolbar">
+            <div>
+              <h2>Inventario inmobiliario</h2>
+              <p class="notice">Los cambios se guardan directamente en la tabla <strong>inmuebles</strong> de este proyecto inmobiliario.</p>
+            </div>
+            <button class="action-btn action-primary" id="newPropertyBtn">＋ Nueva propiedad</button>
+          </div>
+
+          <div id="propertyForm" class="property-form">
+            <div class="panel" style="margin-top:0">
+              <div class="property-toolbar">
+                <h2 id="propertyFormTitle">Nueva propiedad</h2>
+                <button class="action-btn action-secondary" id="cancelPropertyBtn" type="button">Cancelar</button>
+              </div>
+
+              <form id="propertyEditor">
+                <input type="hidden" id="propertyId">
+
+                <div class="property-form-grid">
+                  <div class="field">
+                    <label>Título *</label>
+                    <input id="pTitulo" required placeholder="Ej. Casa moderna en Equipetrol">
+                  </div>
+                  <div class="field">
+                    <label>Tipo *</label>
+                    <select id="pTipo" required>
+                      <option value="">Seleccionar</option>
+                      <option>Casa</option><option>Terreno</option><option>Departamento</option>
+                      <option>Oficina</option><option>Local</option><option>Urbanización</option><option>Otro</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Operación *</label>
+                    <select id="pOperacion" required>
+                      <option value="">Seleccionar</option>
+                      <option>Venta</option><option>Alquiler</option><option>Anticrético</option><option>Crédito Directo</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Ubicación *</label>
+                    <input id="pUbicacion" required placeholder="Zona, ciudad o ubicación">
+                  </div>
+                  <div class="field">
+                    <label>Precio</label>
+                    <input id="pPrecio" placeholder="Ej. $us 180.000">
+                  </div>
+                  <div class="field">
+                    <label>Superficie</label>
+                    <input id="pSuperficie" placeholder="Ej. 240 m²">
+                  </div>
+                  <div class="field">
+                    <label>WhatsApp</label>
+                    <input id="pWhatsapp" placeholder="5917XXXXXXXX">
+                  </div>
+                  <div class="field">
+                    <label>Estado *</label>
+                    <select id="pEstado" required>
+                      <option>Disponible</option><option>Reservado</option><option>Vendido</option>
+                      <option>Alquilado</option><option>Anticrético</option><option>Oculto</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Imagen principal</label>
+                    <input id="pImagen" type="file" accept="image/png,image/jpeg,image/webp">
+                  </div>
+                </div>
+
+                <div class="field" style="margin-top:14px">
+                  <label>Descripción</label>
+                  <textarea id="pDescripcion" placeholder="Describe las características principales de la propiedad..."></textarea>
+                </div>
+
+                <div class="property-checks">
+                  <label><input type="checkbox" id="pDestacado"> Marcar como destacada</label>
+                </div>
+
+                <button class="action-btn action-primary" id="savePropertyBtn" type="submit">Guardar propiedad</button>
+                <div id="propertyFormMessage" class="form-message"></div>
+              </form>
+            </div>
+          </div>
+
+          <div id="propertiesMessage" class="form-message"></div>
+          <div class="property-table-wrap">
+            <table class="property-table">
+              <thead>
+                <tr><th>Foto</th><th>Propiedad</th><th>Tipo</th><th>Operación</th><th>Ubicación</th><th>Precio</th><th>Estado</th><th>Acciones</th></tr>
+              </thead>
+              <tbody id="propertiesTableBody">
+                <tr><td colspan="8">Cargando propiedades...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
       <section id="proyectos" class="section">
@@ -207,6 +324,7 @@ async function verificarAdministrador(){
 
   mostrarAdministrador();
   await cargarDashboard();
+  await cargarPropiedades();
   await cargarLogo();
   return true;
 }
@@ -254,6 +372,183 @@ document.querySelectorAll('.menu-btn').forEach(btn=>{
     if(target)target.classList.add('active');
   });
 });
+
+
+function publicImageUrl(path){
+  if(!path) return '';
+  if(/^https?:\/\//i.test(path)) return path;
+  return supabaseClient.storage.from('inmobiliaria').getPublicUrl(path).data.publicUrl || '';
+}
+
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+}
+
+async function cargarPropiedades(){
+  const tbody=document.getElementById('propertiesTableBody');
+  const message=document.getElementById('propertiesMessage');
+  tbody.innerHTML='<tr><td colspan="8">Cargando propiedades...</td></tr>';
+  message.textContent='';
+
+  const {data,error}=await supabaseClient
+    .from('inmuebles')
+    .select('*')
+    .order('destacado',{ascending:false})
+    .order('created_at',{ascending:false});
+
+  if(error){
+    console.error('Error cargando propiedades:',error);
+    tbody.innerHTML='<tr><td colspan="8">No se pudieron cargar las propiedades.</td></tr>';
+    message.textContent='Error: '+(error.message||'No se pudo consultar inmuebles.');
+    return;
+  }
+
+  if(!data?.length){
+    tbody.innerHTML='<tr><td colspan="8">No hay propiedades registradas todavía.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML=data.map(x=>{
+    const img=publicImageUrl(x.imagen_principal);
+    return `<tr>
+      <td>${img?`<img class="property-thumb" src="${escapeHtml(img)}" onerror="this.style.display='none'">`:'—'}</td>
+      <td><strong>${escapeHtml(x.titulo||'Sin título')}</strong>${x.destacado?'<div class="featured-mark">★ Destacada</div>':''}</td>
+      <td>${escapeHtml(x.tipo||'—')}</td>
+      <td>${escapeHtml(x.operacion||'—')}</td>
+      <td>${escapeHtml(x.ubicacion||'—')}</td>
+      <td>${escapeHtml(x.precio||'Consultar')}</td>
+      <td><span class="status">${escapeHtml(x.estado||'—')}</span></td>
+      <td>
+        <div class="property-actions">
+          <button class="action-btn action-secondary" onclick="editarPropiedad('${escapeHtml(x.id)}')">Editar</button>
+          <button class="action-btn action-danger" onclick="eliminarPropiedad('${escapeHtml(x.id)}')">Eliminar</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function abrirNuevaPropiedad(){
+  document.getElementById('propertyId').value='';
+  document.getElementById('propertyEditor').reset();
+  document.getElementById('pEstado').value='Disponible';
+  document.getElementById('propertyFormTitle').textContent='Nueva propiedad';
+  document.getElementById('propertyFormMessage').textContent='';
+  document.getElementById('propertyForm').classList.add('open');
+  document.getElementById('pTitulo').focus();
+}
+
+async function editarPropiedad(id){
+  const {data,error}=await supabaseClient.from('inmuebles').select('*').eq('id',id).single();
+  if(error||!data){
+    alert('No se pudo cargar la propiedad.');
+    return;
+  }
+
+  document.getElementById('propertyId').value=data.id||'';
+  document.getElementById('pTitulo').value=data.titulo||'';
+  document.getElementById('pTipo').value=data.tipo||'';
+  document.getElementById('pOperacion').value=data.operacion||'';
+  document.getElementById('pUbicacion').value=data.ubicacion||'';
+  document.getElementById('pPrecio').value=data.precio||'';
+  document.getElementById('pSuperficie').value=data.superficie||'';
+  document.getElementById('pWhatsapp').value=data.whatsapp||'';
+  document.getElementById('pEstado').value=data.estado||'Disponible';
+  document.getElementById('pDescripcion').value=data.descripcion||'';
+  document.getElementById('pDestacado').checked=!!data.destacado;
+  document.getElementById('pImagen').value='';
+  document.getElementById('propertyFormTitle').textContent='Editar propiedad';
+  document.getElementById('propertyFormMessage').textContent='';
+  document.getElementById('propertyForm').classList.add('open');
+  document.getElementById('pTitulo').focus();
+}
+
+function cerrarFormularioPropiedad(){
+  document.getElementById('propertyForm').classList.remove('open');
+  document.getElementById('propertyEditor').reset();
+  document.getElementById('propertyId').value='';
+}
+
+async function guardarImagenPrincipal(file){
+  if(!file) return null;
+  const extension=(file.name.split('.').pop()||'jpg').toLowerCase();
+  const path=`inmuebles/${Date.now()}-${Math.random().toString(36).slice(2,9)}.${extension}`;
+  const {error}=await supabaseClient.storage.from('inmobiliaria').upload(path,file,{upsert:false,contentType:file.type});
+  if(error) throw error;
+  return path;
+}
+
+document.getElementById('newPropertyBtn').addEventListener('click',abrirNuevaPropiedad);
+document.getElementById('cancelPropertyBtn').addEventListener('click',cerrarFormularioPropiedad);
+
+document.getElementById('propertyEditor').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const btn=document.getElementById('savePropertyBtn');
+  const msg=document.getElementById('propertyFormMessage');
+  btn.disabled=true;
+  btn.textContent='GUARDANDO...';
+  msg.textContent='';
+
+  try{
+    const id=document.getElementById('propertyId').value.trim();
+    const file=document.getElementById('pImagen').files[0];
+    let imagenPrincipal=null;
+
+    if(file){
+      imagenPrincipal=await guardarImagenPrincipal(file);
+    }
+
+    const payload={
+      titulo:document.getElementById('pTitulo').value.trim(),
+      tipo:document.getElementById('pTipo').value,
+      operacion:document.getElementById('pOperacion').value,
+      ubicacion:document.getElementById('pUbicacion').value.trim(),
+      precio:document.getElementById('pPrecio').value.trim(),
+      superficie:document.getElementById('pSuperficie').value.trim(),
+      whatsapp:document.getElementById('pWhatsapp').value.trim(),
+      estado:document.getElementById('pEstado').value,
+      descripcion:document.getElementById('pDescripcion').value.trim(),
+      destacado:document.getElementById('pDestacado').checked
+    };
+
+    if(imagenPrincipal) payload.imagen_principal=imagenPrincipal;
+
+    let result;
+    if(id){
+      result=await supabaseClient.from('inmuebles').update(payload).eq('id',id).select().single();
+    }else{
+      result=await supabaseClient.from('inmuebles').insert(payload).select().single();
+    }
+
+    if(result.error) throw result.error;
+
+    msg.textContent='✓ Propiedad guardada correctamente.';
+    await cargarPropiedades();
+    await cargarDashboard();
+    setTimeout(cerrarFormularioPropiedad,500);
+  }catch(error){
+    console.error('Error guardando propiedad:',error);
+    msg.textContent='No se pudo guardar: '+(error.message||'error desconocido');
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Guardar propiedad';
+  }
+});
+
+async function eliminarPropiedad(id){
+  if(!confirm('¿Seguro que deseas eliminar esta propiedad? Esta acción no se puede deshacer.')) return;
+
+  const {error}=await supabaseClient.from('inmuebles').delete().eq('id',id);
+  if(error){
+    console.error('Error eliminando propiedad:',error);
+    document.getElementById('propertiesMessage').textContent='No se pudo eliminar: '+(error.message||'error desconocido');
+    return;
+  }
+
+  document.getElementById('propertiesMessage').textContent='✓ Propiedad eliminada.';
+  await cargarPropiedades();
+  await cargarDashboard();
+}
 
 async function cargarDashboard(){
   const [properties,projects,advisors,operations]=await Promise.all([
