@@ -74,9 +74,7 @@ color:#c7d3df;
 margin-bottom:28px
 }
 
-.field{
-margin-bottom:16px
-}
+.field{margin-bottom:16px}
 
 .field label{
 display:block;
@@ -109,9 +107,7 @@ min-height:100px;
 resize:vertical
 }
 
-.field select option{
-color:#111
-}
+.field select option{color:#111}
 
 .primary-btn{
 width:100%;
@@ -241,13 +237,9 @@ max-width:1450px;
 width:100%
 }
 
-.section{
-display:none
-}
+.section{display:none}
 
-.section.active{
-display:block
-}
+.section.active{display:block}
 
 .page-title{
 font-size:30px;
@@ -307,9 +299,7 @@ color:#aebdca;
 line-height:1.5
 }
 
-.config-box{
-max-width:720px
-}
+.config-box{max-width:720px}
 
 .upload-area{
 border:2px dashed rgba(255,255,255,.22);
@@ -343,9 +333,7 @@ font-weight:bold;
 cursor:pointer
 }
 
-#logoInput{
-display:none
-}
+#logoInput{display:none}
 
 .message{
 margin-top:15px;
@@ -395,9 +383,7 @@ margin-bottom:20px
 }
 
 .property-form.open,
-.module-form.open{
-display:block
-}
+.module-form.open{display:block}
 
 .property-form-grid,
 .form-grid{
@@ -428,9 +414,7 @@ resize:vertical
 }
 
 .property-form .field select option,
-.form-grid select option{
-color:#111
-}
+.form-grid select option{color:#111}
 
 .property-checks{
 display:flex;
@@ -453,9 +437,7 @@ flex-wrap:wrap
 }
 
 .property-table-wrap,
-.table-wrap{
-overflow:auto
-}
+.table-wrap{overflow:auto}
 
 .property-table{
 width:100%;
@@ -518,9 +500,7 @@ font-size:13px;
 color:#b9d8ff
 }
 
-.module-msg.error{
-color:#ffb4b4
-}
+.module-msg.error{color:#ffb4b4}
 
 .data-table{
 width:100%;
@@ -565,13 +545,9 @@ color:#d8e2eb
 
 @media(max-width:950px){
 
-.stats{
-grid-template-columns:repeat(2,1fr)
-}
+.stats{grid-template-columns:repeat(2,1fr)}
 
-.layout{
-grid-template-columns:1fr
-}
+.layout{grid-template-columns:1fr}
 
 .sidebar{
 border-right:0;
@@ -579,34 +555,22 @@ border-bottom:1px solid rgba(255,255,255,.08)
 }
 
 .property-form-grid,
-.form-grid{
-grid-template-columns:1fr 1fr
-}
+.form-grid{grid-template-columns:1fr 1fr}
 
 }
 
 @media(max-width:600px){
 
-.topbar{
-padding:0 15px
-}
+.topbar{padding:0 15px}
 
-.content{
-padding:20px 15px
-}
+.content{padding:20px 15px}
 
-.stats{
-grid-template-columns:1fr
-}
+.stats{grid-template-columns:1fr}
 
-.sidebar{
-overflow-x:auto
-}
+.sidebar{overflow-x:auto}
 
 .property-form-grid,
-.form-grid{
-grid-template-columns:1fr
-}
+.form-grid{grid-template-columns:1fr}
 
 }
 </style>
@@ -744,7 +708,6 @@ Sitio web
 
 
 <main class="content">
-
 
 <section id="dashboard" class="section active">
 
@@ -1744,7 +1707,7 @@ SUPABASE_KEY
 
 
 /* =========================
-   LOGIN
+   ELEMENTOS PRINCIPALES
 ========================= */
 
 const loginScreen=document.getElementById('loginScreen');
@@ -1755,10 +1718,101 @@ const loginBtn=document.getElementById('loginBtn');
 const logoutBtn=document.getElementById('logoutBtn');
 
 
+/* =========================
+   ESTADO DE MÓDULOS
+========================= */
+
+const moduleState={
+
+projectEdit:null,
+advisorEdit:null,
+operationEdit:null,
+commissionEdit:null,
+imageEdit:null
+
+};
+
+
+/* =========================
+   CONFIGURACIÓN DE MÓDULOS
+========================= */
+
+const configs={
+
+proyectos:{
+container:'projectsTable',
+table:'proyectos',
+cols:[
+['nombre','Nombre'],
+['categoria','Categoría'],
+['ubicacion','Ubicación'],
+['precio','Precio'],
+['estado','Estado'],
+['destacado','Destacado']
+]
+},
+
+asesores:{
+container:'advisorsTable',
+table:'asesores',
+cols:[
+['nombre','Nombre'],
+['cargo','Cargo'],
+['telefono','Teléfono'],
+['whatsapp','WhatsApp'],
+['estado','Estado']
+]
+},
+
+operaciones:{
+container:'operationsTable',
+table:'operaciones',
+cols:[
+['inmueble_id','Inmueble'],
+['proyecto_id','Proyecto'],
+['captador_id','Captador'],
+['colocador_id','Colocador'],
+['precio','Precio'],
+['fecha','Fecha'],
+['estado','Estado']
+]
+},
+
+comisiones:{
+container:'commissionsTable',
+table:'comisiones',
+cols:[
+['asesor_id','Asesor'],
+['rol','Rol'],
+['porcentaje','%'],
+['monto','Monto'],
+['estado','Estado'],
+['fecha_pago','Fecha pago']
+]
+},
+
+imagenes:{
+container:'imagesTable',
+table:'inmueble_imagenes',
+cols:[
+['inmueble_id','Inmueble'],
+['proyecto_id','Proyecto'],
+['imagen_url','Imagen'],
+['ruta','Ruta'],
+['orden','Orden']
+]
+}
+
+};
+
+
+/* =========================
+   LOGIN
+========================= */
+
 function mostrarAdministrador(){
 
 loginScreen.classList.add('hidden');
-
 adminApp.classList.remove('hidden');
 
 }
@@ -1767,7 +1821,6 @@ adminApp.classList.remove('hidden');
 function mostrarLogin(){
 
 adminApp.classList.add('hidden');
-
 loginScreen.classList.remove('hidden');
 
 }
@@ -1775,15 +1828,22 @@ loginScreen.classList.remove('hidden');
 
 function mostrarError(msg){
 
-loginMessage.innerHTML=
-'<div class="error-box">'+
-msg+
-'</div>';
+loginMessage.innerHTML='';
+
+const box=document.createElement('div');
+
+box.className='error-box';
+
+box.textContent=msg;
+
+loginMessage.appendChild(box);
 
 }
 
 
 async function verificarAdministrador(){
+
+try{
 
 const {
 data:{user},
@@ -1791,7 +1851,26 @@ error:userError
 }=await supabaseClient.auth.getUser();
 
 
-if(userError||!user){
+if(userError){
+
+console.error(
+'Error obteniendo usuario:',
+userError
+);
+
+mostrarLogin();
+
+mostrarError(
+'No se pudo verificar la sesión: '+
+(userError.message||'Error desconocido')
+);
+
+return false;
+
+}
+
+
+if(!user){
 
 mostrarLogin();
 
@@ -1818,26 +1897,81 @@ userId:user.id
 );
 
 
+/*
+IMPORTANTE:
+Si la función RPC falla, NO cerramos
+la sesión automáticamente.
+Mostramos el error real para poder
+identificar qué está pasando.
+*/
+
+if(error){
+
+console.error(
+'Error RPC verificar_admin_actual:',
+error
+);
+
+mostrarLogin();
+
+mostrarError(
+'Error verificando permisos: '+
+(error.message||'Error desconocido')
+);
+
+return false;
+
+}
+
+
 const admin=
 Array.isArray(data)
 ?data[0]
 :data;
 
 
+if(!admin){
+
+await supabaseClient.auth.signOut();
+
+mostrarLogin();
+
+mostrarError(
+'El usuario ingresó correctamente, pero no tiene registro de administrador.'
+);
+
+return false;
+
+}
+
+
+const rol=
+String(
+admin.rol??''
+)
+.trim()
+.toLowerCase();
+
+
+const activo=
+admin.activo===true||
+admin.activo==='true'||
+admin.activo===1||
+admin.activo==='1';
+
+
 if(
-error||
-!admin||
-admin.rol!=='Administrador'||
-admin.activo!==true
+rol!=='administrador'||
+!activo
 ){
 
 await supabaseClient.auth.signOut();
 
-mostrarError(
-'Este usuario no tiene permisos de administrador.'
-);
-
 mostrarLogin();
+
+mostrarError(
+'Tu usuario no tiene permisos de Administrador.'
+);
 
 return false;
 
@@ -1846,13 +1980,37 @@ return false;
 
 mostrarAdministrador();
 
+loginMessage.textContent='';
+
+
 await cargarDashboard();
 
 await cargarPropiedades();
 
 await cargarLogo();
 
+await refreshAllModules();
+
 return true;
+
+
+}catch(error){
+
+console.error(
+'Error inesperado verificando administrador:',
+error
+);
+
+mostrarLogin();
+
+mostrarError(
+'Error al verificar el acceso: '+
+(error.message||'Error desconocido')
+);
+
+return false;
+
+}
 
 }
 
@@ -1880,6 +2038,8 @@ document.getElementById('password')
 .value;
 
 
+try{
+
 const {
 error
 }=await supabaseClient.auth.signInWithPassword({
@@ -1899,10 +2059,6 @@ mostrarError(
 'Correo o contraseña incorrectos.'
 );
 
-loginBtn.disabled=false;
-
-loginBtn.textContent='INGRESAR';
-
 return;
 
 }
@@ -1910,9 +2066,26 @@ return;
 
 await verificarAdministrador();
 
+
+} catch(error){
+
+console.error(
+'Error durante el inicio de sesión:',
+error
+);
+
+mostrarError(
+'No se pudo completar el ingreso: '+
+(error.message||'Error desconocido')
+);
+
+}finally{
+
 loginBtn.disabled=false;
 
 loginBtn.textContent='INGRESAR';
+
+}
 
 });
 
@@ -1921,7 +2094,18 @@ logoutBtn.addEventListener(
 'click',
 async()=>{
 
+try{
+
 await supabaseClient.auth.signOut();
+
+}catch(error){
+
+console.error(
+'Error cerrando sesión:',
+error
+);
+
+}
 
 mostrarLogin();
 
@@ -1968,6 +2152,7 @@ if(target){
 target.classList.add('active');
 }
 
+
 const key=btn.dataset.section;
 
 if(configs[key]){
@@ -1996,7 +2181,7 @@ return supabaseClient
 .from('inmobiliaria')
 .getPublicUrl(path)
 .data
-.publicUrl || '';
+.publicUrl||'';
 
 }
 
@@ -2014,6 +2199,76 @@ c=>({
 "'":'&#039;'
 }[c])
 );
+
+}
+
+
+const escA=v=>
+String(v??'')
+.replace(/&/g,'&amp;')
+.replace(/</g,'&lt;')
+.replace(/>/g,'&gt;')
+.replace(/"/g,'&quot;')
+.replace(/'/g,'&#039;');
+
+
+function setMsg(
+id,
+msg,
+error=false
+){
+
+const e=
+document.getElementById(id);
+
+if(e){
+
+e.textContent=msg;
+
+e.className=
+'module-msg'+
+(error?' error':'');
+
+}
+
+}
+
+
+function toggleForm(
+id,
+open=true
+){
+
+const e=
+document.getElementById(id);
+
+if(e){
+
+e.classList.toggle(
+'open',
+open
+);
+
+}
+
+}
+
+
+function val(id){
+
+return document
+.getElementById(id)
+?.value
+?.trim()||'';
+
+}
+
+
+function boolVal(id){
+
+return document
+.getElementById(id)
+?.value==='true';
 
 }
 
@@ -2610,6 +2865,8 @@ await cargarDashboard();
 
 async function cargarDashboard(){
 
+try{
+
 const [
 properties,
 projects,
@@ -2671,6 +2928,15 @@ document.getElementById(
 ).textContent=
 operations.count??0;
 
+}catch(error){
+
+console.error(
+'Error cargando dashboard:',
+error
+);
+
+}
+
 }
 
 
@@ -2718,19 +2984,25 @@ function aplicarLogo(url){
 document.getElementById(
 'loginLogo'
 ).innerHTML=
-'<img src="'+url+'" alt="TVEO Business">';
+'<img src="'+
+escapeHtml(url)+
+'" alt="TVEO Business">';
 
 
 document.getElementById(
 'brandLogo'
 ).innerHTML=
-'<img src="'+url+'" alt="TVEO Business">';
+'<img src="'+
+escapeHtml(url)+
+'" alt="TVEO Business">';
 
 
 document.getElementById(
 'logoPreview'
 ).innerHTML=
-'<img src="'+url+'" alt="Logo TVEO Business">';
+'<img src="'+
+escapeHtml(url)+
+'" alt="Logo TVEO Business">';
 
 }
 
@@ -2844,115 +3116,9 @@ message.textContent=
 });
 
 
-/* =========================
-   SESIÓN INICIAL
-========================= */
-
-(async()=>{
-
-const {
-data:{session}
-}=await supabaseClient.auth.getSession();
-
-
-if(session){
-
-await verificarAdministrador();
-
-}
-
-})();
-
-
 /* =====================================================
-   TVEO BUSINESS
    MÓDULOS ADMINISTRATIVOS
 ===================================================== */
-
-const moduleState={
-
-projectEdit:null,
-
-advisorEdit:null,
-
-operationEdit:null,
-
-commissionEdit:null,
-
-imageEdit:null
-
-};
-
-
-const escA=v=>
-String(v??'')
-.replace(/&/g,'&amp;')
-.replace(/</g,'&lt;')
-.replace(/>/g,'&gt;')
-.replace(/"/g,'&quot;')
-.replace(/'/g,'&#039;');
-
-
-function setMsg(
-id,
-msg,
-error=false
-){
-
-const e=
-document.getElementById(id);
-
-if(e){
-
-e.textContent=msg;
-
-e.className=
-'module-msg'+
-(error?' error':'');
-
-}
-
-}
-
-
-function toggleForm(
-id,
-open=true
-){
-
-const e=
-document.getElementById(id);
-
-if(e){
-
-e.classList.toggle(
-'open',
-open
-);
-
-}
-
-}
-
-
-function val(id){
-
-return document
-.getElementById(id)
-?.value
-?.trim()||'';
-
-}
-
-
-function boolVal(id){
-
-return document
-.getElementById(id)
-?.value==='true';
-
-}
-
 
 function tableHTML(
 data,
@@ -3071,75 +3237,6 @@ ${rows}
 }
 
 
-const configs={
-
-proyectos:{
-container:'projectsTable',
-table:'proyectos',
-cols:[
-['nombre','Nombre'],
-['categoria','Categoría'],
-['ubicacion','Ubicación'],
-['precio','Precio'],
-['estado','Estado'],
-['destacado','Destacado']
-]
-},
-
-asesores:{
-container:'advisorsTable',
-table:'asesores',
-cols:[
-['nombre','Nombre'],
-['cargo','Cargo'],
-['telefono','Teléfono'],
-['whatsapp','WhatsApp'],
-['estado','Estado']
-]
-},
-
-operaciones:{
-container:'operationsTable',
-table:'operaciones',
-cols:[
-['inmueble_id','Inmueble'],
-['proyecto_id','Proyecto'],
-['captador_id','Captador'],
-['colocador_id','Colocador'],
-['precio','Precio'],
-['fecha','Fecha'],
-['estado','Estado']
-]
-},
-
-comisiones:{
-container:'commissionsTable',
-table:'comisiones',
-cols:[
-['asesor_id','Asesor'],
-['rol','Rol'],
-['porcentaje','%'],
-['monto','Monto'],
-['estado','Estado'],
-['fecha_pago','Fecha pago']
-]
-},
-
-imagenes:{
-container:'imagesTable',
-table:'inmueble_imagenes',
-cols:[
-['inmueble_id','Inmueble'],
-['proyecto_id','Proyecto'],
-['imagen_url','Imagen'],
-['ruta','Ruta'],
-['orden','Orden']
-]
-}
-
-};
-
-
 async function loadModule(key){
 
 const c=
@@ -3180,7 +3277,7 @@ if(el){
 
 el.innerHTML=
 `<div class="error-box">
-No se pudo cargar ${c.table}.
+No se pudo cargar ${escA(c.table)}.
 ${escA(error.message)}
 </div>`;
 
@@ -3482,16 +3579,11 @@ data.estado||'Publicado';
 
 
 /*
-NO cargamos una ruta dentro
-del input file.
+El navegador no permite colocar
+una ruta dentro del input file.
 
-El navegador no permite
-establecer un archivo local
-por seguridad.
-
-Si el usuario no selecciona
-una nueva foto, conservamos
-la foto existente.
+Si no seleccionamos una nueva foto,
+la foto existente se conserva.
 */
 
 document.getElementById(
@@ -3736,12 +3828,6 @@ btn.textContent='GUARDANDO...';
 
 try{
 
-/*
-=====================================
-FOTO NUEVA OPCIONAL
-=====================================
-*/
-
 const file=
 document
 .getElementById('prImagen')
@@ -3786,19 +3872,11 @@ throw uploadError;
 }
 
 
-/*
-Guardamos la ruta de la nueva foto.
-*/
-
 payload.imagen_principal=
 path;
 
 }
 
-
-/* =================================
-   EDITAR PROYECTO EXISTENTE
-================================= */
 
 let ok=false;
 
@@ -3814,14 +3892,7 @@ payload,
 ()=>loadModule('proyectos')
 );
 
-}
-
-
-/* =================================
-   CREAR NUEVO PROYECTO
-================================= */
-
-else{
+}else{
 
 ok=
 await insertData(
@@ -4258,15 +4329,51 @@ false
 
 
 /* =====================================================
-   CARGA INICIAL DE MÓDULOS
+   SESIÓN INICIAL
+   IMPORTANTE:
+   Se ejecuta AL FINAL, cuando todas las
+   funciones, configuraciones y módulos
+   ya están cargados.
 ===================================================== */
 
-setTimeout(
-()=>{
-refreshAllModules();
-},
-1200
+(async()=>{
+
+try{
+
+const {
+data:{session},
+error
+}=await supabaseClient.auth.getSession();
+
+
+if(error){
+
+console.error(
+'Error obteniendo sesión:',
+error
 );
+
+return;
+
+}
+
+
+if(session){
+
+await verificarAdministrador();
+
+}
+
+}catch(error){
+
+console.error(
+'Error comprobando sesión inicial:',
+error
+);
+
+}
+
+})();
 
 </script>
 
