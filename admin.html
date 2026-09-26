@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>TVEO Business | Administración de Proyectos</title>
+  <title>TVEO Business | Administración</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -17,26 +17,30 @@
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       background: #07111f;
-      color: #ffffff;
+      color: #fff;
     }
 
     .container {
       width: min(1100px, 94%);
-      margin: 40px auto;
+      margin: 35px auto;
     }
 
     h1 {
-      margin-bottom: 8px;
+      margin: 0 0 8px;
+    }
+
+    h2 {
+      margin-top: 0;
     }
 
     .subtitle {
       color: #9ca9b8;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
 
     .card {
       background: #101d2d;
-      border: 1px solid #23364c;
+      border: 1px solid #263b52;
       border-radius: 16px;
       padding: 25px;
       margin-bottom: 25px;
@@ -54,7 +58,7 @@
       gap: 7px;
     }
 
-    .field.full {
+    .full {
       grid-column: 1 / -1;
     }
 
@@ -71,7 +75,7 @@
       border-radius: 9px;
       border: 1px solid #30465e;
       background: #081522;
-      color: white;
+      color: #fff;
       outline: none;
     }
 
@@ -88,43 +92,44 @@
 
     .buttons {
       display: flex;
-      gap: 12px;
-      margin-top: 25px;
+      gap: 10px;
       flex-wrap: wrap;
+      margin-top: 22px;
     }
 
     button {
       border: 0;
       border-radius: 9px;
-      padding: 12px 20px;
+      padding: 12px 18px;
       cursor: pointer;
       font-weight: bold;
     }
 
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
     .primary {
       background: #1683d8;
-      color: white;
+      color: #fff;
     }
 
     .secondary {
       background: #26384c;
-      color: white;
+      color: #fff;
     }
 
     .danger {
       background: #a93434;
-      color: white;
-    }
-
-    button:hover {
-      opacity: .9;
+      color: #fff;
     }
 
     .message {
+      display: none;
       margin-top: 18px;
       padding: 12px;
       border-radius: 8px;
-      display: none;
     }
 
     .message.show {
@@ -141,17 +146,24 @@
       color: #ffaaaa;
     }
 
-    .project-image {
-      margin-top: 12px;
+    .image-preview {
       display: none;
+      margin-top: 12px;
     }
 
-    .project-image img {
+    .image-preview img {
       width: 220px;
       height: 140px;
       object-fit: cover;
       border-radius: 12px;
       border: 1px solid #30465e;
+      display: block;
+    }
+
+    .image-label {
+      color: #9ca9b8;
+      margin-bottom: 7px;
+      font-size: 14px;
     }
 
     .table-wrapper {
@@ -165,9 +177,10 @@
 
     th,
     td {
-      padding: 12px;
+      padding: 12px 10px;
       text-align: left;
       border-bottom: 1px solid #25384d;
+      vertical-align: middle;
     }
 
     th {
@@ -186,9 +199,17 @@
     }
 
     .empty {
-      padding: 25px;
       text-align: center;
+      padding: 25px;
       color: #8c9bab;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 6px;
+      background: #26384c;
+      font-size: 12px;
     }
 
     @media (max-width: 700px) {
@@ -196,8 +217,13 @@
         grid-template-columns: 1fr;
       }
 
-      .field.full {
+      .full {
         grid-column: auto;
+      }
+
+      th,
+      td {
+        white-space: nowrap;
       }
     }
   </style>
@@ -208,19 +234,29 @@
 <div class="container">
 
   <h1>TVEO Business</h1>
+
   <div class="subtitle">
     Administración de proyectos inmobiliarios
   </div>
 
-  <!-- FORMULARIO -->
+
+  <!-- =====================================================
+       FORMULARIO DE PROYECTO
+       ===================================================== -->
+
   <div class="card">
 
-    <h2 id="formTitle">Nuevo proyecto</h2>
+    <h2 id="formTitle">
+      Nuevo proyecto
+    </h2>
 
     <div class="form-grid">
 
       <div class="field">
-        <label for="prNombre">Nombre</label>
+        <label for="prNombre">
+          Nombre
+        </label>
+
         <input
           id="prNombre"
           type="text"
@@ -228,8 +264,12 @@
         >
       </div>
 
+
       <div class="field">
-        <label for="prCategoria">Categoría</label>
+        <label for="prCategoria">
+          Categoría
+        </label>
+
         <input
           id="prCategoria"
           type="text"
@@ -237,26 +277,38 @@
         >
       </div>
 
+
       <div class="field">
-        <label for="prUbicacion">Ubicación</label>
+        <label for="prUbicacion">
+          Ubicación
+        </label>
+
         <input
           id="prUbicacion"
           type="text"
-          placeholder="Ubicación del proyecto"
+          placeholder="Ubicación"
         >
       </div>
 
+
       <div class="field">
-        <label for="prPrecio">Precio</label>
+        <label for="prPrecio">
+          Precio
+        </label>
+
         <input
           id="prPrecio"
           type="text"
-          placeholder="Ej. Desde Bs. 150.000"
+          placeholder="Precio"
         >
       </div>
 
+
       <div class="field">
-        <label for="prWhatsapp">WhatsApp</label>
+        <label for="prWhatsapp">
+          WhatsApp
+        </label>
+
         <input
           id="prWhatsapp"
           type="text"
@@ -264,8 +316,11 @@
         >
       </div>
 
+
       <div class="field">
-        <label for="prEstado">Estado</label>
+        <label for="prEstado">
+          Estado
+        </label>
 
         <select id="prEstado">
           <option value="Publicado">Publicado</option>
@@ -274,7 +329,9 @@
         </select>
       </div>
 
+
       <div class="field">
+
         <label for="prImagen">
           Imagen principal
         </label>
@@ -285,31 +342,49 @@
           accept="image/jpeg,image/png,image/webp"
         >
 
-        <div id="imagenActual" class="project-image">
-          <div style="margin-bottom:7px;color:#9ca9b8;">
+        <div
+          id="imagenActual"
+          class="image-preview"
+        >
+
+          <div class="image-label">
             Imagen actual:
           </div>
 
           <img
             id="imagenActualPreview"
             src=""
-            alt="Imagen actual del proyecto"
+            alt="Imagen del proyecto"
           >
+
         </div>
+
       </div>
 
+
       <div class="field">
+
         <label for="prDestacado">
           Proyecto destacado
         </label>
 
         <select id="prDestacado">
-          <option value="false">No</option>
-          <option value="true">Sí</option>
+
+          <option value="false">
+            No
+          </option>
+
+          <option value="true">
+            Sí
+          </option>
+
         </select>
+
       </div>
 
+
       <div class="field full">
+
         <label for="prDesc">
           Descripción corta
         </label>
@@ -318,9 +393,11 @@
           id="prDesc"
           placeholder="Descripción del proyecto..."
         ></textarea>
+
       </div>
 
     </div>
+
 
     <div class="buttons">
 
@@ -332,13 +409,6 @@
         Guardar proyecto
       </button>
 
-      <button
-        id="cancelProjectBtn"
-        class="secondary"
-        type="button"
-      >
-        Cancelar
-      </button>
 
       <button
         id="newProjectBtn"
@@ -348,23 +418,43 @@
         Nuevo proyecto
       </button>
 
+
+      <button
+        id="cancelProjectBtn"
+        class="secondary"
+        type="button"
+      >
+        Cancelar
+      </button>
+
     </div>
 
-    <div id="projectMsg" class="message"></div>
+
+    <div
+      id="projectMsg"
+      class="message"
+    ></div>
 
   </div>
 
 
-  <!-- LISTADO -->
+
+  <!-- =====================================================
+       LISTA DE PROYECTOS
+       ===================================================== -->
+
   <div class="card">
 
-    <h2>Proyectos registrados</h2>
+    <h2>
+      Proyectos registrados
+    </h2>
 
     <div class="table-wrapper">
 
       <table>
 
         <thead>
+
           <tr>
             <th>Nombre</th>
             <th>Categoría</th>
@@ -374,10 +464,10 @@
             <th>Destacado</th>
             <th>Acciones</th>
           </tr>
+
         </thead>
 
-        <tbody id="projectsTable">
-        </tbody>
+        <tbody id="projectsTable"></tbody>
 
       </table>
 
@@ -388,761 +478,718 @@
 </div>
 
 
+
 <script>
 
-  /*
-   * =========================================================
-   * CONFIGURACIÓN SUPABASE
-   * =========================================================
-   */
+/* =========================================================
+   SUPABASE
+   ========================================================= */
 
-  const SUPABASE_URL =
-    'https://jefvmwhkalypvrpiwcuj.supabase.co';
+const SUPABASE_URL =
+  'https://jefvmwhkalypvrpiwcuj.supabase.co';
 
-  const SUPABASE_KEY =
-    'sb_publishable_yj7GqpJpBjtzemuSnke7mQ_bXzeReDy';
+const SUPABASE_KEY =
+  'sb_publishable_yj7GqpJpBjtzemuSnke7mQ_bXzeReDy';
 
-
-  const supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 
-  /*
-   * =========================================================
-   * ESTADO
-   * =========================================================
-   */
+/* =========================================================
+   ESTADO DEL FORMULARIO
+   ========================================================= */
 
-  const moduleState = {
-    projectEdit: null,
-    projectImageOriginal: null
-  };
+let projectEditId = null;
+
+let projectOriginalImage = null;
 
 
-  /*
-   * =========================================================
-   * UTILIDADES
-   * =========================================================
-   */
+/* =========================================================
+   FUNCIONES GENERALES
+   ========================================================= */
 
-  function val(id) {
+function getValue(id) {
 
-    const element =
-      document.getElementById(id);
+  const element =
+    document.getElementById(id);
 
-    return element?.value?.trim() || '';
+  return element
+    ? element.value.trim()
+    : '';
 
+}
+
+
+function escapeHtml(value) {
+
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+}
+
+
+function showMessage(message, type) {
+
+  const box =
+    document.getElementById('projectMsg');
+
+  box.textContent = message;
+
+  box.className =
+    'message show ' + type;
+
+}
+
+
+function clearMessage() {
+
+  const box =
+    document.getElementById('projectMsg');
+
+  box.textContent = '';
+
+  box.className = 'message';
+
+}
+
+
+/* =========================================================
+   URL PÚBLICA DE SUPABASE STORAGE
+   ========================================================= */
+
+function publicImageUrl(path) {
+
+  if (!path) {
+    return '';
   }
 
-
-  function boolVal(id) {
-
-    return (
-      document.getElementById(id)?.value === 'true'
-    );
-
-  }
-
-
-  function escapeHtml(value) {
-
-    return String(value ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-
-  }
-
-
-  function showMessage(
-    message,
-    type = 'success'
-  ) {
-
-    const element =
-      document.getElementById('projectMsg');
-
-    element.textContent = message;
-
-    element.className =
-      'message show ' + type;
-
-  }
-
-
-  function clearMessage() {
-
-    const element =
-      document.getElementById('projectMsg');
-
-    element.textContent = '';
-
-    element.className =
-      'message';
-
-  }
-
-
-  /*
-   * =========================================================
-   * URL PÚBLICA DE IMAGEN
-   * =========================================================
-   */
-
-  function publicImageUrl(path) {
-
-    if (!path) {
-      return '';
-    }
-
-    if (
-      /^https?:\/\//i.test(path)
-    ) {
-      return path;
-    }
-
-    const result =
-      supabaseClient
-        .storage
-        .from('inmobiliaria')
-        .getPublicUrl(path);
-
-    return result?.data?.publicUrl || '';
-
-  }
-
-
-  /*
-   * =========================================================
-   * SUBIR IMAGEN DEL PROYECTO
-   * =========================================================
-   */
-
-  async function guardarImagenProyecto(file) {
-
-    if (!file) {
-      return null;
-    }
-
-    const extension =
-      (
-        file.name
-          .split('.')
-          .pop() || 'jpg'
-      ).toLowerCase();
-
-    const path =
-      `proyectos/${Date.now()}-${Math.random()
-        .toString(36)
-        .slice(2, 9)}.${extension}`;
-
-
-    const {
-      error
-    } =
-      await supabaseClient
-        .storage
-        .from('inmobiliaria')
-        .upload(
-          path,
-          file,
-          {
-            upsert: false,
-            contentType: file.type
-          }
-        );
-
-
-    if (error) {
-      throw error;
-    }
-
-
+  if (/^https?:\/\//i.test(path)) {
     return path;
-
   }
 
+  const result =
+    supabaseClient
+      .storage
+      .from('inmobiliaria')
+      .getPublicUrl(path);
 
-  /*
-   * =========================================================
-   * LIMPIAR FORMULARIO
-   * =========================================================
-   */
+  return result.data.publicUrl || '';
 
-  function limpiarFormularioProyecto() {
-
-    moduleState.projectEdit = null;
-
-    moduleState.projectImageOriginal = null;
+}
 
 
-    document.getElementById('prNombre').value = '';
+/* =========================================================
+   MOSTRAR IMAGEN
+   ========================================================= */
 
-    document.getElementById('prCategoria').value = '';
+function mostrarImagen(path) {
 
-    document.getElementById('prUbicacion').value = '';
+  const box =
+    document.getElementById(
+      'imagenActual'
+    );
 
-    document.getElementById('prPrecio').value = '';
+  const image =
+    document.getElementById(
+      'imagenActualPreview'
+    );
 
-    document.getElementById('prWhatsapp').value = '';
+  const url =
+    publicImageUrl(path);
 
-    document.getElementById('prEstado').value =
-      'Publicado';
+  if (!url) {
 
-    document.getElementById('prImagen').value = '';
+    box.style.display = 'none';
 
-    document.getElementById('prDestacado').value =
-      'false';
+    image.src = '';
 
-    document.getElementById('prDesc').value = '';
-
-
-    document.getElementById('formTitle').textContent =
-      'Nuevo proyecto';
-
-
-    ocultarImagenActual();
-
-    clearMessage();
-
+    return;
   }
 
+  image.src = url;
 
-  /*
-   * =========================================================
-   * MOSTRAR IMAGEN ACTUAL
-   * =========================================================
-   */
+  box.style.display = 'block';
 
-  function mostrarImagenActual(path) {
+}
 
-    const container =
-      document.getElementById('imagenActual');
 
-    const preview =
-      document.getElementById(
-        'imagenActualPreview'
+function ocultarImagen() {
+
+  const box =
+    document.getElementById(
+      'imagenActual'
+    );
+
+  const image =
+    document.getElementById(
+      'imagenActualPreview'
+    );
+
+  image.src = '';
+
+  box.style.display = 'none';
+
+}
+
+
+/* =========================================================
+   SUBIR IMAGEN
+   ========================================================= */
+
+async function subirImagenProyecto(file) {
+
+  if (!file) {
+    return null;
+  }
+
+  const extension =
+    (
+      file.name
+        .split('.')
+        .pop() || 'jpg'
+    ).toLowerCase();
+
+  const nombreArchivo =
+    Date.now() +
+    '-' +
+    Math.random()
+      .toString(36)
+      .substring(2, 10) +
+    '.' +
+    extension;
+
+  const path =
+    'proyectos/' +
+    nombreArchivo;
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .storage
+      .from('inmobiliaria')
+      .upload(
+        path,
+        file,
+        {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.type
+        }
       );
 
 
-    const url =
-      publicImageUrl(path);
-
-
-    if (!url) {
-
-      ocultarImagenActual();
-
-      return;
-
-    }
-
-
-    preview.src = url;
-
-    container.style.display = 'block';
-
+  if (error) {
+    throw error;
   }
 
 
-  function ocultarImagenActual() {
+  return path;
 
-    const container =
-      document.getElementById('imagenActual');
+}
 
-    const preview =
-      document.getElementById(
-        'imagenActualPreview'
-      );
 
-    preview.src = '';
+/* =========================================================
+   LIMPIAR FORMULARIO
+   ========================================================= */
 
-    container.style.display = 'none';
+function nuevoProyecto() {
 
+  projectEditId = null;
+
+  projectOriginalImage = null;
+
+
+  document.getElementById(
+    'formTitle'
+  ).textContent =
+    'Nuevo proyecto';
+
+
+  document.getElementById(
+    'prNombre'
+  ).value = '';
+
+
+  document.getElementById(
+    'prCategoria'
+  ).value = '';
+
+
+  document.getElementById(
+    'prUbicacion'
+  ).value = '';
+
+
+  document.getElementById(
+    'prPrecio'
+  ).value = '';
+
+
+  document.getElementById(
+    'prWhatsapp'
+  ).value = '';
+
+
+  document.getElementById(
+    'prEstado'
+  ).value =
+    'Publicado';
+
+
+  document.getElementById(
+    'prDestacado'
+  ).value =
+    'false';
+
+
+  document.getElementById(
+    'prDesc'
+  ).value = '';
+
+
+  document.getElementById(
+    'prImagen'
+  ).value = '';
+
+
+  ocultarImagen();
+
+  clearMessage();
+
+}
+
+
+/* =========================================================
+   CARGAR PROYECTOS
+   ========================================================= */
+
+async function cargarProyectos() {
+
+  const tbody =
+    document.getElementById(
+      'projectsTable'
+    );
+
+
+  tbody.innerHTML = `
+    <tr>
+      <td colspan="7">
+        Cargando proyectos...
+      </td>
+    </tr>
+  `;
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('proyectos')
+      .select('*');
+
+
+  if (error) {
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7">
+          Error al cargar proyectos:
+          ${escapeHtml(error.message)}
+        </td>
+      </tr>
+    `;
+
+    console.error(error);
+
+    return;
   }
+
+
+  if (!data || data.length === 0) {
+
+    tbody.innerHTML = `
+      <tr>
+        <td
+          colspan="7"
+          class="empty"
+        >
+          No hay proyectos registrados.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+
+  tbody.innerHTML =
+    data.map(project => {
+
+      return `
+        <tr>
+
+          <td>
+            ${escapeHtml(project.nombre)}
+          </td>
+
+          <td>
+            ${escapeHtml(project.categoria)}
+          </td>
+
+          <td>
+            ${escapeHtml(project.ubicacion)}
+          </td>
+
+          <td>
+            ${escapeHtml(project.precio)}
+          </td>
+
+          <td>
+            <span class="status">
+              ${escapeHtml(project.estado)}
+            </span>
+          </td>
+
+          <td>
+            ${project.destacado ? 'Sí' : 'No'}
+          </td>
+
+          <td>
+
+            <div class="actions">
+
+              <button
+                class="primary small"
+                type="button"
+                data-action="edit"
+                data-id="${escapeHtml(project.id)}"
+              >
+                Editar
+              </button>
+
+              <button
+                class="danger small"
+                type="button"
+                data-action="delete"
+                data-id="${escapeHtml(project.id)}"
+              >
+                Eliminar
+              </button>
+
+            </div>
+
+          </td>
+
+        </tr>
+      `;
+
+    }).join('');
+
+}
+
+
+/* =========================================================
+   EDITAR PROYECTO
+   ========================================================= */
+
+async function editarProyecto(id) {
+
+  clearMessage();
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('proyectos')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      'No se pudo abrir el proyecto: ' +
+      error.message,
+      'error'
+    );
+
+    return;
+  }
+
+
+  if (!data) {
+
+    showMessage(
+      'No se encontró el proyecto.',
+      'error'
+    );
+
+    return;
+  }
+
+
+  projectEditId =
+    data.id;
+
+
+  projectOriginalImage =
+    data.imagen_principal || null;
+
+
+  document.getElementById(
+    'formTitle'
+  ).textContent =
+    'Editar proyecto';
+
+
+  document.getElementById(
+    'prNombre'
+  ).value =
+    data.nombre || '';
+
+
+  document.getElementById(
+    'prCategoria'
+  ).value =
+    data.categoria || '';
+
+
+  document.getElementById(
+    'prUbicacion'
+  ).value =
+    data.ubicacion || '';
+
+
+  document.getElementById(
+    'prPrecio'
+  ).value =
+    data.precio || '';
+
+
+  document.getElementById(
+    'prWhatsapp'
+  ).value =
+    data.whatsapp || '';
+
+
+  document.getElementById(
+    'prEstado'
+  ).value =
+    data.estado || 'Publicado';
+
+
+  document.getElementById(
+    'prDestacado'
+  ).value =
+    data.destacado
+      ? 'true'
+      : 'false';
+
+
+  document.getElementById(
+    'prDesc'
+  ).value =
+    data.descripcion_corta || '';
 
 
   /*
-   * =========================================================
-   * CARGAR PROYECTOS
-   * =========================================================
+   * El navegador no permite colocar
+   * automáticamente un archivo en
+   * input type=file.
    */
 
-  async function cargarProyectos() {
+  document.getElementById(
+    'prImagen'
+  ).value = '';
 
-    const tbody =
+
+  if (projectOriginalImage) {
+
+    mostrarImagen(
+      projectOriginalImage
+    );
+
+  } else {
+
+    ocultarImagen();
+
+  }
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+
+}
+
+
+/* =========================================================
+   GUARDAR PROYECTO
+   ========================================================= */
+
+async function guardarProyecto() {
+
+  clearMessage();
+
+
+  const nombre =
+    getValue('prNombre');
+
+
+  if (!nombre) {
+
+    showMessage(
+      'El nombre del proyecto es obligatorio.',
+      'error'
+    );
+
+    return;
+  }
+
+
+  const boton =
+    document.getElementById(
+      'saveProjectBtn'
+    );
+
+
+  boton.disabled = true;
+
+  boton.textContent =
+    'Guardando...';
+
+
+  try {
+
+    const file =
       document.getElementById(
-        'projectsTable'
-      );
+        'prImagen'
+      ).files[0] || null;
 
 
-    tbody.innerHTML =
-      '<tr><td colspan="7">Cargando...</td></tr>';
+    let imagenPrincipal =
+      projectOriginalImage;
 
 
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from('proyectos')
-        .select('*')
-        .order(
-          'created_at',
-          {
-            ascending: false
-          }
+    /*
+     * Si el usuario eligió una
+     * nueva imagen, la subimos.
+     */
+
+    if (file) {
+
+      imagenPrincipal =
+        await subirImagenProyecto(
+          file
         );
 
-
-    if (error) {
-
-      tbody.innerHTML =
-        `<tr>
-          <td colspan="7">
-            Error: ${escapeHtml(error.message)}
-          </td>
-        </tr>`;
-
-      return;
-
     }
 
 
-    if (!data || data.length === 0) {
+    const payload = {
 
-      tbody.innerHTML =
-        `<tr>
-          <td colspan="7" class="empty">
-            No hay proyectos registrados.
-          </td>
-        </tr>`;
+      nombre:
+        nombre,
 
-      return;
+      categoria:
+        getValue('prCategoria'),
 
-    }
+      ubicacion:
+        getValue('prUbicacion'),
 
+      precio:
+        getValue('prPrecio'),
 
-    tbody.innerHTML =
-      data.map(project => {
+      whatsapp:
+        getValue('prWhatsapp'),
 
-        const destacado =
-          project.destacado
-            ? 'Sí'
-            : 'No';
+      estado:
+        getValue('prEstado'),
 
+      imagen_principal:
+        imagenPrincipal,
 
-        return `
-          <tr>
-
-            <td>
-              ${escapeHtml(project.nombre)}
-            </td>
-
-            <td>
-              ${escapeHtml(project.categoria)}
-            </td>
-
-            <td>
-              ${escapeHtml(project.ubicacion)}
-            </td>
-
-            <td>
-              ${escapeHtml(project.precio)}
-            </td>
-
-            <td>
-              ${escapeHtml(project.estado)}
-            </td>
-
-            <td>
-              ${destacado}
-            </td>
-
-            <td>
-
-              <div class="actions">
-
-                <button
-                  class="primary small"
-                  type="button"
-                  onclick="editarProyecto('${escapeHtml(project.id)}')"
-                >
-                  Editar
-                </button>
-
-                <button
-                  class="danger small"
-                  type="button"
-                  onclick="eliminarProyecto('${escapeHtml(project.id)}')"
-                >
-                  Eliminar
-                </button>
-
-              </div>
-
-            </td>
-
-          </tr>
-        `;
-
-      }).join('');
-
-  }
-
-
-  /*
-   * =========================================================
-   * EDITAR PROYECTO
-   * =========================================================
-   */
-
-  async function editarProyecto(id) {
-
-    clearMessage();
-
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from('proyectos')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-
-    if (error) {
-
-      showMessage(
-        'No se pudo cargar el proyecto: ' +
-        error.message,
-        'error'
-      );
-
-      return;
-
-    }
-
-
-    if (!data) {
-
-      showMessage(
-        'No se encontró el proyecto.',
-        'error'
-      );
-
-      return;
-
-    }
-
-
-    moduleState.projectEdit =
-      data.id;
-
-
-    moduleState.projectImageOriginal =
-      data.imagen_principal || null;
-
-
-    document.getElementById('formTitle')
-      .textContent =
-        'Editar proyecto';
-
-
-    document.getElementById('prNombre').value =
-      data.nombre || '';
-
-
-    document.getElementById('prCategoria').value =
-      data.categoria || '';
-
-
-    document.getElementById('prUbicacion').value =
-      data.ubicacion || '';
-
-
-    document.getElementById('prPrecio').value =
-      data.precio || '';
-
-
-    document.getElementById('prWhatsapp').value =
-      data.whatsapp || '';
-
-
-    document.getElementById('prEstado').value =
-      data.estado || 'Publicado';
-
-
-    document.getElementById('prImagen').value =
-      '';
-
-
-    document.getElementById('prDestacado').value =
-      data.destacado
-        ? 'true'
-        : 'false';
-
-
-    document.getElementById('prDesc').value =
-      data.descripcion_corta || '';
-
-
-    if (data.imagen_principal) {
-
-      mostrarImagenActual(
-        data.imagen_principal
-      );
-
-    } else {
-
-      ocultarImagenActual();
-
-    }
-
-
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-
-  }
-
-
-  /*
-   * =========================================================
-   * GUARDAR / ACTUALIZAR PROYECTO
-   * =========================================================
-   */
-
-  async function guardarProyecto() {
-
-    clearMessage();
-
-
-    const nombre =
-      val('prNombre');
-
-
-    if (!nombre) {
-
-      showMessage(
-        'El nombre del proyecto es obligatorio.',
-        'error'
-      );
-
-      return;
-
-    }
-
-
-    const boton =
-      document.getElementById(
-        'saveProjectBtn'
-      );
-
-
-    boton.disabled = true;
-
-    boton.textContent =
-      'Guardando...';
-
-
-    try {
-
-      const file =
+      destacado:
         document.getElementById(
-          'prImagen'
-        ).files[0] || null;
+          'prDestacado'
+        ).value === 'true',
+
+      descripcion_corta:
+        getValue('prDesc')
+
+    };
 
 
-      let imagenPrincipal =
-        moduleState.projectImageOriginal;
+    /*
+     * ACTUALIZAR
+     */
 
+    if (projectEditId) {
 
-      /*
-       * Si seleccionamos una nueva imagen,
-       * se sube y reemplaza la anterior.
-       */
-
-      if (file) {
-
-        imagenPrincipal =
-          await guardarImagenProyecto(
-            file
+      const {
+        error
+      } =
+        await supabaseClient
+          .from('proyectos')
+          .update(payload)
+          .eq(
+            'id',
+            projectEditId
           );
 
+
+      if (error) {
+        throw error;
       }
 
-
-      const payload = {
-
-        nombre: nombre,
-
-        categoria:
-          val('prCategoria'),
-
-        ubicacion:
-          val('prUbicacion'),
-
-        precio:
-          val('prPrecio'),
-
-        whatsapp:
-          val('prWhatsapp'),
-
-        estado:
-          val('prEstado'),
-
-        imagen_principal:
-          imagenPrincipal,
-
-        destacado:
-          boolVal('prDestacado'),
-
-        descripcion_corta:
-          val('prDesc')
-
-      };
-
-
-      /*
-       * EDITAR
-       */
-
-      if (moduleState.projectEdit) {
-
-        const {
-          error
-        } =
-          await supabaseClient
-            .from('proyectos')
-            .update(payload)
-            .eq(
-              'id',
-              moduleState.projectEdit
-            );
-
-
-        if (error) {
-          throw error;
-        }
-
-
-        showMessage(
-          'Proyecto actualizado correctamente.',
-          'success'
-        );
-
-      }
-
-
-      /*
-       * NUEVO
-       */
-
-      else {
-
-        const {
-          error
-        } =
-          await supabaseClient
-            .from('proyectos')
-            .insert(payload);
-
-
-        if (error) {
-          throw error;
-        }
-
-
-        showMessage(
-          'Proyecto creado correctamente.',
-          'success'
-        );
-
-      }
-
-
-      await cargarProyectos();
-
-
-      setTimeout(() => {
-
-        limpiarFormularioProyecto();
-
-      }, 800);
-
-
-    }
-
-    catch (error) {
-
-      console.error(error);
 
       showMessage(
-        'Error al guardar: ' +
-        (error.message || error),
-        'error'
+        'Proyecto actualizado correctamente.',
+        'success'
       );
 
     }
 
-    finally {
 
-      boton.disabled = false;
+    /*
+     * CREAR
+     */
 
-      boton.textContent =
-        'Guardar proyecto';
+    else {
 
-    }
-
-  }
-
-
-  /*
-   * =========================================================
-   * ELIMINAR PROYECTO
-   * =========================================================
-   */
-
-  async function eliminarProyecto(id) {
-
-    const confirmar =
-      confirm(
-        '¿Estás seguro de eliminar este proyecto?'
-      );
+      const {
+        error
+      } =
+        await supabaseClient
+          .from('proyectos')
+          .insert(payload);
 
 
-    if (!confirmar) {
-      return;
-    }
+      if (error) {
+        throw error;
+      }
 
-
-    const {
-      error
-    } =
-      await supabaseClient
-        .from('proyectos')
-        .delete()
-        .eq('id', id);
-
-
-    if (error) {
 
       showMessage(
-        'No se pudo eliminar: ' +
-        error.message,
-        'error'
+        'Proyecto creado correctamente.',
+        'success'
       );
-
-      return;
 
     }
 
@@ -1150,124 +1197,235 @@
     await cargarProyectos();
 
 
-    showMessage(
-      'Proyecto eliminado correctamente.',
-      'success'
+    setTimeout(
+      nuevoProyecto,
+      1000
     );
 
   }
 
+  catch (error) {
 
-  /*
-   * =========================================================
-   * EVENTOS
-   * =========================================================
-   */
-
-  document
-    .getElementById('saveProjectBtn')
-    .addEventListener(
-      'click',
-      guardarProyecto
+    console.error(
+      'ERROR AL GUARDAR:',
+      error
     );
 
 
-  document
-    .getElementById('cancelProjectBtn')
-    .addEventListener(
-      'click',
-      limpiarFormularioProyecto
+    showMessage(
+      'Error al guardar: ' +
+      (error.message || error),
+      'error'
+    );
+
+  }
+
+  finally {
+
+    boton.disabled = false;
+
+    boton.textContent =
+      'Guardar proyecto';
+
+  }
+
+}
+
+
+/* =========================================================
+   ELIMINAR PROYECTO
+   ========================================================= */
+
+async function eliminarProyecto(id) {
+
+  const confirmar =
+    confirm(
+      '¿Seguro que deseas eliminar este proyecto?'
     );
 
 
-  document
-    .getElementById('newProjectBtn')
-    .addEventListener(
-      'click',
-      limpiarFormularioProyecto
+  if (!confirmar) {
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from('proyectos')
+      .delete()
+      .eq(
+        'id',
+        id
+      );
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      'No se pudo eliminar: ' +
+      error.message,
+      'error'
     );
 
+    return;
+  }
 
-  /*
-   * Vista previa cuando se selecciona
-   * una nueva imagen.
-   */
 
-  document
-    .getElementById('prImagen')
-    .addEventListener(
-      'change',
-      function () {
+  await cargarProyectos();
 
-        const file =
-          this.files[0];
 
-        if (!file) {
-          return;
+  showMessage(
+    'Proyecto eliminado correctamente.',
+    'success'
+  );
+
+}
+
+
+/* =========================================================
+   EVENTOS
+   ========================================================= */
+
+document
+  .getElementById(
+    'saveProjectBtn'
+  )
+  .addEventListener(
+    'click',
+    guardarProyecto
+  );
+
+
+document
+  .getElementById(
+    'newProjectBtn'
+  )
+  .addEventListener(
+    'click',
+    nuevoProyecto
+  );
+
+
+document
+  .getElementById(
+    'cancelProjectBtn'
+  )
+  .addEventListener(
+    'click',
+    nuevoProyecto
+  );
+
+
+/*
+ * Vista previa de nueva imagen
+ */
+
+document
+  .getElementById(
+    'prImagen'
+  )
+  .addEventListener(
+    'change',
+    function () {
+
+      const file =
+        this.files[0];
+
+
+      if (!file) {
+
+        if (projectOriginalImage) {
+
+          mostrarImagen(
+            projectOriginalImage
+          );
+
+        } else {
+
+          ocultarImagen();
+
         }
 
-
-        const url =
-          URL.createObjectURL(file);
-
-
-        document
-          .getElementById(
-            'imagenActualPreview'
-          )
-          .src = url;
-
-
-        document
-          .getElementById(
-            'imagenActual'
-          )
-          .style.display = 'block';
-
+        return;
       }
-    );
 
 
-  /*
-   * =========================================================
-   * COMPATIBILIDAD CON EL ADMIN ANTERIOR
-   * =========================================================
-   *
-   * Si tu tabla anterior llamaba:
-   *
-   * editRecord('proyectos', id)
-   *
-   * ahora también funcionará.
-   */
+      const url =
+        URL.createObjectURL(
+          file
+        );
 
-  window.editRecord =
-    function (table, id) {
 
-      if (table === 'proyectos') {
+      document.getElementById(
+        'imagenActualPreview'
+      ).src = url;
+
+
+      document.getElementById(
+        'imagenActual'
+      ).style.display = 'block';
+
+    }
+  );
+
+
+/*
+ * Botones Editar / Eliminar
+ */
+
+document
+  .getElementById(
+    'projectsTable'
+  )
+  .addEventListener(
+    'click',
+    function(event) {
+
+      const button =
+        event.target.closest(
+          'button[data-action]'
+        );
+
+
+      if (!button) {
+        return;
+      }
+
+
+      const action =
+        button.dataset.action;
+
+
+      const id =
+        button.dataset.id;
+
+
+      if (action === 'edit') {
 
         editarProyecto(id);
 
-        return;
-
       }
 
 
-      alert(
-        'La edición de "' +
-        table +
-        '" todavía utiliza el formulario correspondiente.'
-      );
+      if (action === 'delete') {
 
-    };
+        eliminarProyecto(id);
+
+      }
+
+    }
+  );
 
 
-  /*
-   * =========================================================
-   * INICIO
-   * =========================================================
-   */
+/* =========================================================
+   INICIAR
+   ========================================================= */
 
-  cargarProyectos();
+cargarProyectos();
 
 </script>
 
