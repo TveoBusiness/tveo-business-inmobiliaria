@@ -4,304 +4,1748 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TVEO Business | Administrador</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#07111f,#123452 55%,#07111f);color:#fff;min-height:100vh}
-button,input{font:inherit}.hidden{display:none!important}
-#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.login-card{width:100%;max-width:440px;padding:38px;border-radius:28px;background:rgba(255,255,255,.10);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.16);box-shadow:0 30px 90px rgba(0,0,0,.45)}
-.login-logo{width:90px;height:90px;margin:0 auto 20px;border-radius:22px;background:#fff;color:#102a43;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:25px;overflow:hidden}
-.login-logo img,.brand-logo img,.logo-preview img{width:100%;height:100%;object-fit:contain}
-.login-card h1{text-align:center;font-size:26px;margin-bottom:8px}.login-card p{text-align:center;color:#c7d3df;margin-bottom:28px}
-.field{margin-bottom:16px}.field label{display:block;margin-bottom:7px;color:#dce7f0;font-size:14px}
-.field input{width:100%;padding:14px 15px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;outline:none}
-.field input:focus{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.08)}
-.primary-btn{width:100%;border:0;padding:14px;border-radius:12px;cursor:pointer;color:#102a43;font-weight:800;background:linear-gradient(145deg,#fff,#cfdce8);box-shadow:0 12px 25px rgba(0,0,0,.25)}
-.primary-btn:disabled{opacity:.65;cursor:wait}
-#loginMessage{margin-top:15px;text-align:center;color:#ffb4b4;font-size:14px}
-.error-box{padding:12px;border-radius:10px;background:rgba(255,80,80,.10);color:#ffb4b4}
-.topbar{height:76px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,15,27,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.09);position:sticky;top:0;z-index:20}
-.brand{display:flex;align-items:center;gap:12px;font-weight:900}.brand-logo{width:44px;height:44px;border-radius:12px;background:#fff;color:#102a43;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:12px}
-.brand small{display:block;color:#9fb0c0;font-size:11px;font-weight:normal;margin-top:2px}
-.logout-btn{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;padding:9px 15px;border-radius:10px;cursor:pointer}
-.layout{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 76px)}
-.sidebar{padding:22px 15px;background:rgba(3,12,22,.70);border-right:1px solid rgba(255,255,255,.08)}
-.menu-title{color:#8497aa;font-size:11px;text-transform:uppercase;margin:8px 12px 10px;letter-spacing:1px}
-.menu-btn{width:100%;border:0;background:transparent;color:#d8e2eb;text-align:left;padding:13px 14px;border-radius:12px;margin-bottom:5px;cursor:pointer;transition:.2s}
-.menu-btn:hover,.menu-btn.active{background:rgba(255,255,255,.10);color:#fff;transform:translateX(2px)}
-.content{padding:30px;max-width:1450px;width:100%}.section{display:none}.section.active{display:block}
-.page-title{font-size:30px;margin-bottom:8px}.page-subtitle{color:#9fb0c0;margin-bottom:28px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.stat-card{padding:24px;border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045));border:1px solid rgba(255,255,255,.10);box-shadow:0 20px 45px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.08)}
-.stat-card span{color:#9fb0c0;font-size:13px}.stat-card strong{display:block;font-size:32px;margin-top:12px}
-.panel{margin-top:22px;padding:25px;border-radius:20px;background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.09)}
-.notice{margin-top:12px;padding:15px;border-radius:12px;background:rgba(255,255,255,.06);color:#aebdca;line-height:1.5}
-.config-box{max-width:720px}.upload-area{border:2px dashed rgba(255,255,255,.22);border-radius:18px;padding:35px;text-align:center;margin-top:20px;background:rgba(255,255,255,.04)}
-.logo-preview{width:220px;height:130px;margin:0 auto 20px;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#777}
-.upload-btn{display:inline-block;padding:12px 20px;border-radius:10px;background:#fff;color:#102a43;font-weight:bold;cursor:pointer}
-#logoInput{display:none}.message{margin-top:15px;color:#b9d8ff;font-size:14px}
-@media(max-width:950px){.stats{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid rgba(255,255,255,.08)}.property-form-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.topbar{padding:0 15px}.content{padding:20px 15px}.stats{grid-template-columns:1fr}.sidebar{overflow-x:auto}.property-form-grid{grid-template-columns:1fr}}
-.property-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
-.action-btn{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:800}
-.action-primary{background:linear-gradient(145deg,#fff,#cfdce8);color:#102a43}
-.action-secondary{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.15)}
-.action-danger{background:rgba(255,80,80,.15);color:#ffb4b4;border:1px solid rgba(255,80,80,.25)}
-.property-form{display:none;margin-bottom:20px}
-.property-form.open{display:block}
-.property-form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.property-form .field input,.property-form .field select,.property-form .field textarea{width:100%;padding:12px 13px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:#fff;outline:none}
-.property-form .field textarea{min-height:100px;resize:vertical}
-.property-form .field select option{color:#111}
-.property-checks{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin:8px 0 18px}
-.property-checks label{color:#dce7f0;font-size:14px}
-.property-table-wrap{overflow:auto}
-.property-table{width:100%;border-collapse:collapse;min-width:850px}
-.property-table th,.property-table td{padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.09);text-align:left;font-size:13px;vertical-align:middle}
-.property-table th{color:#9fb0c0;font-size:11px;text-transform:uppercase;letter-spacing:.6px}
-.property-thumb{width:58px;height:46px;border-radius:8px;object-fit:cover;background:#102a43}
-.status{display:inline-block;padding:5px 8px;border-radius:8px;background:rgba(255,255,255,.08);font-size:11px}
-.featured-mark{color:#75d7ff;font-weight:800}
-.property-actions{display:flex;gap:7px;flex-wrap:wrap}
-.form-message{margin-top:12px;color:#b9d8ff;font-size:13px}
 
-.module-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-.module-form{display:none}.module-form.open{display:block}
-.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.form-grid .field textarea,.form-grid .field select{width:100%;padding:12px 13px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:#fff;outline:none}
-.form-grid .field textarea{min-height:95px;resize:vertical}.form-grid select option{color:#111}
-.form-actions{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}.table-wrap{overflow:auto}.data-table{width:100%;border-collapse:collapse;min-width:760px}.data-table th,.data-table td{padding:11px 9px;border-bottom:1px solid rgba(255,255,255,.09);font-size:12px;text-align:left}.data-table th{font-size:10px;color:#9fb0c0;text-transform:uppercase}.empty-state{text-align:center;padding:35px;color:#9fb0c0}.module-msg{margin-top:12px;font-size:13px;color:#b9d8ff}.module-msg.error{color:#ffb4b4}.module-summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}.pill{padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.08);font-size:12px;color:#d8e2eb}
-@media(max-width:950px){.form-grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+body{
+font-family:Arial,Helvetica,sans-serif;
+background:linear-gradient(135deg,#07111f,#123452 55%,#07111f);
+color:#fff;
+min-height:100vh
+}
+
+button,input,select,textarea{font:inherit}
+.hidden{display:none!important}
+
+#loginScreen{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px
+}
+
+.login-card{
+width:100%;
+max-width:440px;
+padding:38px;
+border-radius:28px;
+background:rgba(255,255,255,.10);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.16);
+box-shadow:0 30px 90px rgba(0,0,0,.45)
+}
+
+.login-logo{
+width:90px;
+height:90px;
+margin:0 auto 20px;
+border-radius:22px;
+background:#fff;
+color:#102a43;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:900;
+font-size:25px;
+overflow:hidden
+}
+
+.login-logo img,
+.brand-logo img,
+.logo-preview img{
+width:100%;
+height:100%;
+object-fit:contain
+}
+
+.login-card h1{
+text-align:center;
+font-size:26px;
+margin-bottom:8px
+}
+
+.login-card p{
+text-align:center;
+color:#c7d3df;
+margin-bottom:28px
+}
+
+.field{
+margin-bottom:16px
+}
+
+.field label{
+display:block;
+margin-bottom:7px;
+color:#dce7f0;
+font-size:14px
+}
+
+.field input,
+.field select,
+.field textarea{
+width:100%;
+padding:14px 15px;
+border-radius:12px;
+border:1px solid rgba(255,255,255,.15);
+background:rgba(255,255,255,.08);
+color:#fff;
+outline:none
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+border-color:#fff;
+box-shadow:0 0 0 3px rgba(255,255,255,.08)
+}
+
+.field textarea{
+min-height:100px;
+resize:vertical
+}
+
+.field select option{
+color:#111
+}
+
+.primary-btn{
+width:100%;
+border:0;
+padding:14px;
+border-radius:12px;
+cursor:pointer;
+color:#102a43;
+font-weight:800;
+background:linear-gradient(145deg,#fff,#cfdce8);
+box-shadow:0 12px 25px rgba(0,0,0,.25)
+}
+
+.primary-btn:disabled{
+opacity:.65;
+cursor:wait
+}
+
+#loginMessage{
+margin-top:15px;
+text-align:center;
+color:#ffb4b4;
+font-size:14px
+}
+
+.error-box{
+padding:12px;
+border-radius:10px;
+background:rgba(255,80,80,.10);
+color:#ffb4b4
+}
+
+.topbar{
+height:76px;
+padding:0 28px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:rgba(5,15,27,.88);
+backdrop-filter:blur(18px);
+border-bottom:1px solid rgba(255,255,255,.09);
+position:sticky;
+top:0;
+z-index:20
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+font-weight:900
+}
+
+.brand-logo{
+width:44px;
+height:44px;
+border-radius:12px;
+background:#fff;
+color:#102a43;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+font-size:12px
+}
+
+.brand small{
+display:block;
+color:#9fb0c0;
+font-size:11px;
+font-weight:normal;
+margin-top:2px
+}
+
+.logout-btn{
+border:1px solid rgba(255,255,255,.18);
+background:rgba(255,255,255,.07);
+color:#fff;
+padding:9px 15px;
+border-radius:10px;
+cursor:pointer
+}
+
+.layout{
+display:grid;
+grid-template-columns:250px 1fr;
+min-height:calc(100vh - 76px)
+}
+
+.sidebar{
+padding:22px 15px;
+background:rgba(3,12,22,.70);
+border-right:1px solid rgba(255,255,255,.08)
+}
+
+.menu-title{
+color:#8497aa;
+font-size:11px;
+text-transform:uppercase;
+margin:8px 12px 10px;
+letter-spacing:1px
+}
+
+.menu-btn{
+width:100%;
+border:0;
+background:transparent;
+color:#d8e2eb;
+text-align:left;
+padding:13px 14px;
+border-radius:12px;
+margin-bottom:5px;
+cursor:pointer;
+transition:.2s
+}
+
+.menu-btn:hover,
+.menu-btn.active{
+background:rgba(255,255,255,.10);
+color:#fff;
+transform:translateX(2px)
+}
+
+.content{
+padding:30px;
+max-width:1450px;
+width:100%
+}
+
+.section{
+display:none
+}
+
+.section.active{
+display:block
+}
+
+.page-title{
+font-size:30px;
+margin-bottom:8px
+}
+
+.page-subtitle{
+color:#9fb0c0;
+margin-bottom:28px
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px
+}
+
+.stat-card{
+padding:24px;
+border-radius:20px;
+background:linear-gradient(
+145deg,
+rgba(255,255,255,.13),
+rgba(255,255,255,.045)
+);
+border:1px solid rgba(255,255,255,.10);
+box-shadow:
+0 20px 45px rgba(0,0,0,.25),
+inset 0 1px 0 rgba(255,255,255,.08)
+}
+
+.stat-card span{
+color:#9fb0c0;
+font-size:13px
+}
+
+.stat-card strong{
+display:block;
+font-size:32px;
+margin-top:12px
+}
+
+.panel{
+margin-top:22px;
+padding:25px;
+border-radius:20px;
+background:rgba(255,255,255,.065);
+border:1px solid rgba(255,255,255,.09)
+}
+
+.notice{
+margin-top:12px;
+padding:15px;
+border-radius:12px;
+background:rgba(255,255,255,.06);
+color:#aebdca;
+line-height:1.5
+}
+
+.config-box{
+max-width:720px
+}
+
+.upload-area{
+border:2px dashed rgba(255,255,255,.22);
+border-radius:18px;
+padding:35px;
+text-align:center;
+margin-top:20px;
+background:rgba(255,255,255,.04)
+}
+
+.logo-preview{
+width:220px;
+height:130px;
+margin:0 auto 20px;
+border-radius:15px;
+background:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+color:#777
+}
+
+.upload-btn{
+display:inline-block;
+padding:12px 20px;
+border-radius:10px;
+background:#fff;
+color:#102a43;
+font-weight:bold;
+cursor:pointer
+}
+
+#logoInput{
+display:none
+}
+
+.message{
+margin-top:15px;
+color:#b9d8ff;
+font-size:14px
+}
+
+.property-toolbar,
+.module-toolbar{
+display:flex;
+justify-content:space-between;
+gap:12px;
+align-items:center;
+flex-wrap:wrap;
+margin-bottom:18px
+}
+
+.action-btn{
+border:0;
+border-radius:10px;
+padding:10px 14px;
+cursor:pointer;
+font-weight:800
+}
+
+.action-primary{
+background:linear-gradient(145deg,#fff,#cfdce8);
+color:#102a43
+}
+
+.action-secondary{
+background:rgba(255,255,255,.10);
+color:#fff;
+border:1px solid rgba(255,255,255,.15)
+}
+
+.action-danger{
+background:rgba(255,80,80,.15);
+color:#ffb4b4;
+border:1px solid rgba(255,80,80,.25)
+}
+
+.property-form,
+.module-form{
+display:none;
+margin-bottom:20px
+}
+
+.property-form.open,
+.module-form.open{
+display:block
+}
+
+.property-form-grid,
+.form-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:14px
+}
+
+.property-form .field input,
+.property-form .field select,
+.property-form .field textarea,
+.form-grid .field input,
+.form-grid .field select,
+.form-grid .field textarea{
+width:100%;
+padding:12px 13px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,.15);
+background:rgba(255,255,255,.07);
+color:#fff;
+outline:none
+}
+
+.property-form .field textarea,
+.form-grid .field textarea{
+min-height:95px;
+resize:vertical
+}
+
+.property-form .field select option,
+.form-grid select option{
+color:#111
+}
+
+.property-checks{
+display:flex;
+gap:20px;
+align-items:center;
+flex-wrap:wrap;
+margin:8px 0 18px
+}
+
+.property-checks label{
+color:#dce7f0;
+font-size:14px
+}
+
+.form-actions{
+display:flex;
+gap:10px;
+margin-top:8px;
+flex-wrap:wrap
+}
+
+.property-table-wrap,
+.table-wrap{
+overflow:auto
+}
+
+.property-table{
+width:100%;
+border-collapse:collapse;
+min-width:850px
+}
+
+.property-table th,
+.property-table td{
+padding:12px 10px;
+border-bottom:1px solid rgba(255,255,255,.09);
+text-align:left;
+font-size:13px;
+vertical-align:middle
+}
+
+.property-table th{
+color:#9fb0c0;
+font-size:11px;
+text-transform:uppercase;
+letter-spacing:.6px
+}
+
+.property-thumb{
+width:58px;
+height:46px;
+border-radius:8px;
+object-fit:cover;
+background:#102a43
+}
+
+.status{
+display:inline-block;
+padding:5px 8px;
+border-radius:8px;
+background:rgba(255,255,255,.08);
+font-size:11px
+}
+
+.featured-mark{
+color:#75d7ff;
+font-weight:800
+}
+
+.property-actions{
+display:flex;
+gap:7px;
+flex-wrap:wrap
+}
+
+.form-message{
+margin-top:12px;
+color:#b9d8ff;
+font-size:13px
+}
+
+.module-msg{
+margin-top:12px;
+font-size:13px;
+color:#b9d8ff
+}
+
+.module-msg.error{
+color:#ffb4b4
+}
+
+.data-table{
+width:100%;
+border-collapse:collapse;
+min-width:760px
+}
+
+.data-table th,
+.data-table td{
+padding:11px 9px;
+border-bottom:1px solid rgba(255,255,255,.09);
+font-size:12px;
+text-align:left
+}
+
+.data-table th{
+font-size:10px;
+color:#9fb0c0;
+text-transform:uppercase
+}
+
+.empty-state{
+text-align:center;
+padding:35px;
+color:#9fb0c0
+}
+
+.module-summary{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:15px
+}
+
+.pill{
+padding:8px 11px;
+border-radius:999px;
+background:rgba(255,255,255,.08);
+font-size:12px;
+color:#d8e2eb
+}
+
+@media(max-width:950px){
+
+.stats{
+grid-template-columns:repeat(2,1fr)
+}
+
+.layout{
+grid-template-columns:1fr
+}
+
+.sidebar{
+border-right:0;
+border-bottom:1px solid rgba(255,255,255,.08)
+}
+
+.property-form-grid,
+.form-grid{
+grid-template-columns:1fr 1fr
+}
+
+}
+
+@media(max-width:600px){
+
+.topbar{
+padding:0 15px
+}
+
+.content{
+padding:20px 15px
+}
+
+.stats{
+grid-template-columns:1fr
+}
+
+.sidebar{
+overflow-x:auto
+}
+
+.property-form-grid,
+.form-grid{
+grid-template-columns:1fr
+}
+
+}
 </style>
 </head>
+
 <body>
 
 <div id="loginScreen">
-  <div class="login-card">
-    <div class="login-logo" id="loginLogo">TVEO</div>
-    <h1>Administrador</h1>
-    <p>TVEO Business Desarrolladora Inmobiliaria</p>
-    <form id="loginForm">
-      <div class="field">
-        <label>Correo electrónico</label>
-        <input type="email" id="email" required autocomplete="email">
-      </div>
-      <div class="field">
-        <label>Contraseña</label>
-        <input type="password" id="password" required autocomplete="current-password">
-      </div>
-      <button class="primary-btn" id="loginBtn" type="submit">INGRESAR</button>
-    </form>
-    <div id="loginMessage"></div>
-  </div>
+
+<div class="login-card">
+
+<div class="login-logo" id="loginLogo">
+TVEO
 </div>
+
+<h1>Administrador</h1>
+
+<p>
+TVEO Business Desarrolladora Inmobiliaria
+</p>
+
+<form id="loginForm">
+
+<div class="field">
+<label>Correo electrónico</label>
+<input
+type="email"
+id="email"
+required
+autocomplete="email"
+>
+</div>
+
+<div class="field">
+<label>Contraseña</label>
+<input
+type="password"
+id="password"
+required
+autocomplete="current-password"
+>
+</div>
+
+<button
+class="primary-btn"
+id="loginBtn"
+type="submit"
+>
+INGRESAR
+</button>
+
+</form>
+
+<div id="loginMessage"></div>
+
+</div>
+</div>
+
 
 <div id="adminApp" class="hidden">
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-logo" id="brandLogo">TVEO</div>
-      <div>TVEO BUSINESS<small>Panel de Administración</small></div>
-    </div>
-    <button class="logout-btn" id="logoutBtn">Cerrar sesión</button>
-  </header>
 
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="menu-title">Administración</div>
-      <button class="menu-btn active" data-section="dashboard">📊 Dashboard</button>
-      <button class="menu-btn" data-section="propiedades">🏠 Propiedades</button>
-      <button class="menu-btn" data-section="proyectos">🏗️ Proyectos</button>
-      <button class="menu-btn" data-section="asesores">👥 Asesores</button>
-      <button class="menu-btn" data-section="operaciones">💰 Operaciones</button>
-      <button class="menu-btn" data-section="comisiones">💵 Comisiones</button>
-      <div class="menu-title">Sitio web</div>
-      <button class="menu-btn" data-section="imagenes">🖼️ Imágenes</button>
-      <button class="menu-btn" data-section="configuracion">⚙️ Configuración</button>
-    </aside>
+<header class="topbar">
 
-    <main class="content">
-      <section id="dashboard" class="section active">
-        <h1 class="page-title">Dashboard</h1>
-        <p class="page-subtitle">Resumen de TVEO Business Inmobiliaria</p>
-        <div class="stats">
-          <div class="stat-card"><span>Propiedades</span><strong id="statProperties">0</strong></div>
-          <div class="stat-card"><span>Proyectos</span><strong id="statProjects">0</strong></div>
-          <div class="stat-card"><span>Asesores</span><strong id="statAdvisors">0</strong></div>
-          <div class="stat-card"><span>Operaciones</span><strong id="statOperations">0</strong></div>
-        </div>
-        <div class="panel">
-          <h2>Bienvenido al administrador</h2>
-          <p class="notice">Este panel es independiente del CRM. Desde aquí administraremos el sitio inmobiliario, propiedades, proyectos, asesores, operaciones, comisiones, imágenes y configuración.</p>
-        </div>
-      </section>
+<div class="brand">
 
-      <section id="propiedades" class="section">
-        <h1 class="page-title">Propiedades</h1>
-        <p class="page-subtitle">Casas, terrenos, departamentos, oficinas, locales y otros inmuebles.</p>
-
-        <div class="panel">
-          <div class="property-toolbar">
-            <div>
-              <h2>Inventario inmobiliario</h2>
-              <p class="notice">Los cambios se guardan directamente en la tabla <strong>inmuebles</strong> de este proyecto inmobiliario.</p>
-            </div>
-            <button class="action-btn action-primary" id="newPropertyBtn">＋ Nueva propiedad</button>
-          </div>
-
-          <div id="propertyForm" class="property-form">
-            <div class="panel" style="margin-top:0">
-              <div class="property-toolbar">
-                <h2 id="propertyFormTitle">Nueva propiedad</h2>
-                <button class="action-btn action-secondary" id="cancelPropertyBtn" type="button">Cancelar</button>
-              </div>
-
-              <form id="propertyEditor">
-                <input type="hidden" id="propertyId">
-
-                <div class="property-form-grid">
-                  <div class="field">
-                    <label>Título *</label>
-                    <input id="pTitulo" required placeholder="Ej. Casa moderna en Equipetrol">
-                  </div>
-                  <div class="field">
-                    <label>Tipo *</label>
-                    <select id="pTipo" required>
-                      <option value="">Seleccionar</option>
-                      <option>Casa</option><option>Terreno</option><option>Departamento</option>
-                      <option>Oficina</option><option>Local</option><option>Urbanización</option><option>Otro</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label>Operación *</label>
-                    <select id="pOperacion" required>
-                      <option value="">Seleccionar</option>
-                      <option>Venta</option><option>Alquiler</option><option>Anticrético</option><option>Crédito Directo</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label>Ubicación *</label>
-                    <input id="pUbicacion" required placeholder="Zona, ciudad o ubicación">
-                  </div>
-                  <div class="field">
-                    <label>Precio</label>
-                    <input id="pPrecio" placeholder="Ej. $us 180.000">
-                  </div>
-                  <div class="field">
-                    <label>Superficie</label>
-                    <input id="pSuperficie" placeholder="Ej. 240 m²">
-                  </div>
-                  <div class="field">
-                    <label>WhatsApp</label>
-                    <input id="pWhatsapp" placeholder="5917XXXXXXXX">
-                  </div>
-                  <div class="field">
-                    <label>Estado *</label>
-                    <select id="pEstado" required>
-                      <option>Disponible</option><option>Reservado</option><option>Vendido</option>
-                      <option>Alquilado</option><option>Anticrético</option><option>Oculto</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label>Imagen principal</label>
-                    <input id="pImagen" type="file" accept="image/png,image/jpeg,image/webp">
-                  </div>
-                </div>
-
-                <div class="field" style="margin-top:14px">
-                  <label>Descripción</label>
-                  <textarea id="pDescripcion" placeholder="Describe las características principales de la propiedad..."></textarea>
-                </div>
-
-                <div class="property-checks">
-                  <label><input type="checkbox" id="pDestacado"> Marcar como destacada</label>
-                </div>
-
-                <button class="action-btn action-primary" id="savePropertyBtn" type="submit">Guardar propiedad</button>
-                <div id="propertyFormMessage" class="form-message"></div>
-              </form>
-            </div>
-          </div>
-
-          <div id="propertiesMessage" class="form-message"></div>
-          <div class="property-table-wrap">
-            <table class="property-table">
-              <thead>
-                <tr><th>Foto</th><th>Propiedad</th><th>Tipo</th><th>Operación</th><th>Ubicación</th><th>Precio</th><th>Estado</th><th>Acciones</th></tr>
-              </thead>
-              <tbody id="propertiesTableBody">
-                <tr><td colspan="8">Cargando propiedades...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section id="proyectos" class="section">
-        <h1 class="page-title">Proyectos inmobiliarios</h1><p class="page-subtitle">Administra los proyectos que aparecen en la página pública.</p>
-        <div class="panel">
-          <div class="module-toolbar"><h2>Proyectos</h2><button class="action-btn action-primary" id="newProjectBtn">+ Nuevo proyecto</button></div>
-          <div id="projectForm" class="module-form">
-            <div class="form-grid">
-              <div class="field"><label>Nombre</label><input id="prNombre" required></div>
-              <div class="field"><label>Categoría</label><input id="prCategoria" placeholder="Urbanización, residencial, casas..."></div>
-              <div class="field"><label>Ubicación</label><input id="prUbicacion"></div>
-              <div class="field"><label>Precio</label><input id="prPrecio"></div>
-              <div class="field"><label>WhatsApp</label><input id="prWhatsapp"></div>
-              <div class="field"><label>Estado</label><select id="prEstado"><option>Publicado</option><option>Borrador</option><option>Oculto</option></select></div>
-              <div class="field"><label>Imagen principal</label><input id="prImagen"></div>
-              <div class="field"><label>Destacado</label><select id="prDestacado"><option value="false">No</option><option value="true">Sí</option></select></div>
-              <div class="field"><label>Descripción corta</label><textarea id="prDesc"></textarea></div>
-            </div><div class="form-actions"><button class="action-btn action-primary" id="saveProjectBtn">Guardar</button><button class="action-btn action-secondary" id="cancelProjectBtn">Cancelar</button></div><div id="projectMsg" class="module-msg"></div>
-          </div><div id="projectsTable" class="table-wrap"></div>
-        </div>
-      </section>
-
-      <section id="asesores" class="section">
-        <h1 class="page-title">Asesores inmobiliarios</h1><p class="page-subtitle">Gestiona captadores, colocadores y asesores.</p>
-        <div class="panel"><div class="module-toolbar"><h2>Equipo comercial</h2><button class="action-btn action-primary" id="newAdvisorBtn">+ Nuevo asesor</button></div>
-          <div id="advisorForm" class="module-form"><div class="form-grid">
-            <div class="field"><label>Nombre</label><input id="aNombre"></div><div class="field"><label>Fotografía / URL</label><input id="aFoto"></div><div class="field"><label>Teléfono</label><input id="aTelefono"></div><div class="field"><label>WhatsApp</label><input id="aWhatsapp"></div><div class="field"><label>Cargo</label><input id="aCargo" placeholder="Asesor / Captador / Colocador"></div><div class="field"><label>Estado</label><select id="aEstado"><option>Activo</option><option>Inactivo</option></select></div>
-          </div><div class="form-actions"><button class="action-btn action-primary" id="saveAdvisorBtn">Guardar</button><button class="action-btn action-secondary" id="cancelAdvisorBtn">Cancelar</button></div><div id="advisorMsg" class="module-msg"></div></div><div id="advisorsTable" class="table-wrap"></div>
-        </div></section>
-
-      <section id="operaciones" class="section"><h1 class="page-title">Operaciones</h1><p class="page-subtitle">Ventas, alquileres, anticréticos y créditos directos.</p>
-        <div class="panel"><div class="module-toolbar"><h2>Operaciones</h2><button class="action-btn action-primary" id="newOperationBtn">+ Nueva operación</button></div>
-          <div id="operationForm" class="module-form"><div class="form-grid"><div class="field"><label>Inmueble ID</label><input id="oInmueble"></div><div class="field"><label>Proyecto ID</label><input id="oProyecto"></div><div class="field"><label>Captador ID</label><input id="oCaptador"></div><div class="field"><label>Colocador ID</label><input id="oColocador"></div><div class="field"><label>Precio</label><input id="oPrecio"></div><div class="field"><label>Fecha</label><input id="oFecha" type="date"></div><div class="field"><label>Estado</label><select id="oEstado"><option>En proceso</option><option>Reservado</option><option>Concretado</option><option>Cancelado</option></select></div></div><div class="form-actions"><button class="action-btn action-primary" id="saveOperationBtn">Guardar</button><button class="action-btn action-secondary" id="cancelOperationBtn">Cancelar</button></div><div id="operationMsg" class="module-msg"></div></div><div id="operationsTable" class="table-wrap"></div>
-        </div></section>
-
-      <section id="comisiones" class="section"><h1 class="page-title">Comisiones</h1><p class="page-subtitle">Control y seguimiento de pagos de comisión.</p>
-        <div class="panel"><div class="module-toolbar"><h2>Comisiones</h2><button class="action-btn action-primary" id="newCommissionBtn">+ Nueva comisión</button></div>
-          <div id="commissionForm" class="module-form"><div class="form-grid"><div class="field"><label>Asesor ID</label><input id="cAsesor"></div><div class="field"><label>Rol</label><input id="cRol"></div><div class="field"><label>Porcentaje</label><input id="cPorcentaje"></div><div class="field"><label>Monto</label><input id="cMonto"></div><div class="field"><label>Estado</label><select id="cEstado"><option>Pendiente</option><option>Pagada</option><option>Anulada</option></select></div><div class="field"><label>Fecha de pago</label><input id="cFecha" type="date"></div></div><div class="form-actions"><button class="action-btn action-primary" id="saveCommissionBtn">Guardar</button><button class="action-btn action-secondary" id="cancelCommissionBtn">Cancelar</button></div><div id="commissionMsg" class="module-msg"></div></div><div id="commissionsTable" class="table-wrap"></div>
-        </div></section>
-
-      <section id="imagenes" class="section"><h1 class="page-title">Imágenes</h1><p class="page-subtitle">Biblioteca de imágenes de propiedades y proyectos.</p>
-        <div class="panel"><div class="module-toolbar"><h2>Galería</h2><button class="action-btn action-primary" id="newImageBtn">+ Registrar imagen</button></div>
-          <div id="imageForm" class="module-form"><div class="form-grid"><div class="field"><label>Inmueble ID</label><input id="iInmueble"></div><div class="field"><label>Proyecto ID</label><input id="iProyecto"></div><div class="field"><label>Ruta / URL de imagen</label><input id="iUrl"></div><div class="field"><label>Orden</label><input id="iOrden" type="number" value="0"></div></div><div class="form-actions"><button class="action-btn action-primary" id="saveImageBtn">Guardar</button><button class="action-btn action-secondary" id="cancelImageBtn">Cancelar</button></div><div id="imageMsg" class="module-msg"></div></div><div id="imagesTable" class="table-wrap"></div>
-        </div></section>
-
-      <section id="configuracion" class="section">
-        <h1 class="page-title">Configuración</h1>
-        <p class="page-subtitle">Configuración general del sitio web.</p>
-        <div class="panel config-box">
-          <h2>Logo de TVEO Business</h2>
-          <p class="notice">Sube o cambia el logo desde aquí. El logo se guarda en el Storage del nuevo proyecto de Supabase.</p>
-          <div class="upload-area">
-            <div class="logo-preview" id="logoPreview">Sin logo</div>
-            <label class="upload-btn" for="logoInput">🖼️ Seleccionar logo</label>
-            <input type="file" id="logoInput" accept="image/png,image/jpeg,image/webp,image/svg+xml">
-            <div id="logoMessage" class="message"></div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
+<div
+class="brand-logo"
+id="brandLogo"
+>
+TVEO
 </div>
 
+<div>
+TVEO BUSINESS
+<small>Panel de Administración</small>
+</div>
+
+</div>
+
+<button
+class="logout-btn"
+id="logoutBtn"
+>
+Cerrar sesión
+</button>
+
+</header>
+
+
+<div class="layout">
+
+<aside class="sidebar">
+
+<div class="menu-title">
+Administración
+</div>
+
+<button class="menu-btn active" data-section="dashboard">
+📊 Dashboard
+</button>
+
+<button class="menu-btn" data-section="propiedades">
+🏠 Propiedades
+</button>
+
+<button class="menu-btn" data-section="proyectos">
+🏗️ Proyectos
+</button>
+
+<button class="menu-btn" data-section="asesores">
+👥 Asesores
+</button>
+
+<button class="menu-btn" data-section="operaciones">
+💰 Operaciones
+</button>
+
+<button class="menu-btn" data-section="comisiones">
+💵 Comisiones
+</button>
+
+<div class="menu-title">
+Sitio web
+</div>
+
+<button class="menu-btn" data-section="imagenes">
+🖼️ Imágenes
+</button>
+
+<button class="menu-btn" data-section="configuracion">
+⚙️ Configuración
+</button>
+
+</aside>
+
+
+<main class="content">
+
+
+<section id="dashboard" class="section active">
+
+<h1 class="page-title">
+Dashboard
+</h1>
+
+<p class="page-subtitle">
+Resumen de TVEO Business Inmobiliaria
+</p>
+
+<div class="stats">
+
+<div class="stat-card">
+<span>Propiedades</span>
+<strong id="statProperties">0</strong>
+</div>
+
+<div class="stat-card">
+<span>Proyectos</span>
+<strong id="statProjects">0</strong>
+</div>
+
+<div class="stat-card">
+<span>Asesores</span>
+<strong id="statAdvisors">0</strong>
+</div>
+
+<div class="stat-card">
+<span>Operaciones</span>
+<strong id="statOperations">0</strong>
+</div>
+
+</div>
+
+<div class="panel">
+
+<h2>
+Bienvenido al administrador
+</h2>
+
+<p class="notice">
+Este panel es independiente del CRM. Desde aquí administraremos
+el sitio inmobiliario, propiedades, proyectos, asesores,
+operaciones, comisiones, imágenes y configuración.
+</p>
+
+</div>
+
+</section>
+
+
+<section id="propiedades" class="section">
+
+<h1 class="page-title">
+Propiedades
+</h1>
+
+<p class="page-subtitle">
+Casas, terrenos, departamentos, oficinas, locales y otros inmuebles.
+</p>
+
+<div class="panel">
+
+<div class="property-toolbar">
+
+<div>
+
+<h2>
+Inventario inmobiliario
+</h2>
+
+<p class="notice">
+Los cambios se guardan directamente en la tabla
+<strong>inmuebles</strong> de este proyecto inmobiliario.
+</p>
+
+</div>
+
+<button
+class="action-btn action-primary"
+id="newPropertyBtn"
+>
+＋ Nueva propiedad
+</button>
+
+</div>
+
+
+<div
+id="propertyForm"
+class="property-form"
+>
+
+<div class="panel" style="margin-top:0">
+
+<div class="property-toolbar">
+
+<h2 id="propertyFormTitle">
+Nueva propiedad
+</h2>
+
+<button
+class="action-btn action-secondary"
+id="cancelPropertyBtn"
+type="button"
+>
+Cancelar
+</button>
+
+</div>
+
+
+<form id="propertyEditor">
+
+<input
+type="hidden"
+id="propertyId"
+>
+
+<div class="property-form-grid">
+
+<div class="field">
+<label>Título *</label>
+<input
+id="pTitulo"
+required
+placeholder="Ej. Casa moderna en Equipetrol"
+>
+</div>
+
+<div class="field">
+<label>Tipo *</label>
+
+<select id="pTipo" required>
+
+<option value="">
+Seleccionar
+</option>
+
+<option>Casa</option>
+<option>Terreno</option>
+<option>Departamento</option>
+<option>Oficina</option>
+<option>Local</option>
+<option>Urbanización</option>
+<option>Otro</option>
+
+</select>
+
+</div>
+
+<div class="field">
+<label>Operación *</label>
+
+<select id="pOperacion" required>
+
+<option value="">
+Seleccionar
+</option>
+
+<option>Venta</option>
+<option>Alquiler</option>
+<option>Anticrético</option>
+<option>Crédito Directo</option>
+
+</select>
+
+</div>
+
+<div class="field">
+<label>Ubicación *</label>
+<input
+id="pUbicacion"
+required
+placeholder="Zona, ciudad o ubicación"
+>
+</div>
+
+<div class="field">
+<label>Precio</label>
+<input
+id="pPrecio"
+placeholder="Ej. $us 180.000"
+>
+</div>
+
+<div class="field">
+<label>Superficie</label>
+<input
+id="pSuperficie"
+placeholder="Ej. 240 m²"
+>
+</div>
+
+<div class="field">
+<label>WhatsApp</label>
+<input
+id="pWhatsapp"
+placeholder="5917XXXXXXXX"
+>
+</div>
+
+<div class="field">
+<label>Estado *</label>
+
+<select id="pEstado" required>
+
+<option>Disponible</option>
+<option>Reservado</option>
+<option>Vendido</option>
+<option>Alquilado</option>
+<option>Anticrético</option>
+<option>Oculto</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>
+Imagen principal
+</label>
+
+<input
+id="pImagen"
+type="file"
+accept="image/png,image/jpeg,image/webp"
+>
+
+</div>
+
+</div>
+
+
+<div
+class="field"
+style="margin-top:14px"
+>
+
+<label>
+Descripción
+</label>
+
+<textarea
+id="pDescripcion"
+placeholder="Describe las características principales de la propiedad..."
+></textarea>
+
+</div>
+
+
+<div class="property-checks">
+
+<label>
+<input
+type="checkbox"
+id="pDestacado"
+>
+Marcar como destacada
+</label>
+
+</div>
+
+
+<button
+class="action-btn action-primary"
+id="savePropertyBtn"
+type="submit"
+>
+Guardar propiedad
+</button>
+
+<div
+id="propertyFormMessage"
+class="form-message"
+></div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<div
+id="propertiesMessage"
+class="form-message"
+></div>
+
+
+<div class="property-table-wrap">
+
+<table class="property-table">
+
+<thead>
+
+<tr>
+<th>Foto</th>
+<th>Propiedad</th>
+<th>Tipo</th>
+<th>Operación</th>
+<th>Ubicación</th>
+<th>Precio</th>
+<th>Estado</th>
+<th>Acciones</th>
+</tr>
+
+</thead>
+
+<tbody id="propertiesTableBody">
+
+<tr>
+<td colspan="8">
+Cargando propiedades...
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section id="proyectos" class="section">
+
+<h1 class="page-title">
+Proyectos inmobiliarios
+</h1>
+
+<p class="page-subtitle">
+Administra los proyectos que aparecen en la página pública.
+</p>
+
+<div class="panel">
+
+<div class="module-toolbar">
+
+<h2>
+Proyectos
+</h2>
+
+<button
+class="action-btn action-primary"
+id="newProjectBtn"
+>
++ Nuevo proyecto
+</button>
+
+</div>
+
+
+<div
+id="projectForm"
+class="module-form"
+>
+
+<div class="form-grid">
+
+<div class="field">
+<label>Nombre</label>
+<input id="prNombre" required>
+</div>
+
+<div class="field">
+<label>Categoría</label>
+<input
+id="prCategoria"
+placeholder="Urbanización, residencial, casas..."
+>
+</div>
+
+<div class="field">
+<label>Ubicación</label>
+<input id="prUbicacion">
+</div>
+
+<div class="field">
+<label>Precio</label>
+<input id="prPrecio">
+</div>
+
+<div class="field">
+<label>WhatsApp</label>
+<input id="prWhatsapp">
+</div>
+
+<div class="field">
+<label>Estado</label>
+
+<select id="prEstado">
+
+<option>Publicado</option>
+<option>Borrador</option>
+<option>Oculto</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>
+Imagen principal
+</label>
+
+<input
+id="prImagen"
+type="file"
+accept="image/png,image/jpeg,image/webp"
+>
+
+<small
+style="
+display:block;
+margin-top:6px;
+color:#9fb0c0
+"
+>
+Al editar, deja este campo vacío para conservar la foto actual.
+</small>
+
+</div>
+
+<div class="field">
+
+<label>
+Destacado
+</label>
+
+<select id="prDestacado">
+
+<option value="false">
+No
+</option>
+
+<option value="true">
+Sí
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>
+Descripción corta
+</label>
+
+<textarea id="prDesc"></textarea>
+
+</div>
+
+</div>
+
+
+<div class="form-actions">
+
+<button
+class="action-btn action-primary"
+id="saveProjectBtn"
+>
+Guardar
+</button>
+
+<button
+class="action-btn action-secondary"
+id="cancelProjectBtn"
+>
+Cancelar
+</button>
+
+</div>
+
+<div
+id="projectMsg"
+class="module-msg"
+></div>
+
+</div>
+
+<div
+id="projectsTable"
+class="table-wrap"
+></div>
+
+</div>
+
+</section>
+
+
+<section id="asesores" class="section">
+
+<h1 class="page-title">
+Asesores inmobiliarios
+</h1>
+
+<p class="page-subtitle">
+Gestiona captadores, colocadores y asesores.
+</p>
+
+<div class="panel">
+
+<div class="module-toolbar">
+
+<h2>
+Equipo comercial
+</h2>
+
+<button
+class="action-btn action-primary"
+id="newAdvisorBtn"
+>
++ Nuevo asesor
+</button>
+
+</div>
+
+
+<div
+id="advisorForm"
+class="module-form"
+>
+
+<div class="form-grid">
+
+<div class="field">
+<label>Nombre</label>
+<input id="aNombre">
+</div>
+
+<div class="field">
+<label>Fotografía / URL</label>
+<input id="aFoto">
+</div>
+
+<div class="field">
+<label>Teléfono</label>
+<input id="aTelefono">
+</div>
+
+<div class="field">
+<label>WhatsApp</label>
+<input id="aWhatsapp">
+</div>
+
+<div class="field">
+<label>Cargo</label>
+<input
+id="aCargo"
+placeholder="Asesor / Captador / Colocador"
+>
+</div>
+
+<div class="field">
+<label>Estado</label>
+
+<select id="aEstado">
+<option>Activo</option>
+<option>Inactivo</option>
+</select>
+
+</div>
+
+</div>
+
+<div class="form-actions">
+
+<button
+class="action-btn action-primary"
+id="saveAdvisorBtn"
+>
+Guardar
+</button>
+
+<button
+class="action-btn action-secondary"
+id="cancelAdvisorBtn"
+>
+Cancelar
+</button>
+
+</div>
+
+<div
+id="advisorMsg"
+class="module-msg"
+></div>
+
+</div>
+
+<div
+id="advisorsTable"
+class="table-wrap"
+></div>
+
+</div>
+
+</section>
+
+
+<section id="operaciones" class="section">
+
+<h1 class="page-title">
+Operaciones
+</h1>
+
+<p class="page-subtitle">
+Ventas, alquileres, anticréticos y créditos directos.
+</p>
+
+<div class="panel">
+
+<div class="module-toolbar">
+
+<h2>
+Operaciones
+</h2>
+
+<button
+class="action-btn action-primary"
+id="newOperationBtn"
+>
++ Nueva operación
+</button>
+
+</div>
+
+
+<div
+id="operationForm"
+class="module-form"
+>
+
+<div class="form-grid">
+
+<div class="field">
+<label>Inmueble ID</label>
+<input id="oInmueble">
+</div>
+
+<div class="field">
+<label>Proyecto ID</label>
+<input id="oProyecto">
+</div>
+
+<div class="field">
+<label>Captador ID</label>
+<input id="oCaptador">
+</div>
+
+<div class="field">
+<label>Colocador ID</label>
+<input id="oColocador">
+</div>
+
+<div class="field">
+<label>Precio</label>
+<input id="oPrecio">
+</div>
+
+<div class="field">
+<label>Fecha</label>
+<input id="oFecha" type="date">
+</div>
+
+<div class="field">
+<label>Estado</label>
+
+<select id="oEstado">
+<option>En proceso</option>
+<option>Reservado</option>
+<option>Concretado</option>
+<option>Cancelado</option>
+</select>
+
+</div>
+
+</div>
+
+<div class="form-actions">
+
+<button
+class="action-btn action-primary"
+id="saveOperationBtn"
+>
+Guardar
+</button>
+
+<button
+class="action-btn action-secondary"
+id="cancelOperationBtn"
+>
+Cancelar
+</button>
+
+</div>
+
+<div
+id="operationMsg"
+class="module-msg"
+></div>
+
+</div>
+
+<div
+id="operationsTable"
+class="table-wrap"
+></div>
+
+</div>
+
+</section>
+
+
+<section id="comisiones" class="section">
+
+<h1 class="page-title">
+Comisiones
+</h1>
+
+<p class="page-subtitle">
+Control y seguimiento de pagos de comisión.
+</p>
+
+<div class="panel">
+
+<div class="module-toolbar">
+
+<h2>
+Comisiones
+</h2>
+
+<button
+class="action-btn action-primary"
+id="newCommissionBtn"
+>
++ Nueva comisión
+</button>
+
+</div>
+
+
+<div
+id="commissionForm"
+class="module-form"
+>
+
+<div class="form-grid">
+
+<div class="field">
+<label>Asesor ID</label>
+<input id="cAsesor">
+</div>
+
+<div class="field">
+<label>Rol</label>
+<input id="cRol">
+</div>
+
+<div class="field">
+<label>Porcentaje</label>
+<input id="cPorcentaje">
+</div>
+
+<div class="field">
+<label>Monto</label>
+<input id="cMonto">
+</div>
+
+<div class="field">
+<label>Estado</label>
+
+<select id="cEstado">
+<option>Pendiente</option>
+<option>Pagada</option>
+<option>Anulada</option>
+</select>
+
+</div>
+
+<div class="field">
+<label>Fecha de pago</label>
+<input id="cFecha" type="date">
+</div>
+
+</div>
+
+<div class="form-actions">
+
+<button
+class="action-btn action-primary"
+id="saveCommissionBtn"
+>
+Guardar
+</button>
+
+<button
+class="action-btn action-secondary"
+id="cancelCommissionBtn"
+>
+Cancelar
+</button>
+
+</div>
+
+<div
+id="commissionMsg"
+class="module-msg"
+></div>
+
+</div>
+
+<div
+id="commissionsTable"
+class="table-wrap"
+></div>
+
+</div>
+
+</section>
+
+
+<section id="imagenes" class="section">
+
+<h1 class="page-title">
+Imágenes
+</h1>
+
+<p class="page-subtitle">
+Biblioteca de imágenes de propiedades y proyectos.
+</p>
+
+<div class="panel">
+
+<div class="module-toolbar">
+
+<h2>
+Galería
+</h2>
+
+<button
+class="action-btn action-primary"
+id="newImageBtn"
+>
++ Registrar imagen
+</button>
+
+</div>
+
+
+<div
+id="imageForm"
+class="module-form"
+>
+
+<div class="form-grid">
+
+<div class="field">
+<label>Inmueble ID</label>
+<input id="iInmueble">
+</div>
+
+<div class="field">
+<label>Proyecto ID</label>
+<input id="iProyecto">
+</div>
+
+<div class="field">
+<label>Ruta / URL de imagen</label>
+<input id="iUrl">
+</div>
+
+<div class="field">
+<label>Orden</label>
+<input
+id="iOrden"
+type="number"
+value="0"
+>
+</div>
+
+</div>
+
+<div class="form-actions">
+
+<button
+class="action-btn action-primary"
+id="saveImageBtn"
+>
+Guardar
+</button>
+
+<button
+class="action-btn action-secondary"
+id="cancelImageBtn"
+>
+Cancelar
+</button>
+
+</div>
+
+<div
+id="imageMsg"
+class="module-msg"
+></div>
+
+</div>
+
+<div
+id="imagesTable"
+class="table-wrap"
+></div>
+
+</div>
+
+</section>
+
+
+<section id="configuracion" class="section">
+
+<h1 class="page-title">
+Configuración
+</h1>
+
+<p class="page-subtitle">
+Configuración general del sitio web.
+</p>
+
+<div class="panel config-box">
+
+<h2>
+Logo de TVEO Business
+</h2>
+
+<p class="notice">
+Sube o cambia el logo desde aquí. El logo se guarda
+en el Storage de este proyecto de Supabase.
+</p>
+
+<div class="upload-area">
+
+<div
+class="logo-preview"
+id="logoPreview"
+>
+Sin logo
+</div>
+
+<label
+class="upload-btn"
+for="logoInput"
+>
+🖼️ Seleccionar logo
+</label>
+
+<input
+type="file"
+id="logoInput"
+accept="image/png,image/jpeg,image/webp,image/svg+xml"
+>
+
+<div
+id="logoMessage"
+class="message"
+></div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+</div>
+</div>
+
+
 <script>
+
 const SUPABASE_URL='https://jefvmwhkalypvrpiwcuj.supabase.co';
+
 const SUPABASE_KEY='sb_publishable_yj7GqpJpBjtzemuSnke7mQ_bXzeReDy';
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const supabaseClient=
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+/* =========================
+   LOGIN
+========================= */
 
 const loginScreen=document.getElementById('loginScreen');
 const adminApp=document.getElementById('adminApp');
@@ -310,404 +1754,2521 @@ const loginMessage=document.getElementById('loginMessage');
 const loginBtn=document.getElementById('loginBtn');
 const logoutBtn=document.getElementById('logoutBtn');
 
+
 function mostrarAdministrador(){
-  loginScreen.classList.add('hidden');
-  adminApp.classList.remove('hidden');
+
+loginScreen.classList.add('hidden');
+
+adminApp.classList.remove('hidden');
+
 }
+
+
 function mostrarLogin(){
-  adminApp.classList.add('hidden');
-  loginScreen.classList.remove('hidden');
+
+adminApp.classList.add('hidden');
+
+loginScreen.classList.remove('hidden');
+
 }
+
+
 function mostrarError(msg){
-  loginMessage.innerHTML='<div class="error-box">'+msg+'</div>';
+
+loginMessage.innerHTML=
+'<div class="error-box">'+
+msg+
+'</div>';
+
 }
+
 
 async function verificarAdministrador(){
-  const {data:{user},error:userError}=await supabaseClient.auth.getUser();
 
-  if(userError||!user){
-    mostrarLogin();
-    return false;
-  }
+const {
+data:{user},
+error:userError
+}=await supabaseClient.auth.getUser();
 
-  const {data,error}=await supabaseClient.rpc('verificar_admin_actual');
 
-  console.log('Verificación de administrador:',{data,error,userId:user.id});
+if(userError||!user){
 
-  const admin=Array.isArray(data)?data[0]:data;
+mostrarLogin();
 
-  if(error||!admin||admin.rol!=='Administrador'||admin.activo!==true){
-    await supabaseClient.auth.signOut();
-    mostrarError('Este usuario no tiene permisos de administrador.');
-    mostrarLogin();
-    return false;
-  }
+return false;
 
-  mostrarAdministrador();
-  await cargarDashboard();
-  await cargarPropiedades();
-  await cargarLogo();
-  return true;
 }
 
-loginForm.addEventListener('submit',async(e)=>{
-  e.preventDefault();
 
-  loginBtn.disabled=true;
-  loginBtn.textContent='INGRESANDO...';
-  loginMessage.textContent='';
+const {
+data,
+error
+}=await supabaseClient.rpc(
+'verificar_admin_actual'
+);
 
-  const email=document.getElementById('email').value.trim();
-  const password=document.getElementById('password').value;
 
-  const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+console.log(
+'Verificación de administrador:',
+{
+data,
+error,
+userId:user.id
+}
+);
 
-  if(error){
-    console.error('Error de login:',error);
-    mostrarError('Correo o contraseña incorrectos.');
-    loginBtn.disabled=false;
-    loginBtn.textContent='INGRESAR';
-    return;
-  }
 
-  await verificarAdministrador();
+const admin=
+Array.isArray(data)
+?data[0]
+:data;
 
-  loginBtn.disabled=false;
-  loginBtn.textContent='INGRESAR';
+
+if(
+error||
+!admin||
+admin.rol!=='Administrador'||
+admin.activo!==true
+){
+
+await supabaseClient.auth.signOut();
+
+mostrarError(
+'Este usuario no tiene permisos de administrador.'
+);
+
+mostrarLogin();
+
+return false;
+
+}
+
+
+mostrarAdministrador();
+
+await cargarDashboard();
+
+await cargarPropiedades();
+
+await cargarLogo();
+
+return true;
+
+}
+
+
+loginForm.addEventListener(
+'submit',
+async(e)=>{
+
+e.preventDefault();
+
+loginBtn.disabled=true;
+
+loginBtn.textContent='INGRESANDO...';
+
+loginMessage.textContent='';
+
+
+const email=
+document.getElementById('email')
+.value
+.trim();
+
+const password=
+document.getElementById('password')
+.value;
+
+
+const {
+error
+}=await supabaseClient.auth.signInWithPassword({
+email,
+password
 });
 
-logoutBtn.addEventListener('click',async()=>{
-  await supabaseClient.auth.signOut();
-  mostrarLogin();
-  loginMessage.textContent='';
+
+if(error){
+
+console.error(
+'Error de login:',
+error
+);
+
+mostrarError(
+'Correo o contraseña incorrectos.'
+);
+
+loginBtn.disabled=false;
+
+loginBtn.textContent='INGRESAR';
+
+return;
+
+}
+
+
+await verificarAdministrador();
+
+loginBtn.disabled=false;
+
+loginBtn.textContent='INGRESAR';
+
 });
 
-document.querySelectorAll('.menu-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
 
-    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+logoutBtn.addEventListener(
+'click',
+async()=>{
 
-    const target=document.getElementById(btn.dataset.section);
-    if(target)target.classList.add('active');
-  });
+await supabaseClient.auth.signOut();
+
+mostrarLogin();
+
+loginMessage.textContent='';
+
 });
 
+
+/* =========================
+   NAVEGACIÓN
+========================= */
+
+document
+.querySelectorAll('.menu-btn')
+.forEach(btn=>{
+
+btn.addEventListener(
+'click',
+()=>{
+
+document
+.querySelectorAll('.menu-btn')
+.forEach(b=>
+b.classList.remove('active')
+);
+
+btn.classList.add('active');
+
+
+document
+.querySelectorAll('.section')
+.forEach(s=>
+s.classList.remove('active')
+);
+
+
+const target=
+document.getElementById(
+btn.dataset.section
+);
+
+
+if(target){
+target.classList.add('active');
+}
+
+const key=btn.dataset.section;
+
+if(configs[key]){
+loadModule(key);
+}
+
+});
+
+});
+
+
+/* =========================
+   HELPERS
+========================= */
 
 function publicImageUrl(path){
-  if(!path) return '';
-  if(/^https?:\/\//i.test(path)) return path;
-  return supabaseClient.storage.from('inmobiliaria').getPublicUrl(path).data.publicUrl || '';
+
+if(!path)return '';
+
+if(/^https?:\/\//i.test(path)){
+return path;
 }
+
+return supabaseClient
+.storage
+.from('inmobiliaria')
+.getPublicUrl(path)
+.data
+.publicUrl || '';
+
+}
+
 
 function escapeHtml(value){
-  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+
+return String(value??'')
+.replace(
+/[&<>"']/g,
+c=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#039;'
+}[c])
+);
+
 }
+
+
+/* =========================
+   PROPIEDADES
+========================= */
 
 async function cargarPropiedades(){
-  const tbody=document.getElementById('propertiesTableBody');
-  const message=document.getElementById('propertiesMessage');
-  tbody.innerHTML='<tr><td colspan="8">Cargando propiedades...</td></tr>';
-  message.textContent='';
 
-  const {data,error}=await supabaseClient
-    .from('inmuebles')
-    .select('*')
-    .order('destacado',{ascending:false})
-    .order('created_at',{ascending:false});
+const tbody=
+document.getElementById(
+'propertiesTableBody'
+);
 
-  if(error){
-    console.error('Error cargando propiedades:',error);
-    tbody.innerHTML='<tr><td colspan="8">No se pudieron cargar las propiedades.</td></tr>';
-    message.textContent='Error: '+(error.message||'No se pudo consultar inmuebles.');
-    return;
-  }
+const message=
+document.getElementById(
+'propertiesMessage'
+);
 
-  if(!data?.length){
-    tbody.innerHTML='<tr><td colspan="8">No hay propiedades registradas todavía.</td></tr>';
-    return;
-  }
 
-  tbody.innerHTML=data.map(x=>{
-    const img=publicImageUrl(x.imagen_principal);
-    return `<tr>
-      <td>${img?`<img class="property-thumb" src="${escapeHtml(img)}" onerror="this.style.display='none'">`:'—'}</td>
-      <td><strong>${escapeHtml(x.titulo||'Sin título')}</strong>${x.destacado?'<div class="featured-mark">★ Destacada</div>':''}</td>
-      <td>${escapeHtml(x.tipo||'—')}</td>
-      <td>${escapeHtml(x.operacion||'—')}</td>
-      <td>${escapeHtml(x.ubicacion||'—')}</td>
-      <td>${escapeHtml(x.precio||'Consultar')}</td>
-      <td><span class="status">${escapeHtml(x.estado||'—')}</span></td>
-      <td>
-        <div class="property-actions">
-          <button class="action-btn action-secondary" onclick="editarPropiedad('${escapeHtml(x.id)}')">Editar</button>
-          <button class="action-btn action-danger" onclick="eliminarPropiedad('${escapeHtml(x.id)}')">Eliminar</button>
-        </div>
-      </td>
-    </tr>`;
-  }).join('');
+tbody.innerHTML=
+'<tr><td colspan="8">Cargando propiedades...</td></tr>';
+
+message.textContent='';
+
+
+const {
+data,
+error
+}=await supabaseClient
+.from('inmuebles')
+.select('*')
+.order(
+'destacado',
+{ascending:false}
+)
+.order(
+'created_at',
+{ascending:false}
+);
+
+
+if(error){
+
+console.error(
+'Error cargando propiedades:',
+error
+);
+
+tbody.innerHTML=
+'<tr><td colspan="8">No se pudieron cargar las propiedades.</td></tr>';
+
+message.textContent=
+'Error: '+
+(error.message||
+'No se pudo consultar inmuebles.');
+
+return;
+
 }
+
+
+if(!data?.length){
+
+tbody.innerHTML=
+'<tr><td colspan="8">No hay propiedades registradas todavía.</td></tr>';
+
+return;
+
+}
+
+
+tbody.innerHTML=
+data.map(x=>{
+
+const img=
+publicImageUrl(
+x.imagen_principal
+);
+
+
+return `<tr>
+
+<td>
+
+${
+img
+?
+`<img
+class="property-thumb"
+src="${escapeHtml(img)}"
+onerror="this.style.display='none'"
+>`
+:'—'
+}
+
+</td>
+
+<td>
+
+<strong>
+${escapeHtml(x.titulo||'Sin título')}
+</strong>
+
+${
+x.destacado
+?
+'<div class="featured-mark">★ Destacada</div>'
+:''
+}
+
+</td>
+
+<td>
+${escapeHtml(x.tipo||'—')}
+</td>
+
+<td>
+${escapeHtml(x.operacion||'—')}
+</td>
+
+<td>
+${escapeHtml(x.ubicacion||'—')}
+</td>
+
+<td>
+${escapeHtml(x.precio||'Consultar')}
+</td>
+
+<td>
+<span class="status">
+${escapeHtml(x.estado||'—')}
+</span>
+</td>
+
+<td>
+
+<div class="property-actions">
+
+<button
+class="action-btn action-secondary"
+onclick="editarPropiedad('${escapeHtml(x.id)}')"
+>
+Editar
+</button>
+
+<button
+class="action-btn action-danger"
+onclick="eliminarPropiedad('${escapeHtml(x.id)}')"
+>
+Eliminar
+</button>
+
+</div>
+
+</td>
+
+</tr>`;
+
+}).join('');
+
+}
+
 
 function abrirNuevaPropiedad(){
-  document.getElementById('propertyId').value='';
-  document.getElementById('propertyEditor').reset();
-  document.getElementById('pEstado').value='Disponible';
-  document.getElementById('propertyFormTitle').textContent='Nueva propiedad';
-  document.getElementById('propertyFormMessage').textContent='';
-  document.getElementById('propertyForm').classList.add('open');
-  document.getElementById('pTitulo').focus();
+
+document.getElementById(
+'propertyId'
+).value='';
+
+document.getElementById(
+'propertyEditor'
+).reset();
+
+document.getElementById(
+'pEstado'
+).value='Disponible';
+
+document.getElementById(
+'propertyFormTitle'
+).textContent='Nueva propiedad';
+
+document.getElementById(
+'propertyFormMessage'
+).textContent='';
+
+document.getElementById(
+'propertyForm'
+).classList.add('open');
+
+document.getElementById(
+'pTitulo'
+).focus();
+
 }
+
 
 async function editarPropiedad(id){
-  const {data,error}=await supabaseClient.from('inmuebles').select('*').eq('id',id).single();
-  if(error||!data){
-    alert('No se pudo cargar la propiedad.');
-    return;
-  }
 
-  document.getElementById('propertyId').value=data.id||'';
-  document.getElementById('pTitulo').value=data.titulo||'';
-  document.getElementById('pTipo').value=data.tipo||'';
-  document.getElementById('pOperacion').value=data.operacion||'';
-  document.getElementById('pUbicacion').value=data.ubicacion||'';
-  document.getElementById('pPrecio').value=data.precio||'';
-  document.getElementById('pSuperficie').value=data.superficie||'';
-  document.getElementById('pWhatsapp').value=data.whatsapp||'';
-  document.getElementById('pEstado').value=data.estado||'Disponible';
-  document.getElementById('pDescripcion').value=data.descripcion||'';
-  document.getElementById('pDestacado').checked=!!data.destacado;
-  document.getElementById('pImagen').value='';
-  document.getElementById('propertyFormTitle').textContent='Editar propiedad';
-  document.getElementById('propertyFormMessage').textContent='';
-  document.getElementById('propertyForm').classList.add('open');
-  document.getElementById('pTitulo').focus();
+const {
+data,
+error
+}=await supabaseClient
+.from('inmuebles')
+.select('*')
+.eq('id',id)
+.single();
+
+
+if(error||!data){
+
+alert(
+'No se pudo cargar la propiedad.'
+);
+
+return;
+
 }
+
+
+document.getElementById(
+'propertyId'
+).value=data.id||'';
+
+document.getElementById(
+'pTitulo'
+).value=data.titulo||'';
+
+document.getElementById(
+'pTipo'
+).value=data.tipo||'';
+
+document.getElementById(
+'pOperacion'
+).value=data.operacion||'';
+
+document.getElementById(
+'pUbicacion'
+).value=data.ubicacion||'';
+
+document.getElementById(
+'pPrecio'
+).value=data.precio||'';
+
+document.getElementById(
+'pSuperficie'
+).value=data.superficie||'';
+
+document.getElementById(
+'pWhatsapp'
+).value=data.whatsapp||'';
+
+document.getElementById(
+'pEstado'
+).value=data.estado||'Disponible';
+
+document.getElementById(
+'pDescripcion'
+).value=data.descripcion||'';
+
+document.getElementById(
+'pDestacado'
+).checked=!!data.destacado;
+
+document.getElementById(
+'pImagen'
+).value='';
+
+document.getElementById(
+'propertyFormTitle'
+).textContent='Editar propiedad';
+
+document.getElementById(
+'propertyFormMessage'
+).textContent='';
+
+document.getElementById(
+'propertyForm'
+).classList.add('open');
+
+document.getElementById(
+'pTitulo'
+).focus();
+
+}
+
 
 function cerrarFormularioPropiedad(){
-  document.getElementById('propertyForm').classList.remove('open');
-  document.getElementById('propertyEditor').reset();
-  document.getElementById('propertyId').value='';
+
+document.getElementById(
+'propertyForm'
+).classList.remove('open');
+
+document.getElementById(
+'propertyEditor'
+).reset();
+
+document.getElementById(
+'propertyId'
+).value='';
+
 }
+
 
 async function guardarImagenPrincipal(file){
-  if(!file) return null;
-  const extension=(file.name.split('.').pop()||'jpg').toLowerCase();
-  const path=`inmuebles/${Date.now()}-${Math.random().toString(36).slice(2,9)}.${extension}`;
-  const {error}=await supabaseClient.storage.from('inmobiliaria').upload(path,file,{upsert:false,contentType:file.type});
-  if(error) throw error;
-  return path;
+
+if(!file)return null;
+
+
+const extension=
+(file.name.split('.').pop()||'jpg')
+.toLowerCase();
+
+
+const path=
+`inmuebles/${Date.now()}-${Math.random().toString(36).slice(2,9)}.${extension}`;
+
+
+const {
+error
+}=await supabaseClient
+.storage
+.from('inmobiliaria')
+.upload(
+path,
+file,
+{
+upsert:false,
+contentType:file.type
+}
+);
+
+
+if(error)throw error;
+
+return path;
+
 }
 
-document.getElementById('newPropertyBtn').addEventListener('click',abrirNuevaPropiedad);
-document.getElementById('cancelPropertyBtn').addEventListener('click',cerrarFormularioPropiedad);
 
-document.getElementById('propertyEditor').addEventListener('submit',async e=>{
-  e.preventDefault();
-  const btn=document.getElementById('savePropertyBtn');
-  const msg=document.getElementById('propertyFormMessage');
-  btn.disabled=true;
-  btn.textContent='GUARDANDO...';
-  msg.textContent='';
+document
+.getElementById('newPropertyBtn')
+.addEventListener(
+'click',
+abrirNuevaPropiedad
+);
 
-  try{
-    const id=document.getElementById('propertyId').value.trim();
-    const file=document.getElementById('pImagen').files[0];
-    let imagenPrincipal=null;
 
-    if(file){
-      imagenPrincipal=await guardarImagenPrincipal(file);
-    }
+document
+.getElementById('cancelPropertyBtn')
+.addEventListener(
+'click',
+cerrarFormularioPropiedad
+);
 
-    const payload={
-      titulo:document.getElementById('pTitulo').value.trim(),
-      tipo:document.getElementById('pTipo').value,
-      operacion:document.getElementById('pOperacion').value,
-      ubicacion:document.getElementById('pUbicacion').value.trim(),
-      precio:document.getElementById('pPrecio').value.trim(),
-      superficie:document.getElementById('pSuperficie').value.trim(),
-      whatsapp:document.getElementById('pWhatsapp').value.trim(),
-      estado:document.getElementById('pEstado').value,
-      descripcion:document.getElementById('pDescripcion').value.trim(),
-      destacado:document.getElementById('pDestacado').checked
-    };
 
-    if(imagenPrincipal) payload.imagen_principal=imagenPrincipal;
+document
+.getElementById('propertyEditor')
+.addEventListener(
+'submit',
+async e=>{
 
-    let result;
-    if(id){
-      result=await supabaseClient.from('inmuebles').update(payload).eq('id',id).select().single();
-    }else{
-      result=await supabaseClient.from('inmuebles').insert(payload).select().single();
-    }
+e.preventDefault();
 
-    if(result.error) throw result.error;
+const btn=
+document.getElementById(
+'savePropertyBtn'
+);
 
-    msg.textContent='✓ Propiedad guardada correctamente.';
-    await cargarPropiedades();
-    await cargarDashboard();
-    setTimeout(cerrarFormularioPropiedad,500);
-  }catch(error){
-    console.error('Error guardando propiedad:',error);
-    msg.textContent='No se pudo guardar: '+(error.message||'error desconocido');
-  }finally{
-    btn.disabled=false;
-    btn.textContent='Guardar propiedad';
-  }
+const msg=
+document.getElementById(
+'propertyFormMessage'
+);
+
+
+btn.disabled=true;
+
+btn.textContent='GUARDANDO...';
+
+msg.textContent='';
+
+
+try{
+
+const id=
+document.getElementById(
+'propertyId'
+).value.trim();
+
+
+const file=
+document.getElementById(
+'pImagen'
+).files[0];
+
+
+let imagenPrincipal=null;
+
+
+if(file){
+
+imagenPrincipal=
+await guardarImagenPrincipal(file);
+
+}
+
+
+const payload={
+
+titulo:
+document.getElementById(
+'pTitulo'
+).value.trim(),
+
+tipo:
+document.getElementById(
+'pTipo'
+).value,
+
+operacion:
+document.getElementById(
+'pOperacion'
+).value,
+
+ubicacion:
+document.getElementById(
+'pUbicacion'
+).value.trim(),
+
+precio:
+document.getElementById(
+'pPrecio'
+).value.trim(),
+
+superficie:
+document.getElementById(
+'pSuperficie'
+).value.trim(),
+
+whatsapp:
+document.getElementById(
+'pWhatsapp'
+).value.trim(),
+
+estado:
+document.getElementById(
+'pEstado'
+).value,
+
+descripcion:
+document.getElementById(
+'pDescripcion'
+).value.trim(),
+
+destacado:
+document.getElementById(
+'pDestacado'
+).checked
+
+};
+
+
+if(imagenPrincipal){
+
+payload.imagen_principal=
+imagenPrincipal;
+
+}
+
+
+let result;
+
+
+if(id){
+
+result=
+await supabaseClient
+.from('inmuebles')
+.update(payload)
+.eq('id',id)
+.select()
+.single();
+
+}else{
+
+result=
+await supabaseClient
+.from('inmuebles')
+.insert(payload)
+.select()
+.single();
+
+}
+
+
+if(result.error){
+throw result.error;
+}
+
+
+msg.textContent=
+'✓ Propiedad guardada correctamente.';
+
+
+await cargarPropiedades();
+
+await cargarDashboard();
+
+
+setTimeout(
+cerrarFormularioPropiedad,
+500
+);
+
+
+}catch(error){
+
+console.error(
+'Error guardando propiedad:',
+error
+);
+
+msg.textContent=
+'No se pudo guardar: '+
+(error.message||
+'error desconocido');
+
+
+}finally{
+
+btn.disabled=false;
+
+btn.textContent=
+'Guardar propiedad';
+
+}
+
 });
+
 
 async function eliminarPropiedad(id){
-  if(!confirm('¿Seguro que deseas eliminar esta propiedad? Esta acción no se puede deshacer.')) return;
 
-  const {error}=await supabaseClient.from('inmuebles').delete().eq('id',id);
-  if(error){
-    console.error('Error eliminando propiedad:',error);
-    document.getElementById('propertiesMessage').textContent='No se pudo eliminar: '+(error.message||'error desconocido');
-    return;
-  }
+if(
+!confirm(
+'¿Seguro que deseas eliminar esta propiedad? Esta acción no se puede deshacer.'
+)
+)return;
 
-  document.getElementById('propertiesMessage').textContent='✓ Propiedad eliminada.';
-  await cargarPropiedades();
-  await cargarDashboard();
+
+const {
+error
+}=await supabaseClient
+.from('inmuebles')
+.delete()
+.eq('id',id);
+
+
+if(error){
+
+console.error(
+'Error eliminando propiedad:',
+error
+);
+
+document.getElementById(
+'propertiesMessage'
+).textContent=
+'No se pudo eliminar: '+
+(error.message||
+'error desconocido');
+
+return;
+
 }
+
+
+document.getElementById(
+'propertiesMessage'
+).textContent=
+'✓ Propiedad eliminada.';
+
+
+await cargarPropiedades();
+
+await cargarDashboard();
+
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
 
 async function cargarDashboard(){
-  const [properties,projects,advisors,operations]=await Promise.all([
-    supabaseClient.from('inmuebles').select('id',{count:'exact',head:true}),
-    supabaseClient.from('proyectos').select('id',{count:'exact',head:true}),
-    supabaseClient.from('asesores').select('id',{count:'exact',head:true}),
-    supabaseClient.from('operaciones').select('id',{count:'exact',head:true})
-  ]);
 
-  document.getElementById('statProperties').textContent=properties.count??0;
-  document.getElementById('statProjects').textContent=projects.count??0;
-  document.getElementById('statAdvisors').textContent=advisors.count??0;
-  document.getElementById('statOperations').textContent=operations.count??0;
+const [
+properties,
+projects,
+advisors,
+operations
+]=await Promise.all([
+
+supabaseClient
+.from('inmuebles')
+.select(
+'id',
+{count:'exact',head:true}
+),
+
+supabaseClient
+.from('proyectos')
+.select(
+'id',
+{count:'exact',head:true}
+),
+
+supabaseClient
+.from('asesores')
+.select(
+'id',
+{count:'exact',head:true}
+),
+
+supabaseClient
+.from('operaciones')
+.select(
+'id',
+{count:'exact',head:true}
+)
+
+]);
+
+
+document.getElementById(
+'statProperties'
+).textContent=
+properties.count??0;
+
+
+document.getElementById(
+'statProjects'
+).textContent=
+projects.count??0;
+
+
+document.getElementById(
+'statAdvisors'
+).textContent=
+advisors.count??0;
+
+
+document.getElementById(
+'statOperations'
+).textContent=
+operations.count??0;
+
 }
+
+
+/* =========================
+   LOGO
+========================= */
 
 async function cargarLogo(){
-  const {data,error}=await supabaseClient
-    .from('configuracion_sitio')
-    .select('logo_url')
-    .eq('id',1)
-    .maybeSingle();
 
-  if(error){
-    console.error('Error cargando configuración:',error);
-    return;
-  }
+const {
+data,
+error
+}=await supabaseClient
+.from('configuracion_sitio')
+.select('logo_url')
+.eq('id',1)
+.maybeSingle();
 
-  if(data?.logo_url)aplicarLogo(data.logo_url);
+
+if(error){
+
+console.error(
+'Error cargando configuración:',
+error
+);
+
+return;
+
 }
+
+
+if(data?.logo_url){
+
+aplicarLogo(
+data.logo_url
+);
+
+}
+
+}
+
 
 function aplicarLogo(url){
-  document.getElementById('loginLogo').innerHTML='<img src="'+url+'" alt="TVEO Business">';
-  document.getElementById('brandLogo').innerHTML='<img src="'+url+'" alt="TVEO Business">';
-  document.getElementById('logoPreview').innerHTML='<img src="'+url+'" alt="Logo TVEO Business">';
+
+document.getElementById(
+'loginLogo'
+).innerHTML=
+'<img src="'+url+'" alt="TVEO Business">';
+
+
+document.getElementById(
+'brandLogo'
+).innerHTML=
+'<img src="'+url+'" alt="TVEO Business">';
+
+
+document.getElementById(
+'logoPreview'
+).innerHTML=
+'<img src="'+url+'" alt="Logo TVEO Business">';
+
 }
 
-document.getElementById('logoInput').addEventListener('change',async function(){
-  const file=this.files[0];
-  if(!file)return;
 
-  const message=document.getElementById('logoMessage');
-  message.textContent='Subiendo logo...';
+document
+.getElementById('logoInput')
+.addEventListener(
+'change',
+async function(){
 
-  try{
-    const extension=file.name.split('.').pop().toLowerCase();
-    const filePath='configuracion/logo-tveo-'+Date.now()+'.'+extension;
+const file=this.files[0];
 
-    const {error:uploadError}=await supabaseClient
-      .storage.from('inmobiliaria')
-      .upload(filePath,file,{upsert:true,contentType:file.type});
+if(!file)return;
 
-    if(uploadError)throw uploadError;
 
-    const {data}=supabaseClient
-      .storage.from('inmobiliaria')
-      .getPublicUrl(filePath);
+const message=
+document.getElementById(
+'logoMessage'
+);
 
-    const logoUrl=data.publicUrl;
+message.textContent=
+'Subiendo logo...';
 
-    const {error:saveError}=await supabaseClient
-      .from('configuracion_sitio')
-      .upsert({id:1,logo_url:logoUrl});
 
-    if(saveError)throw saveError;
+try{
 
-    aplicarLogo(logoUrl);
-    message.textContent='✓ Logo guardado correctamente.';
-  }catch(error){
-    console.error('Error guardando logo:',error);
-    message.textContent='No se pudo guardar el logo: '+(error.message||'error desconocido');
-  }
+const extension=
+file.name
+.split('.')
+.pop()
+.toLowerCase();
+
+
+const filePath=
+'configuracion/logo-tveo-'+
+Date.now()+
+'.'+
+extension;
+
+
+const {
+error:uploadError
+}=await supabaseClient
+.storage
+.from('inmobiliaria')
+.upload(
+filePath,
+file,
+{
+upsert:true,
+contentType:file.type
+}
+);
+
+
+if(uploadError){
+throw uploadError;
+}
+
+
+const {data}=
+supabaseClient
+.storage
+.from('inmobiliaria')
+.getPublicUrl(
+filePath
+);
+
+
+const logoUrl=
+data.publicUrl;
+
+
+const {
+error:saveError
+}=await supabaseClient
+.from('configuracion_sitio')
+.upsert({
+id:1,
+logo_url:logoUrl
 });
 
-(async()=>{
-  const {data:{session}}=await supabaseClient.auth.getSession();
 
-  if(session){
-    await verificarAdministrador();
-  }
+if(saveError){
+throw saveError;
+}
+
+
+aplicarLogo(
+logoUrl
+);
+
+message.textContent=
+'✓ Logo guardado correctamente.';
+
+
+}catch(error){
+
+console.error(
+'Error guardando logo:',
+error
+);
+
+message.textContent=
+'No se pudo guardar el logo: '+
+(error.message||
+'error desconocido');
+
+}
+
+});
+
+
+/* =========================
+   SESIÓN INICIAL
+========================= */
+
+(async()=>{
+
+const {
+data:{session}
+}=await supabaseClient.auth.getSession();
+
+
+if(session){
+
+await verificarAdministrador();
+
+}
+
 })();
 
 
-// ===== TVEO BUSINESS: módulos administrativos =====
-const moduleState={projectEdit:null,advisorEdit:null,operationEdit:null,commissionEdit:null,imageEdit:null};
-const escA=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-function setMsg(id,msg,error=false){const e=document.getElementById(id);if(e){e.textContent=msg;e.className='module-msg'+(error?' error':'')}}
-function toggleForm(id,open=true){const e=document.getElementById(id);if(e)e.classList.toggle('open',open)}
-function val(id){return document.getElementById(id)?.value?.trim()||''}
-function boolVal(id){return document.getElementById(id)?.value==='true'}
-function tableHTML(data,table,container,cols){
- const el=document.getElementById(container); if(!el)return;
- if(!data?.length){el.innerHTML='<div class="empty-state">No hay registros todavía.</div>';return}
- const shown=cols.filter(c=>data.some(r=>Object.prototype.hasOwnProperty.call(r,c.key)));
- const head=shown.map(c=>`<th>${escA(c.label)}</th>`).join('')+'<th>Acciones</th>';
- const rows=data.map(r=>'<tr>'+shown.map(c=>{let v=r[c.key]; if(typeof v==='boolean')v=v?'Sí':'No'; return `<td>${escA(v)}</td>`}).join('')+`<td><div class="property-actions"><button class="action-btn action-secondary" onclick="editRecord('${table}','${escA(r.id)}')">Editar</button><button class="action-btn action-danger" onclick="deleteRecord('${table}','${escA(r.id)}')">Eliminar</button></div></td></tr>`).join('');
- el.innerHTML=`<table class="data-table"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>`;
-}
-const configs={
- proyectos:{container:'projectsTable',table:'proyectos',cols:[['nombre','Nombre'],['categoria','Categoría'],['ubicacion','Ubicación'],['precio','Precio'],['estado','Estado'],['destacado','Destacado']]},
- asesores:{container:'advisorsTable',table:'asesores',cols:[['nombre','Nombre'],['cargo','Cargo'],['telefono','Teléfono'],['whatsapp','WhatsApp'],['estado','Estado']]},
- operaciones:{container:'operationsTable',table:'operaciones',cols:[['inmueble_id','Inmueble'],['proyecto_id','Proyecto'],['captador_id','Captador'],['colocador_id','Colocador'],['precio','Precio'],['fecha','Fecha'],['estado','Estado']]},
- comisiones:{container:'commissionsTable',table:'comisiones',cols:[['asesor_id','Asesor'],['rol','Rol'],['porcentaje','%'],['monto','Monto'],['estado','Estado'],['fecha_pago','Fecha pago']]},
- imagenes:{container:'imagesTable',table:'inmueble_imagenes',cols:[['inmueble_id','Inmueble'],['proyecto_id','Proyecto'],['imagen_url','Imagen'],['ruta','Ruta'],['orden','Orden']]}
+/* =====================================================
+   TVEO BUSINESS
+   MÓDULOS ADMINISTRATIVOS
+===================================================== */
+
+const moduleState={
+
+projectEdit:null,
+
+advisorEdit:null,
+
+operationEdit:null,
+
+commissionEdit:null,
+
+imageEdit:null
+
 };
+
+
+const escA=v=>
+String(v??'')
+.replace(/&/g,'&amp;')
+.replace(/</g,'&lt;')
+.replace(/>/g,'&gt;')
+.replace(/"/g,'&quot;')
+.replace(/'/g,'&#039;');
+
+
+function setMsg(
+id,
+msg,
+error=false
+){
+
+const e=
+document.getElementById(id);
+
+if(e){
+
+e.textContent=msg;
+
+e.className=
+'module-msg'+
+(error?' error':'');
+
+}
+
+}
+
+
+function toggleForm(
+id,
+open=true
+){
+
+const e=
+document.getElementById(id);
+
+if(e){
+
+e.classList.toggle(
+'open',
+open
+);
+
+}
+
+}
+
+
+function val(id){
+
+return document
+.getElementById(id)
+?.value
+?.trim()||'';
+
+}
+
+
+function boolVal(id){
+
+return document
+.getElementById(id)
+?.value==='true';
+
+}
+
+
+function tableHTML(
+data,
+table,
+container,
+cols
+){
+
+const el=
+document.getElementById(
+container
+);
+
+
+if(!el)return;
+
+
+if(!data?.length){
+
+el.innerHTML=
+'<div class="empty-state">No hay registros todavía.</div>';
+
+return;
+
+}
+
+
+const shown=
+cols.filter(
+c=>
+data.some(
+r=>
+Object.prototype.hasOwnProperty.call(
+r,
+c.key
+)
+)
+);
+
+
+const head=
+shown
+.map(
+c=>
+`<th>${escA(c.label)}</th>`
+)
+.join('')+
+'<th>Acciones</th>';
+
+
+const rows=
+data.map(
+r=>
+'<tr>'+
+shown.map(
+c=>{
+
+let v=r[c.key];
+
+if(typeof v==='boolean'){
+
+v=v?'Sí':'No';
+
+}
+
+return `<td>${escA(v)}</td>`;
+
+}
+)
+.join('')+
+
+`<td>
+
+<div class="property-actions">
+
+<button
+class="action-btn action-secondary"
+onclick="editRecord('${table}','${escA(r.id)}')"
+>
+Editar
+</button>
+
+<button
+class="action-btn action-danger"
+onclick="deleteRecord('${table}','${escA(r.id)}')"
+>
+Eliminar
+</button>
+
+</div>
+
+</td>
+
+</tr>`
+)
+.join('');
+
+
+el.innerHTML=
+`<table class="data-table">
+
+<thead>
+
+<tr>
+${head}
+</tr>
+
+</thead>
+
+<tbody>
+${rows}
+</tbody>
+
+</table>`;
+
+}
+
+
+const configs={
+
+proyectos:{
+container:'projectsTable',
+table:'proyectos',
+cols:[
+['nombre','Nombre'],
+['categoria','Categoría'],
+['ubicacion','Ubicación'],
+['precio','Precio'],
+['estado','Estado'],
+['destacado','Destacado']
+]
+},
+
+asesores:{
+container:'advisorsTable',
+table:'asesores',
+cols:[
+['nombre','Nombre'],
+['cargo','Cargo'],
+['telefono','Teléfono'],
+['whatsapp','WhatsApp'],
+['estado','Estado']
+]
+},
+
+operaciones:{
+container:'operationsTable',
+table:'operaciones',
+cols:[
+['inmueble_id','Inmueble'],
+['proyecto_id','Proyecto'],
+['captador_id','Captador'],
+['colocador_id','Colocador'],
+['precio','Precio'],
+['fecha','Fecha'],
+['estado','Estado']
+]
+},
+
+comisiones:{
+container:'commissionsTable',
+table:'comisiones',
+cols:[
+['asesor_id','Asesor'],
+['rol','Rol'],
+['porcentaje','%'],
+['monto','Monto'],
+['estado','Estado'],
+['fecha_pago','Fecha pago']
+]
+},
+
+imagenes:{
+container:'imagesTable',
+table:'inmueble_imagenes',
+cols:[
+['inmueble_id','Inmueble'],
+['proyecto_id','Proyecto'],
+['imagen_url','Imagen'],
+['ruta','Ruta'],
+['orden','Orden']
+]
+}
+
+};
+
+
 async function loadModule(key){
- const c=configs[key]; if(!c)return;
- const el=document.getElementById(c.container); if(el)el.innerHTML='<div class="empty-state">Cargando...</div>';
- const {data,error}=await supabaseClient.from(c.table).select('*').order('created_at',{ascending:false});
- if(error){if(el)el.innerHTML=`<div class="error-box">No se pudo cargar ${c.table}. ${escA(error.message)}</div>`;return}
- tableHTML(data,c.table,c.container,c.cols.map(x=>({key:x[0],label:x[1]})));
+
+const c=
+configs[key];
+
+if(!c)return;
+
+
+const el=
+document.getElementById(
+c.container
+);
+
+
+if(el){
+
+el.innerHTML=
+'<div class="empty-state">Cargando...</div>';
+
 }
-async function refreshAllModules(){loadModule('proyectos');loadModule('asesores');loadModule('operaciones');loadModule('comisiones');loadModule('imagenes')}
-async function insertData(table,payload,msgId,after){
- const clean={}; Object.entries(payload).forEach(([k,v])=>{if(v!==''&&v!==null&&v!==undefined)clean[k]=v});
- const {error}=await supabaseClient.from(table).insert(clean);
- if(error){setMsg(msgId,error.message,true);return false}
- setMsg(msgId,'Guardado correctamente.'); if(after)await after(); return true;
+
+
+const {
+data,
+error
+}=await supabaseClient
+.from(c.table)
+.select('*')
+.order(
+'created_at',
+{ascending:false}
+);
+
+
+if(error){
+
+if(el){
+
+el.innerHTML=
+`<div class="error-box">
+No se pudo cargar ${c.table}.
+${escA(error.message)}
+</div>`;
+
 }
-async function updateData(table,id,payload,msgId,after){const clean={};Object.entries(payload).forEach(([k,v])=>{if(v!==''&&v!==null&&v!==undefined)clean[k]=v});const {error}=await supabaseClient.from(table).update(clean).eq('id',id);if(error){setMsg(msgId,error.message,true);return false}setMsg(msgId,'Actualizado correctamente.');if(after)await after();return true}
-window.deleteRecord=async function(table,id){if(!confirm('¿Eliminar este registro?'))return;const {error}=await supabaseClient.from(table).delete().eq('id',id);if(error){alert(error.message);return}const key=Object.keys(configs).find(k=>configs[k].table===table);if(key)loadModule(key);refreshDashboard()}
-window.editRecord=async function(table,id){alert('Edición rápida: abre el formulario de '+table+' para crear/editar. El registro seleccionado es '+id+'.')}
-function clearForm(prefix,ids){ids.forEach(id=>{const e=document.getElementById(id);if(e)e.value=''})}
 
-document.getElementById('newProjectBtn')?.addEventListener('click',()=>{moduleState.projectEdit=null;toggleForm('projectForm');});
-document.getElementById('cancelProjectBtn')?.addEventListener('click',()=>toggleForm('projectForm',false));
-document.getElementById('saveProjectBtn')?.addEventListener('click',async()=>{const payload={nombre:val('prNombre'),categoria:val('prCategoria'),ubicacion:val('prUbicacion'),precio:val('prPrecio'),whatsapp:val('prWhatsapp'),estado:val('prEstado'),imagen_principal:val('prImagen'),destacado:boolVal('prDestacado'),descripcion_corta:val('prDesc')};if(!payload.nombre)return setMsg('projectMsg','El nombre es obligatorio.',true);if(await insertData('proyectos',payload,'projectMsg',()=>loadModule('proyectos'))){clearForm('', ['prNombre','prCategoria','prUbicacion','prPrecio','prWhatsapp','prImagen','prDesc']);toggleForm('projectForm',false);refreshDashboard()}});
+return;
 
-document.getElementById('newAdvisorBtn')?.addEventListener('click',()=>toggleForm('advisorForm'));document.getElementById('cancelAdvisorBtn')?.addEventListener('click',()=>toggleForm('advisorForm',false));document.getElementById('saveAdvisorBtn')?.addEventListener('click',async()=>{const p={nombre:val('aNombre'),foto_url:val('aFoto'),telefono:val('aTelefono'),whatsapp:val('aWhatsapp'),cargo:val('aCargo'),estado:val('aEstado')};if(!p.nombre)return setMsg('advisorMsg','El nombre es obligatorio.',true);if(await insertData('asesores',p,'advisorMsg',()=>loadModule('asesores'))){clearForm('', ['aNombre','aFoto','aTelefono','aWhatsapp','aCargo']);toggleForm('advisorForm',false);refreshDashboard()}});
+}
 
-document.getElementById('newOperationBtn')?.addEventListener('click',()=>toggleForm('operationForm'));document.getElementById('cancelOperationBtn')?.addEventListener('click',()=>toggleForm('operationForm',false));document.getElementById('saveOperationBtn')?.addEventListener('click',async()=>{const p={inmueble_id:val('oInmueble')||null,proyecto_id:val('oProyecto')||null,captador_id:val('oCaptador')||null,colocador_id:val('oColocador')||null,precio:val('oPrecio'),fecha:val('oFecha'),estado:val('oEstado')};if(await insertData('operaciones',p,'operationMsg',()=>loadModule('operaciones'))){toggleForm('operationForm',false);refreshDashboard()}});
 
-document.getElementById('newCommissionBtn')?.addEventListener('click',()=>toggleForm('commissionForm'));document.getElementById('cancelCommissionBtn')?.addEventListener('click',()=>toggleForm('commissionForm',false));document.getElementById('saveCommissionBtn')?.addEventListener('click',async()=>{const p={asesor_id:val('cAsesor')||null,rol:val('cRol'),porcentaje:val('cPorcentaje'),monto:val('cMonto'),estado:val('cEstado'),fecha_pago:val('cFecha')};if(await insertData('comisiones',p,'commissionMsg',()=>loadModule('comisiones'))){toggleForm('commissionForm',false)}});
+tableHTML(
+data,
+c.table,
+c.container,
+c.cols.map(
+x=>({
+key:x[0],
+label:x[1]
+})
+)
+);
 
-document.getElementById('newImageBtn')?.addEventListener('click',()=>toggleForm('imageForm'));document.getElementById('cancelImageBtn')?.addEventListener('click',()=>toggleForm('imageForm',false));document.getElementById('saveImageBtn')?.addEventListener('click',async()=>{const p={inmueble_id:val('iInmueble')||null,proyecto_id:val('iProyecto')||null,imagen_url:val('iUrl'),orden:val('iOrden')||0};if(!p.imagen_url)return setMsg('imageMsg','La ruta o URL de imagen es obligatoria.',true);if(await insertData('inmueble_imagenes',p,'imageMsg',()=>loadModule('imagenes'))){toggleForm('imageForm',false)}});
+}
 
-// Cargar módulos al entrar, y dejar claro cualquier error de tabla/RLS.
-document.querySelectorAll('.menu-btn').forEach(btn=>{btn.addEventListener('click',()=>{const key=btn.dataset.section;if(configs[key])loadModule(key)})});
-setTimeout(()=>{refreshAllModules()},1200);
+
+async function refreshAllModules(){
+
+await Promise.all([
+loadModule('proyectos'),
+loadModule('asesores'),
+loadModule('operaciones'),
+loadModule('comisiones'),
+loadModule('imagenes')
+]);
+
+}
+
+
+async function insertData(
+table,
+payload,
+msgId,
+after
+){
+
+const clean={};
+
+
+Object.entries(payload)
+.forEach(
+([k,v])=>{
+
+if(
+v!==''&&
+v!==null&&
+v!==undefined
+){
+
+clean[k]=v;
+
+}
+
+});
+
+
+const {
+error
+}=await supabaseClient
+.from(table)
+.insert(clean);
+
+
+if(error){
+
+setMsg(
+msgId,
+error.message,
+true
+);
+
+return false;
+
+}
+
+
+setMsg(
+msgId,
+'Guardado correctamente.'
+);
+
+
+if(after){
+
+await after();
+
+}
+
+
+return true;
+
+}
+
+
+async function updateData(
+table,
+id,
+payload,
+msgId,
+after
+){
+
+const clean={};
+
+
+Object.entries(payload)
+.forEach(
+([k,v])=>{
+
+if(
+v!==''&&
+v!==null&&
+v!==undefined
+){
+
+clean[k]=v;
+
+}
+
+});
+
+
+const {
+error
+}=await supabaseClient
+.from(table)
+.update(clean)
+.eq('id',id);
+
+
+if(error){
+
+setMsg(
+msgId,
+error.message,
+true
+);
+
+return false;
+
+}
+
+
+setMsg(
+msgId,
+'Actualizado correctamente.'
+);
+
+
+if(after){
+
+await after();
+
+}
+
+
+return true;
+
+}
+
+
+/* =====================================================
+   ELIMINAR REGISTROS
+===================================================== */
+
+window.deleteRecord=
+async function(
+table,
+id
+){
+
+if(
+!confirm(
+'¿Eliminar este registro?'
+)
+){
+
+return;
+
+}
+
+
+const {
+error
+}=await supabaseClient
+.from(table)
+.delete()
+.eq('id',id);
+
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+
+const key=
+Object.keys(configs)
+.find(
+k=>
+configs[k].table===table
+);
+
+
+if(key){
+
+await loadModule(key);
+
+}
+
+
+await cargarDashboard();
+
+};
+
+
+/* =====================================================
+   EDITAR PROYECTO
+===================================================== */
+
+window.editProject=
+async function(id){
+
+const {
+data,
+error
+}=await supabaseClient
+.from('proyectos')
+.select('*')
+.eq('id',id)
+.single();
+
+
+if(error||!data){
+
+console.error(
+'Error cargando proyecto:',
+error
+);
+
+alert(
+'No se pudo cargar el proyecto.'
+);
+
+return;
+
+}
+
+
+moduleState.projectEdit=id;
+
+
+document.getElementById(
+'prNombre'
+).value=
+data.nombre||'';
+
+
+document.getElementById(
+'prCategoria'
+).value=
+data.categoria||'';
+
+
+document.getElementById(
+'prUbicacion'
+).value=
+data.ubicacion||'';
+
+
+document.getElementById(
+'prPrecio'
+).value=
+data.precio||'';
+
+
+document.getElementById(
+'prWhatsapp'
+).value=
+data.whatsapp||'';
+
+
+document.getElementById(
+'prEstado'
+).value=
+data.estado||'Publicado';
+
+
+/*
+NO cargamos una ruta dentro
+del input file.
+
+El navegador no permite
+establecer un archivo local
+por seguridad.
+
+Si el usuario no selecciona
+una nueva foto, conservamos
+la foto existente.
+*/
+
+document.getElementById(
+'prImagen'
+).value='';
+
+
+document.getElementById(
+'prDestacado'
+).value=
+data.destacado
+?'true'
+:'false';
+
+
+document.getElementById(
+'prDesc'
+).value=
+data.descripcion_corta||'';
+
+
+toggleForm(
+'projectForm',
+true
+);
+
+
+setMsg(
+'projectMsg',
+'Editando proyecto: '+
+(data.nombre||'')+
+(
+data.imagen_principal
+?
+' · La foto actual se conservará si no seleccionas otra.'
+:
+''
+)
+);
+
+
+document.getElementById(
+'prNombre'
+).focus();
+
+};
+
+
+/* =====================================================
+   EDITOR GENERAL
+===================================================== */
+
+window.editRecord=
+async function(
+table,
+id
+){
+
+if(table==='proyectos'){
+
+await window.editProject(id);
+
+return;
+
+}
+
+
+alert(
+'La edición de este módulo todavía utiliza el formulario existente.'
+);
+
+};
+
+
+function clearForm(
+prefix,
+ids
+){
+
+ids.forEach(
+id=>{
+
+const e=
+document.getElementById(id);
+
+if(e){
+
+e.value='';
+
+}
+
+});
+
+}
+
+
+/* =====================================================
+   PROYECTOS
+===================================================== */
+
+document
+.getElementById('newProjectBtn')
+?.addEventListener(
+'click',
+()=>{
+
+moduleState.projectEdit=null;
+
+document.getElementById(
+'prNombre'
+).value='';
+
+document.getElementById(
+'prCategoria'
+).value='';
+
+document.getElementById(
+'prUbicacion'
+).value='';
+
+document.getElementById(
+'prPrecio'
+).value='';
+
+document.getElementById(
+'prWhatsapp'
+).value='';
+
+document.getElementById(
+'prImagen'
+).value='';
+
+document.getElementById(
+'prDesc'
+).value='';
+
+document.getElementById(
+'prDestacado'
+).value='false';
+
+document.getElementById(
+'prEstado'
+).value='Publicado';
+
+setMsg(
+'projectMsg',
+''
+);
+
+toggleForm(
+'projectForm',
+true
+);
+
+document.getElementById(
+'prNombre'
+).focus();
+
+}
+);
+
+
+document
+.getElementById('cancelProjectBtn')
+?.addEventListener(
+'click',
+()=>{
+
+moduleState.projectEdit=null;
+
+toggleForm(
+'projectForm',
+false
+);
+
+}
+);
+
+
+/* =====================================================
+   GUARDAR PROYECTO
+===================================================== */
+
+document
+.getElementById('saveProjectBtn')
+?.addEventListener(
+'click',
+async()=>{
+
+const payload={
+
+nombre:
+val('prNombre'),
+
+categoria:
+val('prCategoria'),
+
+ubicacion:
+val('prUbicacion'),
+
+precio:
+val('prPrecio'),
+
+whatsapp:
+val('prWhatsapp'),
+
+estado:
+val('prEstado'),
+
+destacado:
+boolVal('prDestacado'),
+
+descripcion_corta:
+val('prDesc')
+
+};
+
+
+if(!payload.nombre){
+
+setMsg(
+'projectMsg',
+'El nombre es obligatorio.',
+true
+);
+
+return;
+
+}
+
+
+const btn=
+document.getElementById(
+'saveProjectBtn'
+);
+
+
+btn.disabled=true;
+
+btn.textContent='GUARDANDO...';
+
+
+try{
+
+/*
+=====================================
+FOTO NUEVA OPCIONAL
+=====================================
+*/
+
+const file=
+document
+.getElementById('prImagen')
+?.files?.[0];
+
+
+if(file){
+
+const ext=
+(
+file.name
+.split('.')
+.pop()||
+'jpg'
+)
+.toLowerCase();
+
+
+const path=
+`proyectos/${Date.now()}-${Math.random().toString(36).slice(2,9)}.${ext}`;
+
+
+const {
+error:uploadError
+}=await supabaseClient
+.storage
+.from('inmobiliaria')
+.upload(
+path,
+file,
+{
+upsert:false,
+contentType:file.type
+}
+);
+
+
+if(uploadError){
+
+throw uploadError;
+
+}
+
+
+/*
+Guardamos la ruta de la nueva foto.
+*/
+
+payload.imagen_principal=
+path;
+
+}
+
+
+/* =================================
+   EDITAR PROYECTO EXISTENTE
+================================= */
+
+let ok=false;
+
+
+if(moduleState.projectEdit){
+
+ok=
+await updateData(
+'proyectos',
+moduleState.projectEdit,
+payload,
+'projectMsg',
+()=>loadModule('proyectos')
+);
+
+}
+
+
+/* =================================
+   CREAR NUEVO PROYECTO
+================================= */
+
+else{
+
+ok=
+await insertData(
+'proyectos',
+payload,
+'projectMsg',
+()=>loadModule('proyectos')
+);
+
+}
+
+
+if(ok){
+
+moduleState.projectEdit=null;
+
+
+clearForm(
+'',
+[
+'prNombre',
+'prCategoria',
+'prUbicacion',
+'prPrecio',
+'prWhatsapp',
+'prDesc'
+]
+);
+
+
+const img=
+document.getElementById(
+'prImagen'
+);
+
+
+if(img){
+
+img.value='';
+
+}
+
+
+document.getElementById(
+'prDestacado'
+).value='false';
+
+
+document.getElementById(
+'prEstado'
+).value='Publicado';
+
+
+toggleForm(
+'projectForm',
+false
+);
+
+
+await loadModule(
+'proyectos'
+);
+
+
+await cargarDashboard();
+
+}
+
+}catch(error){
+
+console.error(
+'Error guardando proyecto:',
+error
+);
+
+
+setMsg(
+'projectMsg',
+'No se pudo guardar: '+
+(error.message||
+'error desconocido'),
+true
+);
+
+}finally{
+
+btn.disabled=false;
+
+btn.textContent='Guardar';
+
+}
+
+});
+
+
+/* =====================================================
+   ASESORES
+===================================================== */
+
+document
+.getElementById('newAdvisorBtn')
+?.addEventListener(
+'click',
+()=>{
+
+moduleState.advisorEdit=null;
+
+toggleForm(
+'advisorForm'
+);
+
+}
+);
+
+
+document
+.getElementById('cancelAdvisorBtn')
+?.addEventListener(
+'click',
+()=>toggleForm(
+'advisorForm',
+false
+)
+);
+
+
+document
+.getElementById('saveAdvisorBtn')
+?.addEventListener(
+'click',
+async()=>{
+
+const p={
+
+nombre:
+val('aNombre'),
+
+foto_url:
+val('aFoto'),
+
+telefono:
+val('aTelefono'),
+
+whatsapp:
+val('aWhatsapp'),
+
+cargo:
+val('aCargo'),
+
+estado:
+val('aEstado')
+
+};
+
+
+if(!p.nombre){
+
+setMsg(
+'advisorMsg',
+'El nombre es obligatorio.',
+true
+);
+
+return;
+
+}
+
+
+if(
+await insertData(
+'asesores',
+p,
+'advisorMsg',
+()=>loadModule('asesores')
+)
+){
+
+clearForm(
+'',
+[
+'aNombre',
+'aFoto',
+'aTelefono',
+'aWhatsapp',
+'aCargo'
+]
+);
+
+toggleForm(
+'advisorForm',
+false
+);
+
+await cargarDashboard();
+
+}
+
+}
+);
+
+
+/* =====================================================
+   OPERACIONES
+===================================================== */
+
+document
+.getElementById('newOperationBtn')
+?.addEventListener(
+'click',
+()=>toggleForm(
+'operationForm'
+)
+);
+
+
+document
+.getElementById('cancelOperationBtn')
+?.addEventListener(
+'click',
+()=>toggleForm(
+'operationForm',
+false
+)
+);
+
+
+document
+.getElementById('saveOperationBtn')
+?.addEventListener(
+'click',
+async()=>{
+
+const p={
+
+inmueble_id:
+val('oInmueble')||null,
+
+proyecto_id:
+val('oProyecto')||null,
+
+captador_id:
+val('oCaptador')||null,
+
+colocador_id:
+val('oColocador')||null,
+
+precio:
+val('oPrecio'),
+
+fecha:
+val('oFecha'),
+
+estado:
+val('oEstado')
+
+};
+
+
+if(
+await insertData(
+'operaciones',
+p,
+'operationMsg',
+()=>loadModule('operaciones')
+)
+){
+
+toggleForm(
+'operationForm',
+false
+);
+
+await cargarDashboard();
+
+}
+
+}
+);
+
+
+/* =====================================================
+   COMISIONES
+===================================================== */
+
+document
+.getElementById('newCommissionBtn')
+?.addEventListener(
+'click',
+()=>toggleForm(
+'commissionForm'
+)
+);
+
+
+document
+.getElementById('cancelCommissionBtn')
+?.addEventListener(
+'click',
+()=>toggleForm(
+'commissionForm',
+false
+)
+);
+
+
+document
+.getElementById('saveCommissionBtn')
+?.addEventListener(
+'click',
+async()=>{
+
+const p={
+
+asesor_id:
+val('cAsesor')||null,
+
+rol:
+val('cRol'),
+
+porcentaje:
+val('cPorcentaje'),
+
+monto:
+val('cMonto'),
+
+estado:
+val('cEstado'),
+
+fecha_pago:
+val('cFecha')
+
+};
+
+
+if(
+await insertData(
+'comisiones',
+p,
+'commissionMsg',
+()=>loadModule('comisiones')
+)
+){
+
+toggleForm(
+'commissionForm',
+false
+);
+
+}
+
+}
+);
+
+
+/* =====================================================
+   IMÁGENES
+===================================================== */
+
+document
+.getElementById('newImageBtn')
+?.addEventListener(
+'click',
+()=>toggleForm(
+'imageForm'
+)
+);
+
+
+document
+.getElementById('cancelImageBtn')
+?.addEventListener(
+'click',
+()=>toggleForm(
+'imageForm',
+false
+)
+);
+
+
+document
+.getElementById('saveImageBtn')
+?.addEventListener(
+'click',
+async()=>{
+
+const p={
+
+inmueble_id:
+val('iInmueble')||null,
+
+proyecto_id:
+val('iProyecto')||null,
+
+imagen_url:
+val('iUrl'),
+
+orden:
+val('iOrden')||0
+
+};
+
+
+if(!p.imagen_url){
+
+setMsg(
+'imageMsg',
+'La ruta o URL de imagen es obligatoria.',
+true
+);
+
+return;
+
+}
+
+
+if(
+await insertData(
+'inmueble_imagenes',
+p,
+'imageMsg',
+()=>loadModule('imagenes')
+)
+){
+
+toggleForm(
+'imageForm',
+false
+);
+
+}
+
+}
+);
+
+
+/* =====================================================
+   CARGA INICIAL DE MÓDULOS
+===================================================== */
+
+setTimeout(
+()=>{
+refreshAllModules();
+},
+1200
+);
+
 </script>
+
 </body>
 </html>
