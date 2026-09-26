@@ -8,388 +8,453 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-
-body{
-font-family:Arial,Helvetica,sans-serif;
-background:linear-gradient(135deg,#07111f,#123452 55%,#07111f);
-color:#fff;
-min-height:100vh
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0
 }
 
-button,input,select,textarea{font:inherit}
-.hidden{display:none!important}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#07111f,#123452 55%,#07111f);
+  color:#fff;
+  min-height:100vh
+}
+
+button,input,select,textarea{
+  font:inherit
+}
+
+button{
+  cursor:pointer
+}
+
+.hidden{
+  display:none!important
+}
+
+/* =========================
+   LOGIN
+========================= */
 
 #loginScreen{
-min-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:20px
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px
 }
 
 .login-card{
-width:100%;
-max-width:440px;
-padding:38px;
-border-radius:28px;
-background:rgba(255,255,255,.10);
-backdrop-filter:blur(20px);
-border:1px solid rgba(255,255,255,.16);
-box-shadow:0 30px 90px rgba(0,0,0,.45)
+  width:100%;
+  max-width:440px;
+  padding:38px;
+  border-radius:28px;
+  background:rgba(255,255,255,.10);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 30px 90px rgba(0,0,0,.45)
 }
 
 .login-logo{
-width:90px;
-height:90px;
-margin:0 auto 20px;
-border-radius:22px;
-background:#fff;
-color:#102a43;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:900;
-font-size:25px;
-overflow:hidden
+  width:90px;
+  height:90px;
+  margin:0 auto 20px;
+  border-radius:22px;
+  background:#fff;
+  color:#102a43;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:25px;
+  overflow:hidden
 }
 
 .login-logo img,
 .brand-logo img,
 .logo-preview img{
-width:100%;
-height:100%;
-object-fit:contain
+  width:100%;
+  height:100%;
+  object-fit:contain
 }
 
 .login-card h1{
-text-align:center;
-font-size:26px;
-margin-bottom:8px
+  text-align:center;
+  font-size:26px;
+  margin-bottom:8px
 }
 
 .login-card p{
-text-align:center;
-color:#c7d3df;
-margin-bottom:28px
+  text-align:center;
+  color:#c7d3df;
+  margin-bottom:28px
 }
 
-.field{margin-bottom:16px}
+.field{
+  margin-bottom:16px
+}
 
 .field label{
-display:block;
-margin-bottom:7px;
-color:#dce7f0;
-font-size:14px
+  display:block;
+  margin-bottom:7px;
+  color:#dce7f0;
+  font-size:14px
 }
 
 .field input,
 .field select,
 .field textarea{
-width:100%;
-padding:14px 15px;
-border-radius:12px;
-border:1px solid rgba(255,255,255,.15);
-background:rgba(255,255,255,.08);
-color:#fff;
-outline:none
+  width:100%;
+  padding:14px 15px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  outline:none
 }
 
 .field input:focus,
 .field select:focus,
 .field textarea:focus{
-border-color:#fff;
-box-shadow:0 0 0 3px rgba(255,255,255,.08)
+  border-color:#fff;
+  box-shadow:0 0 0 3px rgba(255,255,255,.08)
 }
 
 .field textarea{
-min-height:100px;
-resize:vertical
+  min-height:100px;
+  resize:vertical
 }
 
-.field select option{color:#111}
+.field select option{
+  color:#111
+}
 
 .primary-btn{
-width:100%;
-border:0;
-padding:14px;
-border-radius:12px;
-cursor:pointer;
-color:#102a43;
-font-weight:800;
-background:linear-gradient(145deg,#fff,#cfdce8);
-box-shadow:0 12px 25px rgba(0,0,0,.25)
+  width:100%;
+  border:0;
+  padding:14px;
+  border-radius:12px;
+  cursor:pointer;
+  color:#102a43;
+  font-weight:800;
+  background:linear-gradient(145deg,#fff,#cfdce8);
+  box-shadow:0 12px 25px rgba(0,0,0,.25)
 }
 
 .primary-btn:disabled{
-opacity:.65;
-cursor:wait
+  opacity:.65;
+  cursor:wait
 }
 
 #loginMessage{
-margin-top:15px;
-text-align:center;
-color:#ffb4b4;
-font-size:14px
+  margin-top:15px;
+  text-align:center;
+  color:#ffb4b4;
+  font-size:14px
 }
 
 .error-box{
-padding:12px;
-border-radius:10px;
-background:rgba(255,80,80,.10);
-color:#ffb4b4
+  padding:12px;
+  border-radius:10px;
+  background:rgba(255,80,80,.10);
+  color:#ffb4b4;
+  line-height:1.5
 }
 
+/* =========================
+   TOPBAR
+========================= */
+
 .topbar{
-height:76px;
-padding:0 28px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-background:rgba(5,15,27,.88);
-backdrop-filter:blur(18px);
-border-bottom:1px solid rgba(255,255,255,.09);
-position:sticky;
-top:0;
-z-index:20
+  height:76px;
+  padding:0 28px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(5,15,27,.88);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.09);
+  position:sticky;
+  top:0;
+  z-index:20
 }
 
 .brand{
-display:flex;
-align-items:center;
-gap:12px;
-font-weight:900
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:900
 }
 
 .brand-logo{
-width:44px;
-height:44px;
-border-radius:12px;
-background:#fff;
-color:#102a43;
-display:flex;
-align-items:center;
-justify-content:center;
-overflow:hidden;
-font-size:12px
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  background:#fff;
+  color:#102a43;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  font-size:12px
 }
 
 .brand small{
-display:block;
-color:#9fb0c0;
-font-size:11px;
-font-weight:normal;
-margin-top:2px
+  display:block;
+  color:#9fb0c0;
+  font-size:11px;
+  font-weight:normal;
+  margin-top:2px
 }
 
 .logout-btn{
-border:1px solid rgba(255,255,255,.18);
-background:rgba(255,255,255,.07);
-color:#fff;
-padding:9px 15px;
-border-radius:10px;
-cursor:pointer
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.07);
+  color:#fff;
+  padding:9px 15px;
+  border-radius:10px;
+  cursor:pointer
 }
 
+/* =========================
+   LAYOUT
+========================= */
+
 .layout{
-display:grid;
-grid-template-columns:250px 1fr;
-min-height:calc(100vh - 76px)
+  display:grid;
+  grid-template-columns:250px 1fr;
+  min-height:calc(100vh - 76px)
 }
 
 .sidebar{
-padding:22px 15px;
-background:rgba(3,12,22,.70);
-border-right:1px solid rgba(255,255,255,.08)
+  padding:22px 15px;
+  background:rgba(3,12,22,.70);
+  border-right:1px solid rgba(255,255,255,.08)
 }
 
 .menu-title{
-color:#8497aa;
-font-size:11px;
-text-transform:uppercase;
-margin:8px 12px 10px;
-letter-spacing:1px
+  color:#8497aa;
+  font-size:11px;
+  text-transform:uppercase;
+  margin:8px 12px 10px;
+  letter-spacing:1px
 }
 
 .menu-btn{
-width:100%;
-border:0;
-background:transparent;
-color:#d8e2eb;
-text-align:left;
-padding:13px 14px;
-border-radius:12px;
-margin-bottom:5px;
-cursor:pointer;
-transition:.2s
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#d8e2eb;
+  text-align:left;
+  padding:13px 14px;
+  border-radius:12px;
+  margin-bottom:5px;
+  cursor:pointer;
+  transition:.2s
 }
 
 .menu-btn:hover,
 .menu-btn.active{
-background:rgba(255,255,255,.10);
-color:#fff;
-transform:translateX(2px)
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  transform:translateX(2px)
 }
 
 .content{
-padding:30px;
-max-width:1450px;
-width:100%
+  padding:30px;
+  max-width:1450px;
+  width:100%
 }
 
-.section{display:none}
+.section{
+  display:none
+}
 
-.section.active{display:block}
+.section.active{
+  display:block
+}
 
 .page-title{
-font-size:30px;
-margin-bottom:8px
+  font-size:30px;
+  margin-bottom:8px
 }
 
 .page-subtitle{
-color:#9fb0c0;
-margin-bottom:28px
+  color:#9fb0c0;
+  margin-bottom:28px
 }
 
+/* =========================
+   DASHBOARD
+========================= */
+
 .stats{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:18px
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px
 }
 
 .stat-card{
-padding:24px;
-border-radius:20px;
-background:linear-gradient(
-145deg,
-rgba(255,255,255,.13),
-rgba(255,255,255,.045)
-);
-border:1px solid rgba(255,255,255,.10);
-box-shadow:
-0 20px 45px rgba(0,0,0,.25),
-inset 0 1px 0 rgba(255,255,255,.08)
+  padding:24px;
+  border-radius:20px;
+  background:linear-gradient(
+    145deg,
+    rgba(255,255,255,.13),
+    rgba(255,255,255,.045)
+  );
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 20px 45px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.08)
 }
 
 .stat-card span{
-color:#9fb0c0;
-font-size:13px
+  color:#9fb0c0;
+  font-size:13px
 }
 
 .stat-card strong{
-display:block;
-font-size:32px;
-margin-top:12px
+  display:block;
+  font-size:32px;
+  margin-top:12px
 }
 
+/* =========================
+   PANELS
+========================= */
+
 .panel{
-margin-top:22px;
-padding:25px;
-border-radius:20px;
-background:rgba(255,255,255,.065);
-border:1px solid rgba(255,255,255,.09)
+  margin-top:22px;
+  padding:25px;
+  border-radius:20px;
+  background:rgba(255,255,255,.065);
+  border:1px solid rgba(255,255,255,.09)
 }
 
 .notice{
-margin-top:12px;
-padding:15px;
-border-radius:12px;
-background:rgba(255,255,255,.06);
-color:#aebdca;
-line-height:1.5
+  margin-top:12px;
+  padding:15px;
+  border-radius:12px;
+  background:rgba(255,255,255,.06);
+  color:#aebdca;
+  line-height:1.5
 }
 
-.config-box{max-width:720px}
+/* =========================
+   CONFIG
+========================= */
+
+.config-box{
+  max-width:720px
+}
 
 .upload-area{
-border:2px dashed rgba(255,255,255,.22);
-border-radius:18px;
-padding:35px;
-text-align:center;
-margin-top:20px;
-background:rgba(255,255,255,.04)
+  border:2px dashed rgba(255,255,255,.22);
+  border-radius:18px;
+  padding:35px;
+  text-align:center;
+  margin-top:20px;
+  background:rgba(255,255,255,.04)
 }
 
 .logo-preview{
-width:220px;
-height:130px;
-margin:0 auto 20px;
-border-radius:15px;
-background:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
-overflow:hidden;
-color:#777
+  width:220px;
+  height:130px;
+  margin:0 auto 20px;
+  border-radius:15px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  color:#777
 }
 
 .upload-btn{
-display:inline-block;
-padding:12px 20px;
-border-radius:10px;
-background:#fff;
-color:#102a43;
-font-weight:bold;
-cursor:pointer
+  display:inline-block;
+  padding:12px 20px;
+  border-radius:10px;
+  background:#fff;
+  color:#102a43;
+  font-weight:bold;
+  cursor:pointer
 }
 
-#logoInput{display:none}
+#logoInput{
+  display:none
+}
 
 .message{
-margin-top:15px;
-color:#b9d8ff;
-font-size:14px
+  margin-top:15px;
+  color:#b9d8ff;
+  font-size:14px
 }
+
+/* =========================
+   BUTTONS
+========================= */
 
 .property-toolbar,
 .module-toolbar{
-display:flex;
-justify-content:space-between;
-gap:12px;
-align-items:center;
-flex-wrap:wrap;
-margin-bottom:18px
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:18px
 }
 
 .action-btn{
-border:0;
-border-radius:10px;
-padding:10px 14px;
-cursor:pointer;
-font-weight:800
+  border:0;
+  border-radius:10px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:800
+}
+
+.action-btn:disabled{
+  opacity:.6;
+  cursor:wait
 }
 
 .action-primary{
-background:linear-gradient(145deg,#fff,#cfdce8);
-color:#102a43
+  background:linear-gradient(145deg,#fff,#cfdce8);
+  color:#102a43
 }
 
 .action-secondary{
-background:rgba(255,255,255,.10);
-color:#fff;
-border:1px solid rgba(255,255,255,.15)
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.15)
 }
 
 .action-danger{
-background:rgba(255,80,80,.15);
-color:#ffb4b4;
-border:1px solid rgba(255,80,80,.25)
+  background:rgba(255,80,80,.15);
+  color:#ffb4b4;
+  border:1px solid rgba(255,80,80,.25)
 }
+
+/* =========================
+   FORMS
+========================= */
 
 .property-form,
 .module-form{
-display:none;
-margin-bottom:20px
+  display:none;
+  margin-bottom:20px
 }
 
 .property-form.open,
-.module-form.open{display:block}
+.module-form.open{
+  display:block
+}
 
 .property-form-grid,
 .form-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:14px
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px
 }
 
 .property-form .field input,
@@ -398,264 +463,300 @@ gap:14px
 .form-grid .field input,
 .form-grid .field select,
 .form-grid .field textarea{
-width:100%;
-padding:12px 13px;
-border-radius:10px;
-border:1px solid rgba(255,255,255,.15);
-background:rgba(255,255,255,.07);
-color:#fff;
-outline:none
+  width:100%;
+  padding:12px 13px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.07);
+  color:#fff;
+  outline:none
 }
 
 .property-form .field textarea,
 .form-grid .field textarea{
-min-height:95px;
-resize:vertical
+  min-height:95px;
+  resize:vertical
 }
 
 .property-form .field select option,
-.form-grid select option{color:#111}
+.form-grid select option{
+  color:#111
+}
 
 .property-checks{
-display:flex;
-gap:20px;
-align-items:center;
-flex-wrap:wrap;
-margin:8px 0 18px
+  display:flex;
+  gap:20px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin:8px 0 18px
 }
 
 .property-checks label{
-color:#dce7f0;
-font-size:14px
+  color:#dce7f0;
+  font-size:14px
 }
 
 .form-actions{
-display:flex;
-gap:10px;
-margin-top:8px;
-flex-wrap:wrap
+  display:flex;
+  gap:10px;
+  margin-top:8px;
+  flex-wrap:wrap
 }
 
+.form-message,
+.module-msg{
+  margin-top:12px;
+  color:#b9d8ff;
+  font-size:13px
+}
+
+.module-msg.error,
+.form-message.error{
+  color:#ffb4b4
+}
+
+/* =========================
+   TABLES
+========================= */
+
 .property-table-wrap,
-.table-wrap{overflow:auto}
+.table-wrap{
+  overflow:auto
+}
 
 .property-table{
-width:100%;
-border-collapse:collapse;
-min-width:850px
+  width:100%;
+  border-collapse:collapse;
+  min-width:850px
 }
 
 .property-table th,
 .property-table td{
-padding:12px 10px;
-border-bottom:1px solid rgba(255,255,255,.09);
-text-align:left;
-font-size:13px;
-vertical-align:middle
+  padding:12px 10px;
+  border-bottom:1px solid rgba(255,255,255,.09);
+  text-align:left;
+  font-size:13px;
+  vertical-align:middle
 }
 
 .property-table th{
-color:#9fb0c0;
-font-size:11px;
-text-transform:uppercase;
-letter-spacing:.6px
+  color:#9fb0c0;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.6px
 }
 
 .property-thumb{
-width:58px;
-height:46px;
-border-radius:8px;
-object-fit:cover;
-background:#102a43
+  width:58px;
+  height:46px;
+  border-radius:8px;
+  object-fit:cover;
+  background:#102a43
 }
 
 .status{
-display:inline-block;
-padding:5px 8px;
-border-radius:8px;
-background:rgba(255,255,255,.08);
-font-size:11px
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:8px;
+  background:rgba(255,255,255,.08);
+  font-size:11px
 }
 
 .featured-mark{
-color:#75d7ff;
-font-weight:800
+  color:#75d7ff;
+  font-weight:800
 }
 
 .property-actions{
-display:flex;
-gap:7px;
-flex-wrap:wrap
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap
 }
-
-.form-message{
-margin-top:12px;
-color:#b9d8ff;
-font-size:13px
-}
-
-.module-msg{
-margin-top:12px;
-font-size:13px;
-color:#b9d8ff
-}
-
-.module-msg.error{color:#ffb4b4}
 
 .data-table{
-width:100%;
-border-collapse:collapse;
-min-width:760px
+  width:100%;
+  border-collapse:collapse;
+  min-width:760px
 }
 
 .data-table th,
 .data-table td{
-padding:11px 9px;
-border-bottom:1px solid rgba(255,255,255,.09);
-font-size:12px;
-text-align:left
+  padding:11px 9px;
+  border-bottom:1px solid rgba(255,255,255,.09);
+  font-size:12px;
+  text-align:left;
+  vertical-align:middle
 }
 
 .data-table th{
-font-size:10px;
-color:#9fb0c0;
-text-transform:uppercase
+  font-size:10px;
+  color:#9fb0c0;
+  text-transform:uppercase
 }
 
 .empty-state{
-text-align:center;
-padding:35px;
-color:#9fb0c0
+  text-align:center;
+  padding:35px;
+  color:#9fb0c0
 }
 
 .module-summary{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-bottom:15px
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:15px
 }
 
 .pill{
-padding:8px 11px;
-border-radius:999px;
-background:rgba(255,255,255,.08);
-font-size:12px;
-color:#d8e2eb
+  padding:8px 11px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  font-size:12px;
+  color:#d8e2eb
 }
+
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media(max-width:950px){
 
-.stats{grid-template-columns:repeat(2,1fr)}
+  .stats{
+    grid-template-columns:repeat(2,1fr)
+  }
 
-.layout{grid-template-columns:1fr}
+  .layout{
+    grid-template-columns:1fr
+  }
 
-.sidebar{
-border-right:0;
-border-bottom:1px solid rgba(255,255,255,.08)
-}
+  .sidebar{
+    border-right:0;
+    border-bottom:1px solid rgba(255,255,255,.08)
+  }
 
-.property-form-grid,
-.form-grid{grid-template-columns:1fr 1fr}
-
+  .property-form-grid,
+  .form-grid{
+    grid-template-columns:1fr 1fr
+  }
 }
 
 @media(max-width:600px){
 
-.topbar{padding:0 15px}
+  .topbar{
+    padding:0 15px
+  }
 
-.content{padding:20px 15px}
+  .content{
+    padding:20px 15px
+  }
 
-.stats{grid-template-columns:1fr}
+  .stats{
+    grid-template-columns:1fr
+  }
 
-.sidebar{overflow-x:auto}
+  .sidebar{
+    overflow-x:auto
+  }
 
-.property-form-grid,
-.form-grid{grid-template-columns:1fr}
-
+  .property-form-grid,
+  .form-grid{
+    grid-template-columns:1fr
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
 <div id="loginScreen">
 
-<div class="login-card">
+  <div class="login-card">
 
-<div class="login-logo" id="loginLogo">
-TVEO
+    <div class="login-logo" id="loginLogo">
+      TVEO
+    </div>
+
+    <h1>Administrador</h1>
+
+    <p>
+      TVEO Business Desarrolladora Inmobiliaria
+    </p>
+
+    <form id="loginForm">
+
+      <div class="field">
+        <label>Correo electrónico</label>
+
+        <input
+          type="email"
+          id="email"
+          required
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="field">
+        <label>Contraseña</label>
+
+        <input
+          type="password"
+          id="password"
+          required
+          autocomplete="current-password"
+        >
+      </div>
+
+      <button
+        class="primary-btn"
+        id="loginBtn"
+        type="submit"
+      >
+        INGRESAR
+      </button>
+
+    </form>
+
+    <div id="loginMessage"></div>
+
+  </div>
+
 </div>
 
-<h1>Administrador</h1>
 
-<p>
-TVEO Business Desarrolladora Inmobiliaria
-</p>
-
-<form id="loginForm">
-
-<div class="field">
-<label>Correo electrónico</label>
-<input
-type="email"
-id="email"
-required
-autocomplete="email"
->
-</div>
-
-<div class="field">
-<label>Contraseña</label>
-<input
-type="password"
-id="password"
-required
-autocomplete="current-password"
->
-</div>
-
-<button
-class="primary-btn"
-id="loginBtn"
-type="submit"
->
-INGRESAR
-</button>
-
-</form>
-
-<div id="loginMessage"></div>
-
-</div>
-</div>
-
+<!-- =====================================================
+     ADMIN APP
+===================================================== -->
 
 <div id="adminApp" class="hidden">
 
 <header class="topbar">
 
-<div class="brand">
+  <div class="brand">
 
-<div
-class="brand-logo"
-id="brandLogo"
->
-TVEO
-</div>
+    <div
+      class="brand-logo"
+      id="brandLogo"
+    >
+      TVEO
+    </div>
 
-<div>
-TVEO BUSINESS
-<small>Panel de Administración</small>
-</div>
+    <div>
+      TVEO BUSINESS
+      <small>Panel de Administración</small>
+    </div>
 
-</div>
+  </div>
 
-<button
-class="logout-btn"
-id="logoutBtn"
->
-Cerrar sesión
-</button>
+  <button
+    class="logout-btn"
+    id="logoutBtn"
+  >
+    Cerrar sesión
+  </button>
 
 </header>
 
@@ -664,1027 +765,1177 @@ Cerrar sesión
 
 <aside class="sidebar">
 
-<div class="menu-title">
-Administración
-</div>
+  <div class="menu-title">
+    Administración
+  </div>
 
-<button class="menu-btn active" data-section="dashboard">
-📊 Dashboard
-</button>
+  <button
+    class="menu-btn active"
+    data-section="dashboard"
+  >
+    📊 Dashboard
+  </button>
 
-<button class="menu-btn" data-section="propiedades">
-🏠 Propiedades
-</button>
+  <button
+    class="menu-btn"
+    data-section="propiedades"
+  >
+    🏠 Propiedades
+  </button>
 
-<button class="menu-btn" data-section="proyectos">
-🏗️ Proyectos
-</button>
+  <button
+    class="menu-btn"
+    data-section="proyectos"
+  >
+    🏗️ Proyectos
+  </button>
 
-<button class="menu-btn" data-section="asesores">
-👥 Asesores
-</button>
+  <button
+    class="menu-btn"
+    data-section="asesores"
+  >
+    👥 Asesores
+  </button>
 
-<button class="menu-btn" data-section="operaciones">
-💰 Operaciones
-</button>
+  <button
+    class="menu-btn"
+    data-section="operaciones"
+  >
+    💰 Operaciones
+  </button>
 
-<button class="menu-btn" data-section="comisiones">
-💵 Comisiones
-</button>
+  <button
+    class="menu-btn"
+    data-section="comisiones"
+  >
+    💵 Comisiones
+  </button>
 
-<div class="menu-title">
-Sitio web
-</div>
+  <div class="menu-title">
+    Sitio web
+  </div>
 
-<button class="menu-btn" data-section="imagenes">
-🖼️ Imágenes
-</button>
+  <button
+    class="menu-btn"
+    data-section="imagenes"
+  >
+    🖼️ Imágenes
+  </button>
 
-<button class="menu-btn" data-section="configuracion">
-⚙️ Configuración
-</button>
+  <button
+    class="menu-btn"
+    data-section="configuracion"
+  >
+    ⚙️ Configuración
+  </button>
 
 </aside>
 
 
 <main class="content">
 
-<section id="dashboard" class="section active">
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
 
-<h1 class="page-title">
-Dashboard
-</h1>
+<section
+  id="dashboard"
+  class="section active"
+>
 
-<p class="page-subtitle">
-Resumen de TVEO Business Inmobiliaria
-</p>
+  <h1 class="page-title">
+    Dashboard
+  </h1>
 
-<div class="stats">
+  <p class="page-subtitle">
+    Resumen de TVEO Business Inmobiliaria
+  </p>
 
-<div class="stat-card">
-<span>Propiedades</span>
-<strong id="statProperties">0</strong>
-</div>
+  <div class="stats">
 
-<div class="stat-card">
-<span>Proyectos</span>
-<strong id="statProjects">0</strong>
-</div>
+    <div class="stat-card">
+      <span>Propiedades</span>
+      <strong id="statProperties">0</strong>
+    </div>
 
-<div class="stat-card">
-<span>Asesores</span>
-<strong id="statAdvisors">0</strong>
-</div>
+    <div class="stat-card">
+      <span>Proyectos</span>
+      <strong id="statProjects">0</strong>
+    </div>
 
-<div class="stat-card">
-<span>Operaciones</span>
-<strong id="statOperations">0</strong>
-</div>
+    <div class="stat-card">
+      <span>Asesores</span>
+      <strong id="statAdvisors">0</strong>
+    </div>
 
-</div>
+    <div class="stat-card">
+      <span>Operaciones</span>
+      <strong id="statOperations">0</strong>
+    </div>
 
-<div class="panel">
+  </div>
 
-<h2>
-Bienvenido al administrador
-</h2>
+  <div class="panel">
 
-<p class="notice">
-Este panel es independiente del CRM. Desde aquí administraremos
-el sitio inmobiliario, propiedades, proyectos, asesores,
-operaciones, comisiones, imágenes y configuración.
-</p>
+    <h2>
+      Bienvenido al administrador
+    </h2>
 
-</div>
+    <p class="notice">
+      Este panel es independiente del CRM.
+      Desde aquí administraremos el sitio inmobiliario,
+      propiedades, proyectos, asesores, operaciones,
+      comisiones, imágenes y configuración.
+    </p>
+
+  </div>
 
 </section>
 
 
-<section id="propiedades" class="section">
+<!-- =====================================================
+     PROPIEDADES
+===================================================== -->
 
-<h1 class="page-title">
-Propiedades
-</h1>
-
-<p class="page-subtitle">
-Casas, terrenos, departamentos, oficinas, locales y otros inmuebles.
-</p>
-
-<div class="panel">
-
-<div class="property-toolbar">
-
-<div>
-
-<h2>
-Inventario inmobiliario
-</h2>
-
-<p class="notice">
-Los cambios se guardan directamente en la tabla
-<strong>inmuebles</strong> de este proyecto inmobiliario.
-</p>
-
-</div>
-
-<button
-class="action-btn action-primary"
-id="newPropertyBtn"
->
-＋ Nueva propiedad
-</button>
-
-</div>
-
-
-<div
-id="propertyForm"
-class="property-form"
+<section
+  id="propiedades"
+  class="section"
 >
 
-<div class="panel" style="margin-top:0">
-
-<div class="property-toolbar">
-
-<h2 id="propertyFormTitle">
-Nueva propiedad
-</h2>
-
-<button
-class="action-btn action-secondary"
-id="cancelPropertyBtn"
-type="button"
->
-Cancelar
-</button>
-
-</div>
-
-
-<form id="propertyEditor">
-
-<input
-type="hidden"
-id="propertyId"
->
-
-<div class="property-form-grid">
+  <h1 class="page-title">
+    Propiedades
+  </h1>
 
-<div class="field">
-<label>Título *</label>
-<input
-id="pTitulo"
-required
-placeholder="Ej. Casa moderna en Equipetrol"
->
-</div>
-
-<div class="field">
-<label>Tipo *</label>
+  <p class="page-subtitle">
+    Casas, terrenos, departamentos, oficinas, locales y otros inmuebles.
+  </p>
 
-<select id="pTipo" required>
+  <div class="panel">
 
-<option value="">
-Seleccionar
-</option>
+    <div class="property-toolbar">
 
-<option>Casa</option>
-<option>Terreno</option>
-<option>Departamento</option>
-<option>Oficina</option>
-<option>Local</option>
-<option>Urbanización</option>
-<option>Otro</option>
+      <div>
 
-</select>
+        <h2>
+          Inventario inmobiliario
+        </h2>
 
-</div>
+        <p class="notice">
+          Los cambios se guardan directamente en la tabla
+          <strong>inmuebles</strong>.
+        </p>
 
-<div class="field">
-<label>Operación *</label>
+      </div>
 
-<select id="pOperacion" required>
+      <button
+        class="action-btn action-primary"
+        id="newPropertyBtn"
+      >
+        ＋ Nueva propiedad
+      </button>
 
-<option value="">
-Seleccionar
-</option>
+    </div>
 
-<option>Venta</option>
-<option>Alquiler</option>
-<option>Anticrético</option>
-<option>Crédito Directo</option>
 
-</select>
+    <div
+      id="propertyForm"
+      class="property-form"
+    >
 
-</div>
+      <div
+        class="panel"
+        style="margin-top:0"
+      >
 
-<div class="field">
-<label>Ubicación *</label>
-<input
-id="pUbicacion"
-required
-placeholder="Zona, ciudad o ubicación"
->
-</div>
+        <div class="property-toolbar">
 
-<div class="field">
-<label>Precio</label>
-<input
-id="pPrecio"
-placeholder="Ej. $us 180.000"
->
-</div>
+          <h2 id="propertyFormTitle">
+            Nueva propiedad
+          </h2>
 
-<div class="field">
-<label>Superficie</label>
-<input
-id="pSuperficie"
-placeholder="Ej. 240 m²"
->
-</div>
+          <button
+            class="action-btn action-secondary"
+            id="cancelPropertyBtn"
+            type="button"
+          >
+            Cancelar
+          </button>
 
-<div class="field">
-<label>WhatsApp</label>
-<input
-id="pWhatsapp"
-placeholder="5917XXXXXXXX"
->
-</div>
+        </div>
 
-<div class="field">
-<label>Estado *</label>
 
-<select id="pEstado" required>
+        <form id="propertyEditor">
 
-<option>Disponible</option>
-<option>Reservado</option>
-<option>Vendido</option>
-<option>Alquilado</option>
-<option>Anticrético</option>
-<option>Oculto</option>
+          <input
+            type="hidden"
+            id="propertyId"
+          >
 
-</select>
+          <div class="property-form-grid">
 
-</div>
+            <div class="field">
+              <label>Título *</label>
 
-<div class="field">
+              <input
+                id="pTitulo"
+                required
+                placeholder="Ej. Casa moderna en Equipetrol"
+              >
+            </div>
 
-<label>
-Imagen principal
-</label>
+            <div class="field">
 
-<input
-id="pImagen"
-type="file"
-accept="image/png,image/jpeg,image/webp"
->
+              <label>Tipo *</label>
 
-</div>
+              <select
+                id="pTipo"
+                required
+              >
 
-</div>
+                <option value="">
+                  Seleccionar
+                </option>
 
+                <option>Casa</option>
+                <option>Terreno</option>
+                <option>Departamento</option>
+                <option>Oficina</option>
+                <option>Local</option>
+                <option>Urbanización</option>
+                <option>Otro</option>
 
-<div
-class="field"
-style="margin-top:14px"
->
+              </select>
 
-<label>
-Descripción
-</label>
+            </div>
 
-<textarea
-id="pDescripcion"
-placeholder="Describe las características principales de la propiedad..."
-></textarea>
+            <div class="field">
 
-</div>
+              <label>Operación *</label>
 
+              <select
+                id="pOperacion"
+                required
+              >
 
-<div class="property-checks">
+                <option value="">
+                  Seleccionar
+                </option>
 
-<label>
-<input
-type="checkbox"
-id="pDestacado"
->
-Marcar como destacada
-</label>
+                <option>Venta</option>
+                <option>Alquiler</option>
+                <option>Anticrético</option>
+                <option>Crédito Directo</option>
 
-</div>
+              </select>
 
+            </div>
 
-<button
-class="action-btn action-primary"
-id="savePropertyBtn"
-type="submit"
->
-Guardar propiedad
-</button>
+            <div class="field">
 
-<div
-id="propertyFormMessage"
-class="form-message"
-></div>
+              <label>Ubicación *</label>
 
-</form>
+              <input
+                id="pUbicacion"
+                required
+                placeholder="Zona, ciudad o ubicación"
+              >
 
-</div>
+            </div>
 
-</div>
+            <div class="field">
 
+              <label>Precio</label>
 
-<div
-id="propertiesMessage"
-class="form-message"
-></div>
+              <input
+                id="pPrecio"
+                placeholder="Ej. $us 180.000"
+              >
 
+            </div>
 
-<div class="property-table-wrap">
+            <div class="field">
 
-<table class="property-table">
+              <label>Superficie</label>
 
-<thead>
+              <input
+                id="pSuperficie"
+                placeholder="Ej. 240 m²"
+              >
 
-<tr>
-<th>Foto</th>
-<th>Propiedad</th>
-<th>Tipo</th>
-<th>Operación</th>
-<th>Ubicación</th>
-<th>Precio</th>
-<th>Estado</th>
-<th>Acciones</th>
-</tr>
+            </div>
 
-</thead>
+            <div class="field">
 
-<tbody id="propertiesTableBody">
+              <label>WhatsApp</label>
 
-<tr>
-<td colspan="8">
-Cargando propiedades...
-</td>
-</tr>
+              <input
+                id="pWhatsapp"
+                placeholder="5917XXXXXXXX"
+              >
 
-</tbody>
+            </div>
 
-</table>
+            <div class="field">
 
-</div>
+              <label>Estado *</label>
 
-</div>
+              <select
+                id="pEstado"
+                required
+              >
+
+                <option>Disponible</option>
+                <option>Reservado</option>
+                <option>Vendido</option>
+                <option>Alquilado</option>
+                <option>Anticrético</option>
+                <option>Oculto</option>
+
+              </select>
+
+            </div>
+
+            <div class="field">
+
+              <label>
+                Imagen principal
+              </label>
+
+              <input
+                id="pImagen"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+              >
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="field"
+            style="margin-top:14px"
+          >
+
+            <label>
+              Descripción
+            </label>
+
+            <textarea
+              id="pDescripcion"
+              placeholder="Describe las características principales de la propiedad..."
+            ></textarea>
+
+          </div>
+
+
+          <div class="property-checks">
+
+            <label>
+              <input
+                type="checkbox"
+                id="pDestacado"
+              >
+              Marcar como destacada
+            </label>
+
+          </div>
+
+
+          <button
+            class="action-btn action-primary"
+            id="savePropertyBtn"
+            type="submit"
+          >
+            Guardar propiedad
+          </button>
+
+          <div
+            id="propertyFormMessage"
+            class="form-message"
+          ></div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="propertiesMessage"
+      class="form-message"
+    ></div>
+
+
+    <div class="property-table-wrap">
+
+      <table class="property-table">
+
+        <thead>
+
+          <tr>
+            <th>Foto</th>
+            <th>Propiedad</th>
+            <th>Tipo</th>
+            <th>Operación</th>
+            <th>Ubicación</th>
+            <th>Precio</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="propertiesTableBody">
+
+          <tr>
+            <td colspan="8">
+              Cargando propiedades...
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
 
 </section>
 
 
-<section id="proyectos" class="section">
+<!-- =====================================================
+     PROYECTOS
+===================================================== -->
 
-<h1 class="page-title">
-Proyectos inmobiliarios
-</h1>
-
-<p class="page-subtitle">
-Administra los proyectos que aparecen en la página pública.
-</p>
-
-<div class="panel">
-
-<div class="module-toolbar">
-
-<h2>
-Proyectos
-</h2>
-
-<button
-class="action-btn action-primary"
-id="newProjectBtn"
->
-+ Nuevo proyecto
-</button>
-
-</div>
-
-
-<div
-id="projectForm"
-class="module-form"
+<section
+  id="proyectos"
+  class="section"
 >
 
-<div class="form-grid">
+  <h1 class="page-title">
+    Proyectos inmobiliarios
+  </h1>
 
-<div class="field">
-<label>Nombre</label>
-<input id="prNombre" required>
-</div>
+  <p class="page-subtitle">
+    Administra los proyectos que aparecen en la página pública.
+  </p>
 
-<div class="field">
-<label>Categoría</label>
-<input
-id="prCategoria"
-placeholder="Urbanización, residencial, casas..."
->
-</div>
+  <div class="panel">
 
-<div class="field">
-<label>Ubicación</label>
-<input id="prUbicacion">
-</div>
+    <div class="module-toolbar">
 
-<div class="field">
-<label>Precio</label>
-<input id="prPrecio">
-</div>
+      <h2>
+        Proyectos
+      </h2>
 
-<div class="field">
-<label>WhatsApp</label>
-<input id="prWhatsapp">
-</div>
+      <button
+        class="action-btn action-primary"
+        id="newProjectBtn"
+      >
+        + Nuevo proyecto
+      </button>
 
-<div class="field">
-<label>Estado</label>
-
-<select id="prEstado">
-
-<option>Publicado</option>
-<option>Borrador</option>
-<option>Oculto</option>
-
-</select>
-
-</div>
-
-<div class="field">
-
-<label>
-Imagen principal
-</label>
-
-<input
-id="prImagen"
-type="file"
-accept="image/png,image/jpeg,image/webp"
->
-
-<small
-style="
-display:block;
-margin-top:6px;
-color:#9fb0c0
-"
->
-Al editar, deja este campo vacío para conservar la foto actual.
-</small>
-
-</div>
-
-<div class="field">
-
-<label>
-Destacado
-</label>
-
-<select id="prDestacado">
-
-<option value="false">
-No
-</option>
-
-<option value="true">
-Sí
-</option>
-
-</select>
-
-</div>
-
-<div class="field">
-
-<label>
-Descripción corta
-</label>
-
-<textarea id="prDesc"></textarea>
-
-</div>
-
-</div>
+    </div>
 
 
-<div class="form-actions">
+    <div
+      id="projectForm"
+      class="module-form"
+    >
 
-<button
-class="action-btn action-primary"
-id="saveProjectBtn"
->
-Guardar
-</button>
+      <div class="form-grid">
 
-<button
-class="action-btn action-secondary"
-id="cancelProjectBtn"
->
-Cancelar
-</button>
+        <div class="field">
+          <label>Nombre *</label>
+          <input id="prNombre">
+        </div>
 
-</div>
+        <div class="field">
+          <label>Categoría</label>
+          <input
+            id="prCategoria"
+            placeholder="Urbanización, residencial, casas..."
+          >
+        </div>
 
-<div
-id="projectMsg"
-class="module-msg"
-></div>
+        <div class="field">
+          <label>Ubicación</label>
+          <input id="prUbicacion">
+        </div>
 
-</div>
+        <div class="field">
+          <label>Precio</label>
+          <input id="prPrecio">
+        </div>
 
-<div
-id="projectsTable"
-class="table-wrap"
-></div>
+        <div class="field">
+          <label>WhatsApp</label>
+          <input id="prWhatsapp">
+        </div>
 
-</div>
+        <div class="field">
+
+          <label>Estado</label>
+
+          <select id="prEstado">
+
+            <option value="Disponible">
+              Disponible
+            </option>
+
+            <option value="Reservado">
+              Reservado
+            </option>
+
+            <option value="Agotado">
+              Agotado
+            </option>
+
+            <option value="Oculto">
+              Oculto
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            Imagen principal
+          </label>
+
+          <input
+            id="prImagen"
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+          >
+
+          <small
+            style="
+              display:block;
+              margin-top:6px;
+              color:#9fb0c0
+            "
+          >
+            Al editar, deja este campo vacío para conservar la foto actual.
+          </small>
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            Destacado
+          </label>
+
+          <select id="prDestacado">
+
+            <option value="false">
+              No
+            </option>
+
+            <option value="true">
+              Sí
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            Descripción corta
+          </label>
+
+          <textarea id="prDesc"></textarea>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          class="action-btn action-primary"
+          id="saveProjectBtn"
+        >
+          Guardar
+        </button>
+
+        <button
+          class="action-btn action-secondary"
+          id="cancelProjectBtn"
+        >
+          Cancelar
+        </button>
+
+      </div>
+
+      <div
+        id="projectMsg"
+        class="module-msg"
+      ></div>
+
+    </div>
+
+    <div
+      id="projectsTable"
+      class="table-wrap"
+    ></div>
+
+  </div>
 
 </section>
 
 
-<section id="asesores" class="section">
+<!-- =====================================================
+     ASESORES
+===================================================== -->
 
-<h1 class="page-title">
-Asesores inmobiliarios
-</h1>
-
-<p class="page-subtitle">
-Gestiona captadores, colocadores y asesores.
-</p>
-
-<div class="panel">
-
-<div class="module-toolbar">
-
-<h2>
-Equipo comercial
-</h2>
-
-<button
-class="action-btn action-primary"
-id="newAdvisorBtn"
->
-+ Nuevo asesor
-</button>
-
-</div>
-
-
-<div
-id="advisorForm"
-class="module-form"
+<section
+  id="asesores"
+  class="section"
 >
 
-<div class="form-grid">
+  <h1 class="page-title">
+    Asesores inmobiliarios
+  </h1>
 
-<div class="field">
-<label>Nombre</label>
-<input id="aNombre">
-</div>
+  <p class="page-subtitle">
+    Gestiona captadores, colocadores y asesores.
+  </p>
 
-<div class="field">
-<label>Fotografía / URL</label>
-<input id="aFoto">
-</div>
+  <div class="panel">
 
-<div class="field">
-<label>Teléfono</label>
-<input id="aTelefono">
-</div>
+    <div class="module-toolbar">
 
-<div class="field">
-<label>WhatsApp</label>
-<input id="aWhatsapp">
-</div>
+      <h2>
+        Equipo comercial
+      </h2>
 
-<div class="field">
-<label>Cargo</label>
-<input
-id="aCargo"
-placeholder="Asesor / Captador / Colocador"
->
-</div>
+      <button
+        class="action-btn action-primary"
+        id="newAdvisorBtn"
+      >
+        + Nuevo asesor
+      </button>
 
-<div class="field">
-<label>Estado</label>
+    </div>
 
-<select id="aEstado">
-<option>Activo</option>
-<option>Inactivo</option>
-</select>
 
-</div>
+    <div
+      id="advisorForm"
+      class="module-form"
+    >
 
-</div>
+      <div class="form-grid">
 
-<div class="form-actions">
+        <div class="field">
+          <label>Nombre *</label>
+          <input id="aNombre">
+        </div>
 
-<button
-class="action-btn action-primary"
-id="saveAdvisorBtn"
->
-Guardar
-</button>
+        <div class="field">
+          <label>Fotografía / URL</label>
+          <input id="aFoto">
+        </div>
 
-<button
-class="action-btn action-secondary"
-id="cancelAdvisorBtn"
->
-Cancelar
-</button>
+        <div class="field">
+          <label>Teléfono</label>
+          <input id="aTelefono">
+        </div>
 
-</div>
+        <div class="field">
+          <label>WhatsApp</label>
+          <input id="aWhatsapp">
+        </div>
 
-<div
-id="advisorMsg"
-class="module-msg"
-></div>
+        <div class="field">
 
-</div>
+          <label>Cargo</label>
 
-<div
-id="advisorsTable"
-class="table-wrap"
-></div>
+          <input
+            id="aCargo"
+            placeholder="Asesor / Captador / Colocador"
+          >
 
-</div>
+        </div>
+
+        <div class="field">
+
+          <label>Estado</label>
+
+          <select id="aEstado">
+
+            <option>Activo</option>
+            <option>Inactivo</option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          class="action-btn action-primary"
+          id="saveAdvisorBtn"
+        >
+          Guardar
+        </button>
+
+        <button
+          class="action-btn action-secondary"
+          id="cancelAdvisorBtn"
+        >
+          Cancelar
+        </button>
+
+      </div>
+
+      <div
+        id="advisorMsg"
+        class="module-msg"
+      ></div>
+
+    </div>
+
+
+    <div
+      id="advisorsTable"
+      class="table-wrap"
+    ></div>
+
+  </div>
 
 </section>
 
 
-<section id="operaciones" class="section">
+<!-- =====================================================
+     OPERACIONES
+===================================================== -->
 
-<h1 class="page-title">
-Operaciones
-</h1>
-
-<p class="page-subtitle">
-Ventas, alquileres, anticréticos y créditos directos.
-</p>
-
-<div class="panel">
-
-<div class="module-toolbar">
-
-<h2>
-Operaciones
-</h2>
-
-<button
-class="action-btn action-primary"
-id="newOperationBtn"
->
-+ Nueva operación
-</button>
-
-</div>
-
-
-<div
-id="operationForm"
-class="module-form"
+<section
+  id="operaciones"
+  class="section"
 >
 
-<div class="form-grid">
+  <h1 class="page-title">
+    Operaciones
+  </h1>
 
-<div class="field">
-<label>Inmueble ID</label>
-<input id="oInmueble">
-</div>
+  <p class="page-subtitle">
+    Ventas, alquileres, anticréticos y créditos directos.
+  </p>
 
-<div class="field">
-<label>Proyecto ID</label>
-<input id="oProyecto">
-</div>
+  <div class="panel">
 
-<div class="field">
-<label>Captador ID</label>
-<input id="oCaptador">
-</div>
+    <div class="module-toolbar">
 
-<div class="field">
-<label>Colocador ID</label>
-<input id="oColocador">
-</div>
+      <h2>
+        Operaciones
+      </h2>
 
-<div class="field">
-<label>Precio</label>
-<input id="oPrecio">
-</div>
+      <button
+        class="action-btn action-primary"
+        id="newOperationBtn"
+      >
+        + Nueva operación
+      </button>
 
-<div class="field">
-<label>Fecha</label>
-<input id="oFecha" type="date">
-</div>
+    </div>
 
-<div class="field">
-<label>Estado</label>
 
-<select id="oEstado">
-<option>En proceso</option>
-<option>Reservado</option>
-<option>Concretado</option>
-<option>Cancelado</option>
-</select>
+    <div
+      id="operationForm"
+      class="module-form"
+    >
 
-</div>
+      <div class="form-grid">
 
-</div>
+        <div class="field">
+          <label>Inmueble ID</label>
+          <input id="oInmueble">
+        </div>
 
-<div class="form-actions">
+        <div class="field">
+          <label>Proyecto ID</label>
+          <input id="oProyecto">
+        </div>
 
-<button
-class="action-btn action-primary"
-id="saveOperationBtn"
->
-Guardar
-</button>
+        <div class="field">
+          <label>Captador ID</label>
+          <input id="oCaptador">
+        </div>
 
-<button
-class="action-btn action-secondary"
-id="cancelOperationBtn"
->
-Cancelar
-</button>
+        <div class="field">
+          <label>Colocador ID</label>
+          <input id="oColocador">
+        </div>
 
-</div>
+        <div class="field">
+          <label>Precio</label>
+          <input id="oPrecio">
+        </div>
 
-<div
-id="operationMsg"
-class="module-msg"
-></div>
+        <div class="field">
+          <label>Fecha</label>
+          <input id="oFecha" type="date">
+        </div>
 
-</div>
+        <div class="field">
 
-<div
-id="operationsTable"
-class="table-wrap"
-></div>
+          <label>Estado</label>
 
-</div>
+          <select id="oEstado">
+
+            <option>En proceso</option>
+            <option>Reservado</option>
+            <option>Concretado</option>
+            <option>Cancelado</option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          class="action-btn action-primary"
+          id="saveOperationBtn"
+        >
+          Guardar
+        </button>
+
+        <button
+          class="action-btn action-secondary"
+          id="cancelOperationBtn"
+        >
+          Cancelar
+        </button>
+
+      </div>
+
+      <div
+        id="operationMsg"
+        class="module-msg"
+      ></div>
+
+    </div>
+
+
+    <div
+      id="operationsTable"
+      class="table-wrap"
+    ></div>
+
+  </div>
 
 </section>
 
 
-<section id="comisiones" class="section">
+<!-- =====================================================
+     COMISIONES
+===================================================== -->
 
-<h1 class="page-title">
-Comisiones
-</h1>
-
-<p class="page-subtitle">
-Control y seguimiento de pagos de comisión.
-</p>
-
-<div class="panel">
-
-<div class="module-toolbar">
-
-<h2>
-Comisiones
-</h2>
-
-<button
-class="action-btn action-primary"
-id="newCommissionBtn"
->
-+ Nueva comisión
-</button>
-
-</div>
-
-
-<div
-id="commissionForm"
-class="module-form"
+<section
+  id="comisiones"
+  class="section"
 >
 
-<div class="form-grid">
+  <h1 class="page-title">
+    Comisiones
+  </h1>
 
-<div class="field">
-<label>Asesor ID</label>
-<input id="cAsesor">
-</div>
+  <p class="page-subtitle">
+    Control y seguimiento de pagos de comisión.
+  </p>
 
-<div class="field">
-<label>Rol</label>
-<input id="cRol">
-</div>
+  <div class="panel">
 
-<div class="field">
-<label>Porcentaje</label>
-<input id="cPorcentaje">
-</div>
+    <div class="module-toolbar">
 
-<div class="field">
-<label>Monto</label>
-<input id="cMonto">
-</div>
+      <h2>
+        Comisiones
+      </h2>
 
-<div class="field">
-<label>Estado</label>
+      <button
+        class="action-btn action-primary"
+        id="newCommissionBtn"
+      >
+        + Nueva comisión
+      </button>
 
-<select id="cEstado">
-<option>Pendiente</option>
-<option>Pagada</option>
-<option>Anulada</option>
-</select>
+    </div>
 
-</div>
 
-<div class="field">
-<label>Fecha de pago</label>
-<input id="cFecha" type="date">
-</div>
+    <div
+      id="commissionForm"
+      class="module-form"
+    >
 
-</div>
+      <div class="form-grid">
 
-<div class="form-actions">
+        <div class="field">
+          <label>Asesor ID</label>
+          <input id="cAsesor">
+        </div>
 
-<button
-class="action-btn action-primary"
-id="saveCommissionBtn"
->
-Guardar
-</button>
+        <div class="field">
+          <label>Rol</label>
+          <input id="cRol">
+        </div>
 
-<button
-class="action-btn action-secondary"
-id="cancelCommissionBtn"
->
-Cancelar
-</button>
+        <div class="field">
+          <label>Porcentaje</label>
+          <input id="cPorcentaje">
+        </div>
 
-</div>
+        <div class="field">
+          <label>Monto</label>
+          <input id="cMonto">
+        </div>
 
-<div
-id="commissionMsg"
-class="module-msg"
-></div>
+        <div class="field">
 
-</div>
+          <label>Estado</label>
 
-<div
-id="commissionsTable"
-class="table-wrap"
-></div>
+          <select id="cEstado">
 
-</div>
+            <option>Pendiente</option>
+            <option>Pagada</option>
+            <option>Anulada</option>
+
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>Fecha de pago</label>
+
+          <input
+            id="cFecha"
+            type="date"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          class="action-btn action-primary"
+          id="saveCommissionBtn"
+        >
+          Guardar
+        </button>
+
+        <button
+          class="action-btn action-secondary"
+          id="cancelCommissionBtn"
+        >
+          Cancelar
+        </button>
+
+      </div>
+
+      <div
+        id="commissionMsg"
+        class="module-msg"
+      ></div>
+
+    </div>
+
+
+    <div
+      id="commissionsTable"
+      class="table-wrap"
+    ></div>
+
+  </div>
 
 </section>
 
 
-<section id="imagenes" class="section">
+<!-- =====================================================
+     IMÁGENES
+===================================================== -->
 
-<h1 class="page-title">
-Imágenes
-</h1>
-
-<p class="page-subtitle">
-Biblioteca de imágenes de propiedades y proyectos.
-</p>
-
-<div class="panel">
-
-<div class="module-toolbar">
-
-<h2>
-Galería
-</h2>
-
-<button
-class="action-btn action-primary"
-id="newImageBtn"
->
-+ Registrar imagen
-</button>
-
-</div>
-
-
-<div
-id="imageForm"
-class="module-form"
+<section
+  id="imagenes"
+  class="section"
 >
 
-<div class="form-grid">
+  <h1 class="page-title">
+    Imágenes
+  </h1>
 
-<div class="field">
-<label>Inmueble ID</label>
-<input id="iInmueble">
-</div>
+  <p class="page-subtitle">
+    Biblioteca de imágenes de propiedades y proyectos.
+  </p>
 
-<div class="field">
-<label>Proyecto ID</label>
-<input id="iProyecto">
-</div>
+  <div class="panel">
 
-<div class="field">
-<label>Ruta / URL de imagen</label>
-<input id="iUrl">
-</div>
+    <div class="module-toolbar">
 
-<div class="field">
-<label>Orden</label>
-<input
-id="iOrden"
-type="number"
-value="0"
->
-</div>
+      <h2>
+        Galería
+      </h2>
 
-</div>
+      <button
+        class="action-btn action-primary"
+        id="newImageBtn"
+      >
+        + Registrar imagen
+      </button>
 
-<div class="form-actions">
+    </div>
 
-<button
-class="action-btn action-primary"
-id="saveImageBtn"
->
-Guardar
-</button>
 
-<button
-class="action-btn action-secondary"
-id="cancelImageBtn"
->
-Cancelar
-</button>
+    <div
+      id="imageForm"
+      class="module-form"
+    >
 
-</div>
+      <div class="form-grid">
 
-<div
-id="imageMsg"
-class="module-msg"
-></div>
+        <div class="field">
+          <label>Inmueble ID</label>
+          <input id="iInmueble">
+        </div>
 
-</div>
+        <div class="field">
+          <label>Proyecto ID</label>
+          <input id="iProyecto">
+        </div>
 
-<div
-id="imagesTable"
-class="table-wrap"
-></div>
+        <div class="field">
+          <label>Ruta / URL de imagen</label>
+          <input id="iUrl">
+        </div>
 
-</div>
+        <div class="field">
+          <label>Orden</label>
+
+          <input
+            id="iOrden"
+            type="number"
+            value="0"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          class="action-btn action-primary"
+          id="saveImageBtn"
+        >
+          Guardar
+        </button>
+
+        <button
+          class="action-btn action-secondary"
+          id="cancelImageBtn"
+        >
+          Cancelar
+        </button>
+
+      </div>
+
+      <div
+        id="imageMsg"
+        class="module-msg"
+      ></div>
+
+    </div>
+
+
+    <div
+      id="imagesTable"
+      class="table-wrap"
+    ></div>
+
+  </div>
 
 </section>
 
 
-<section id="configuracion" class="section">
+<!-- =====================================================
+     CONFIGURACIÓN
+===================================================== -->
 
-<h1 class="page-title">
-Configuración
-</h1>
-
-<p class="page-subtitle">
-Configuración general del sitio web.
-</p>
-
-<div class="panel config-box">
-
-<h2>
-Logo de TVEO Business
-</h2>
-
-<p class="notice">
-Sube o cambia el logo desde aquí. El logo se guarda
-en el Storage de este proyecto de Supabase.
-</p>
-
-<div class="upload-area">
-
-<div
-class="logo-preview"
-id="logoPreview"
->
-Sin logo
-</div>
-
-<label
-class="upload-btn"
-for="logoInput"
->
-🖼️ Seleccionar logo
-</label>
-
-<input
-type="file"
-id="logoInput"
-accept="image/png,image/jpeg,image/webp,image/svg+xml"
+<section
+  id="configuracion"
+  class="section"
 >
 
-<div
-id="logoMessage"
-class="message"
-></div>
+  <h1 class="page-title">
+    Configuración
+  </h1>
 
-</div>
+  <p class="page-subtitle">
+    Configuración general del sitio web.
+  </p>
 
-</div>
+  <div class="panel config-box">
+
+    <h2>
+      Logo de TVEO Business
+    </h2>
+
+    <p class="notice">
+      Sube o cambia el logo desde aquí.
+      El logo se guarda en el Storage de este proyecto de Supabase.
+    </p>
+
+    <div class="upload-area">
+
+      <div
+        class="logo-preview"
+        id="logoPreview"
+      >
+        Sin logo
+      </div>
+
+      <label
+        class="upload-btn"
+        for="logoInput"
+      >
+        🖼️ Seleccionar logo
+      </label>
+
+      <input
+        type="file"
+        id="logoInput"
+        accept="image/png,image/jpeg,image/webp,image/svg+xml"
+      >
+
+      <div
+        id="logoMessage"
+        class="message"
+      ></div>
+
+    </div>
+
+  </div>
 
 </section>
 
@@ -1695,1989 +1946,2540 @@ class="message"
 
 <script>
 
-const SUPABASE_URL='https://jefvmwhkalypvrpiwcuj.supabase.co';
+/* =====================================================
+   SUPABASE
+===================================================== */
 
-const SUPABASE_KEY='sb_publishable_yj7GqpJpBjtzemuSnke7mQ_bXzeReDy';
+const SUPABASE_URL =
+  'https://jefvmwhkalypvrpiwcuj.supabase.co';
 
-const supabaseClient=
-window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-);
+const SUPABASE_KEY =
+  'sb_publishable_yj7GqpJpBjtzemuSnke7mQ_bXzeReDy';
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 
-/* =========================
+/* =====================================================
    ELEMENTOS PRINCIPALES
-========================= */
+===================================================== */
 
-const loginScreen=document.getElementById('loginScreen');
-const adminApp=document.getElementById('adminApp');
-const loginForm=document.getElementById('loginForm');
-const loginMessage=document.getElementById('loginMessage');
-const loginBtn=document.getElementById('loginBtn');
-const logoutBtn=document.getElementById('logoutBtn');
+const loginScreen =
+  document.getElementById('loginScreen');
+
+const adminApp =
+  document.getElementById('adminApp');
+
+const loginForm =
+  document.getElementById('loginForm');
+
+const loginMessage =
+  document.getElementById('loginMessage');
+
+const loginBtn =
+  document.getElementById('loginBtn');
+
+const logoutBtn =
+  document.getElementById('logoutBtn');
 
 
-/* =========================
-   ESTADO DE MÓDULOS
-========================= */
+/* =====================================================
+   ESTADO
+===================================================== */
 
-const moduleState={
+const moduleState = {
 
-projectEdit:null,
-advisorEdit:null,
-operationEdit:null,
-commissionEdit:null,
-imageEdit:null
+  projectEdit:null,
+  advisorEdit:null,
+  operationEdit:null,
+  commissionEdit:null,
+  imageEdit:null
 
 };
 
 
-/* =========================
+/* =====================================================
    CONFIGURACIÓN DE MÓDULOS
-========================= */
+===================================================== */
 
-const configs={
+const configs = {
 
-proyectos:{
-container:'projectsTable',
-table:'proyectos',
-cols:[
-['nombre','Nombre'],
-['categoria','Categoría'],
-['ubicacion','Ubicación'],
-['precio','Precio'],
-['estado','Estado'],
-['destacado','Destacado']
-]
-},
+  proyectos:{
+    container:'projectsTable',
+    table:'proyectos',
+    cols:[
+      ['nombre','Nombre'],
+      ['categoria','Categoría'],
+      ['ubicacion','Ubicación'],
+      ['precio','Precio'],
+      ['estado','Estado'],
+      ['destacado','Destacado']
+    ]
+  },
 
-asesores:{
-container:'advisorsTable',
-table:'asesores',
-cols:[
-['nombre','Nombre'],
-['cargo','Cargo'],
-['telefono','Teléfono'],
-['whatsapp','WhatsApp'],
-['estado','Estado']
-]
-},
+  asesores:{
+    container:'advisorsTable',
+    table:'asesores',
+    cols:[
+      ['nombre','Nombre'],
+      ['cargo','Cargo'],
+      ['telefono','Teléfono'],
+      ['whatsapp','WhatsApp'],
+      ['estado','Estado']
+    ]
+  },
 
-operaciones:{
-container:'operationsTable',
-table:'operaciones',
-cols:[
-['inmueble_id','Inmueble'],
-['proyecto_id','Proyecto'],
-['captador_id','Captador'],
-['colocador_id','Colocador'],
-['precio','Precio'],
-['fecha','Fecha'],
-['estado','Estado']
-]
-},
+  operaciones:{
+    container:'operationsTable',
+    table:'operaciones',
+    cols:[
+      ['inmueble_id','Inmueble'],
+      ['proyecto_id','Proyecto'],
+      ['captador_id','Captador'],
+      ['colocador_id','Colocador'],
+      ['precio','Precio'],
+      ['fecha','Fecha'],
+      ['estado','Estado']
+    ]
+  },
 
-comisiones:{
-container:'commissionsTable',
-table:'comisiones',
-cols:[
-['asesor_id','Asesor'],
-['rol','Rol'],
-['porcentaje','%'],
-['monto','Monto'],
-['estado','Estado'],
-['fecha_pago','Fecha pago']
-]
-},
+  comisiones:{
+    container:'commissionsTable',
+    table:'comisiones',
+    cols:[
+      ['asesor_id','Asesor'],
+      ['rol','Rol'],
+      ['porcentaje','%'],
+      ['monto','Monto'],
+      ['estado','Estado'],
+      ['fecha_pago','Fecha pago']
+    ]
+  },
 
-imagenes:{
-container:'imagesTable',
-table:'inmueble_imagenes',
-cols:[
-['inmueble_id','Inmueble'],
-['proyecto_id','Proyecto'],
-['imagen_url','Imagen'],
-['ruta','Ruta'],
-['orden','Orden']
-]
-}
+  imagenes:{
+    container:'imagesTable',
+    table:'inmueble_imagenes',
+    cols:[
+      ['inmueble_id','Inmueble'],
+      ['proyecto_id','Proyecto'],
+      ['imagen_url','Imagen'],
+      ['ruta','Ruta'],
+      ['orden','Orden']
+    ]
+  }
 
 };
 
 
-/* =========================
+/* =====================================================
    LOGIN
-========================= */
+===================================================== */
 
 function mostrarAdministrador(){
 
-loginScreen.classList.add('hidden');
-adminApp.classList.remove('hidden');
+  loginScreen.classList.add('hidden');
+  adminApp.classList.remove('hidden');
 
 }
 
 
 function mostrarLogin(){
 
-adminApp.classList.add('hidden');
-loginScreen.classList.remove('hidden');
+  adminApp.classList.add('hidden');
+  loginScreen.classList.remove('hidden');
 
 }
 
 
 function mostrarError(msg){
 
-loginMessage.innerHTML='';
+  loginMessage.innerHTML='';
 
-const box=document.createElement('div');
+  const box =
+    document.createElement('div');
 
-box.className='error-box';
+  box.className='error-box';
 
-box.textContent=msg;
+  box.textContent=msg;
 
-loginMessage.appendChild(box);
+  loginMessage.appendChild(box);
 
 }
 
 
 async function verificarAdministrador(){
 
-try{
+  try{
 
-const {
-data:{user},
-error:userError
-}=await supabaseClient.auth.getUser();
-
-
-if(userError){
-
-console.error(
-'Error obteniendo usuario:',
-userError
-);
-
-mostrarLogin();
-
-mostrarError(
-'No se pudo verificar la sesión: '+
-(userError.message||'Error desconocido')
-);
-
-return false;
-
-}
+    const {
+      data:{user},
+      error:userError
+    } =
+      await supabaseClient.auth.getUser();
 
 
-if(!user){
+    if(userError){
 
-mostrarLogin();
+      console.error(
+        'Error obteniendo usuario:',
+        userError
+      );
 
-return false;
+      mostrarLogin();
 
-}
+      mostrarError(
+        'No se pudo verificar la sesión: '+
+        (userError.message||'Error desconocido')
+      );
 
+      return false;
 
-const {
-data,
-error
-}=await supabaseClient.rpc(
-'verificar_admin_actual'
-);
-
-
-console.log(
-'Verificación de administrador:',
-{
-data,
-error,
-userId:user.id
-}
-);
+    }
 
 
-/*
-IMPORTANTE:
-Si la función RPC falla, NO cerramos
-la sesión automáticamente.
-Mostramos el error real para poder
-identificar qué está pasando.
-*/
+    if(!user){
 
-if(error){
+      mostrarLogin();
 
-console.error(
-'Error RPC verificar_admin_actual:',
-error
-);
+      return false;
 
-mostrarLogin();
-
-mostrarError(
-'Error verificando permisos: '+
-(error.message||'Error desconocido')
-);
-
-return false;
-
-}
+    }
 
 
-const admin=
-Array.isArray(data)
-?data[0]
-:data;
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.rpc(
+        'verificar_admin_actual'
+      );
 
 
-if(!admin){
-
-await supabaseClient.auth.signOut();
-
-mostrarLogin();
-
-mostrarError(
-'El usuario ingresó correctamente, pero no tiene registro de administrador.'
-);
-
-return false;
-
-}
+    console.log(
+      'Verificación de administrador:',
+      {
+        data,
+        error,
+        userId:user.id
+      }
+    );
 
 
-const rol=
-String(
-admin.rol??''
-)
-.trim()
-.toLowerCase();
+    if(error){
+
+      console.error(
+        'Error RPC verificar_admin_actual:',
+        error
+      );
+
+      mostrarLogin();
+
+      mostrarError(
+        'Error verificando permisos: '+
+        (error.message||'Error desconocido')
+      );
+
+      return false;
+
+    }
 
 
-const activo=
-admin.activo===true||
-admin.activo==='true'||
-admin.activo===1||
-admin.activo==='1';
+    const admin =
+      Array.isArray(data)
+      ? data[0]
+      : data;
 
 
-if(
-rol!=='administrador'||
-!activo
-){
+    if(!admin){
 
-await supabaseClient.auth.signOut();
+      await supabaseClient.auth.signOut();
 
-mostrarLogin();
+      mostrarLogin();
 
-mostrarError(
-'Tu usuario no tiene permisos de Administrador.'
-);
+      mostrarError(
+        'El usuario ingresó correctamente, pero no tiene registro de administrador.'
+      );
 
-return false;
+      return false;
 
-}
+    }
 
 
-mostrarAdministrador();
-
-loginMessage.textContent='';
-
-
-await cargarDashboard();
-
-await cargarPropiedades();
-
-await cargarLogo();
-
-await refreshAllModules();
-
-return true;
+    const rol =
+      String(
+        admin.rol??''
+      )
+      .trim()
+      .toLowerCase();
 
 
-}catch(error){
+    const activo =
+      admin.activo===true ||
+      admin.activo==='true' ||
+      admin.activo===1 ||
+      admin.activo==='1';
 
-console.error(
-'Error inesperado verificando administrador:',
-error
-);
 
-mostrarLogin();
+    if(
+      rol!=='administrador' ||
+      !activo
+    ){
 
-mostrarError(
-'Error al verificar el acceso: '+
-(error.message||'Error desconocido')
-);
+      await supabaseClient.auth.signOut();
 
-return false;
+      mostrarLogin();
 
-}
+      mostrarError(
+        'Tu usuario no tiene permisos de Administrador.'
+      );
+
+      return false;
+
+    }
+
+
+    mostrarAdministrador();
+
+    loginMessage.textContent='';
+
+
+    await cargarDashboard();
+
+    await cargarPropiedades();
+
+    await cargarLogo();
+
+    await refreshAllModules();
+
+
+    return true;
+
+
+  }catch(error){
+
+    console.error(
+      'Error inesperado verificando administrador:',
+      error
+    );
+
+    mostrarLogin();
+
+    mostrarError(
+      'Error al verificar el acceso: '+
+      (error.message||'Error desconocido')
+    );
+
+    return false;
+
+  }
 
 }
 
 
 loginForm.addEventListener(
-'submit',
-async(e)=>{
+  'submit',
+  async e=>{
 
-e.preventDefault();
+    e.preventDefault();
 
-loginBtn.disabled=true;
+    loginBtn.disabled=true;
+    loginBtn.textContent='INGRESANDO...';
 
-loginBtn.textContent='INGRESANDO...';
-
-loginMessage.textContent='';
-
-
-const email=
-document.getElementById('email')
-.value
-.trim();
-
-const password=
-document.getElementById('password')
-.value;
+    loginMessage.textContent='';
 
 
-try{
+    const email =
+      document
+        .getElementById('email')
+        .value
+        .trim();
 
-const {
-error
-}=await supabaseClient.auth.signInWithPassword({
-email,
-password
-});
+    const password =
+      document
+        .getElementById('password')
+        .value;
 
 
-if(error){
+    try{
 
-console.error(
-'Error de login:',
-error
+      const {
+        error
+      } =
+        await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+
+      if(error){
+
+        console.error(
+          'Error de login:',
+          error
+        );
+
+        mostrarError(
+          'Correo o contraseña incorrectos.'
+        );
+
+        return;
+
+      }
+
+
+      await verificarAdministrador();
+
+
+    }catch(error){
+
+      console.error(
+        'Error durante el inicio de sesión:',
+        error
+      );
+
+      mostrarError(
+        'No se pudo completar el ingreso: '+
+        (error.message||'Error desconocido')
+      );
+
+    }finally{
+
+      loginBtn.disabled=false;
+      loginBtn.textContent='INGRESAR';
+
+    }
+
+  }
 );
-
-mostrarError(
-'Correo o contraseña incorrectos.'
-);
-
-return;
-
-}
-
-
-await verificarAdministrador();
-
-
-} catch(error){
-
-console.error(
-'Error durante el inicio de sesión:',
-error
-);
-
-mostrarError(
-'No se pudo completar el ingreso: '+
-(error.message||'Error desconocido')
-);
-
-}finally{
-
-loginBtn.disabled=false;
-
-loginBtn.textContent='INGRESAR';
-
-}
-
-});
 
 
 logoutBtn.addEventListener(
-'click',
-async()=>{
+  'click',
+  async()=>{
 
-try{
+    try{
 
-await supabaseClient.auth.signOut();
+      await supabaseClient.auth.signOut();
 
-}catch(error){
+    }catch(error){
 
-console.error(
-'Error cerrando sesión:',
-error
+      console.error(
+        'Error cerrando sesión:',
+        error
+      );
+
+    }
+
+    mostrarLogin();
+
+    loginMessage.textContent='';
+
+  }
 );
 
-}
 
-mostrarLogin();
-
-loginMessage.textContent='';
-
-});
-
-
-/* =========================
+/* =====================================================
    NAVEGACIÓN
-========================= */
+===================================================== */
 
 document
-.querySelectorAll('.menu-btn')
-.forEach(btn=>{
+  .querySelectorAll('.menu-btn')
+  .forEach(btn=>{
 
-btn.addEventListener(
-'click',
-()=>{
+    btn.addEventListener(
+      'click',
+      ()=>{
 
-document
-.querySelectorAll('.menu-btn')
-.forEach(b=>
-b.classList.remove('active')
-);
-
-btn.classList.add('active');
+        document
+          .querySelectorAll('.menu-btn')
+          .forEach(b=>
+            b.classList.remove('active')
+          );
 
 
-document
-.querySelectorAll('.section')
-.forEach(s=>
-s.classList.remove('active')
-);
+        btn.classList.add('active');
 
 
-const target=
-document.getElementById(
-btn.dataset.section
-);
+        document
+          .querySelectorAll('.section')
+          .forEach(s=>
+            s.classList.remove('active')
+          );
 
 
-if(target){
-target.classList.add('active');
-}
+        const target =
+          document.getElementById(
+            btn.dataset.section
+          );
 
 
-const key=btn.dataset.section;
+        if(target){
 
-if(configs[key]){
-loadModule(key);
-}
+          target.classList.add('active');
 
-});
-
-});
+        }
 
 
-/* =========================
+        const key =
+          btn.dataset.section;
+
+
+        if(configs[key]){
+
+          loadModule(key);
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* =====================================================
    HELPERS
-========================= */
+===================================================== */
 
 function publicImageUrl(path){
 
-if(!path)return '';
+  if(!path){
+    return '';
+  }
 
-if(/^https?:\/\//i.test(path)){
-return path;
-}
 
-return supabaseClient
-.storage
-.from('inmobiliaria')
-.getPublicUrl(path)
-.data
-.publicUrl||'';
+  if(/^https?:\/\//i.test(path)){
+
+    return path;
+
+  }
+
+
+  return supabaseClient
+    .storage
+    .from('inmobiliaria')
+    .getPublicUrl(path)
+    .data
+    .publicUrl||'';
 
 }
 
 
 function escapeHtml(value){
 
-return String(value??'')
-.replace(
-/[&<>"']/g,
-c=>({
-'&':'&amp;',
-'<':'&lt;',
-'>':'&gt;',
-'"':'&quot;',
-"'":'&#039;'
-}[c])
-);
+  return String(value??'')
+    .replace(
+      /[&<>"']/g,
+      c=>({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#039;'
+      }[c])
+    );
 
 }
-
-
-const escA=v=>
-String(v??'')
-.replace(/&/g,'&amp;')
-.replace(/</g,'&lt;')
-.replace(/>/g,'&gt;')
-.replace(/"/g,'&quot;')
-.replace(/'/g,'&#039;');
 
 
 function setMsg(
-id,
-msg,
-error=false
+  id,
+  msg,
+  error=false
 ){
 
-const e=
-document.getElementById(id);
+  const e =
+    document.getElementById(id);
 
-if(e){
+  if(!e){
+    return;
+  }
 
-e.textContent=msg;
 
-e.className=
-'module-msg'+
-(error?' error':'');
+  e.textContent=msg;
+
+  e.className =
+    'module-msg'+
+    (error?' error':'');
 
 }
+
+
+function setFormMessage(
+  id,
+  msg,
+  error=false
+){
+
+  const e =
+    document.getElementById(id);
+
+  if(!e){
+    return;
+  }
+
+
+  e.textContent=msg;
+
+  e.className =
+    'form-message'+
+    (error?' error':'');
 
 }
 
 
 function toggleForm(
-id,
-open=true
+  id,
+  open=true
 ){
 
-const e=
-document.getElementById(id);
+  const e =
+    document.getElementById(id);
 
-if(e){
+  if(e){
 
-e.classList.toggle(
-'open',
-open
-);
+    e.classList.toggle(
+      'open',
+      open
+    );
 
-}
+  }
 
 }
 
 
 function val(id){
 
-return document
-.getElementById(id)
-?.value
-?.trim()||'';
+  return document
+    .getElementById(id)
+    ?.value
+    ?.trim()||'';
 
 }
 
 
 function boolVal(id){
 
-return document
-.getElementById(id)
-?.value==='true';
+  return document
+    .getElementById(id)
+    ?.value==='true';
 
 }
 
 
-/* =========================
+function clearFields(ids){
+
+  ids.forEach(id=>{
+
+    const e =
+      document.getElementById(id);
+
+    if(!e){
+      return;
+    }
+
+
+    if(e.type==='checkbox'){
+
+      e.checked=false;
+
+    }else{
+
+      e.value='';
+
+    }
+
+  });
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+async function cargarDashboard(){
+
+  try{
+
+    const [
+      properties,
+      projects,
+      advisors,
+      operations
+    ] =
+      await Promise.all([
+
+        supabaseClient
+          .from('inmuebles')
+          .select(
+            'id',
+            {count:'exact',head:true}
+          ),
+
+        supabaseClient
+          .from('proyectos')
+          .select(
+            'id',
+            {count:'exact',head:true}
+          ),
+
+        supabaseClient
+          .from('asesores')
+          .select(
+            'id',
+            {count:'exact',head:true}
+          ),
+
+        supabaseClient
+          .from('operaciones')
+          .select(
+            'id',
+            {count:'exact',head:true}
+          )
+
+      ]);
+
+
+    document.getElementById(
+      'statProperties'
+    ).textContent =
+      properties.count??0;
+
+
+    document.getElementById(
+      'statProjects'
+    ).textContent =
+      projects.count??0;
+
+
+    document.getElementById(
+      'statAdvisors'
+    ).textContent =
+      advisors.count??0;
+
+
+    document.getElementById(
+      'statOperations'
+    ).textContent =
+      operations.count??0;
+
+
+  }catch(error){
+
+    console.error(
+      'Error cargando dashboard:',
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
    PROPIEDADES
-========================= */
+===================================================== */
 
 async function cargarPropiedades(){
 
-const tbody=
-document.getElementById(
-'propertiesTableBody'
-);
+  const tbody =
+    document.getElementById(
+      'propertiesTableBody'
+    );
 
-const message=
-document.getElementById(
-'propertiesMessage'
-);
-
-
-tbody.innerHTML=
-'<tr><td colspan="8">Cargando propiedades...</td></tr>';
-
-message.textContent='';
+  const message =
+    document.getElementById(
+      'propertiesMessage'
+    );
 
 
-const {
-data,
-error
-}=await supabaseClient
-.from('inmuebles')
-.select('*')
-.order(
-'destacado',
-{ascending:false}
-)
-.order(
-'created_at',
-{ascending:false}
-);
+  tbody.innerHTML =
+    '<tr><td colspan="8">Cargando propiedades...</td></tr>';
+
+  message.textContent='';
 
 
-if(error){
-
-console.error(
-'Error cargando propiedades:',
-error
-);
-
-tbody.innerHTML=
-'<tr><td colspan="8">No se pudieron cargar las propiedades.</td></tr>';
-
-message.textContent=
-'Error: '+
-(error.message||
-'No se pudo consultar inmuebles.');
-
-return;
-
-}
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('inmuebles')
+      .select('*')
+      .order(
+        'destacado',
+        {ascending:false}
+      )
+      .order(
+        'created_at',
+        {ascending:false}
+      );
 
 
-if(!data?.length){
+  if(error){
 
-tbody.innerHTML=
-'<tr><td colspan="8">No hay propiedades registradas todavía.</td></tr>';
+    console.error(
+      'Error cargando propiedades:',
+      error
+    );
 
-return;
+    tbody.innerHTML =
+      '<tr><td colspan="8">No se pudieron cargar las propiedades.</td></tr>';
 
-}
+    message.textContent =
+      'Error: '+
+      (error.message||
+      'No se pudo consultar inmuebles.');
+
+    return;
+
+  }
 
 
-tbody.innerHTML=
-data.map(x=>{
+  if(!data?.length){
 
-const img=
-publicImageUrl(
-x.imagen_principal
-);
+    tbody.innerHTML =
+      '<tr><td colspan="8">No hay propiedades registradas todavía.</td></tr>';
+
+    return;
+
+  }
 
 
-return `<tr>
+  tbody.innerHTML =
+    data
+      .map(x=>{
 
-<td>
+        const img =
+          publicImageUrl(
+            x.imagen_principal
+          );
 
-${
-img
-?
-`<img
-class="property-thumb"
-src="${escapeHtml(img)}"
-onerror="this.style.display='none'"
->`
-:'—'
-}
 
-</td>
+        return `
+        <tr>
 
-<td>
+          <td>
+            ${
+              img
+              ?
+              `<img
+                class="property-thumb"
+                src="${escapeHtml(img)}"
+                onerror="this.style.display='none'"
+              >`
+              :
+              '—'
+            }
+          </td>
 
-<strong>
-${escapeHtml(x.titulo||'Sin título')}
-</strong>
+          <td>
 
-${
-x.destacado
-?
-'<div class="featured-mark">★ Destacada</div>'
-:''
-}
+            <strong>
+              ${escapeHtml(x.titulo||'Sin título')}
+            </strong>
 
-</td>
+            ${
+              x.destacado
+              ?
+              '<div class="featured-mark">★ Destacada</div>'
+              :
+              ''
+            }
 
-<td>
-${escapeHtml(x.tipo||'—')}
-</td>
+          </td>
 
-<td>
-${escapeHtml(x.operacion||'—')}
-</td>
+          <td>
+            ${escapeHtml(x.tipo||'—')}
+          </td>
 
-<td>
-${escapeHtml(x.ubicacion||'—')}
-</td>
+          <td>
+            ${escapeHtml(x.operacion||'—')}
+          </td>
 
-<td>
-${escapeHtml(x.precio||'Consultar')}
-</td>
+          <td>
+            ${escapeHtml(x.ubicacion||'—')}
+          </td>
 
-<td>
-<span class="status">
-${escapeHtml(x.estado||'—')}
-</span>
-</td>
+          <td>
+            ${escapeHtml(x.precio||'Consultar')}
+          </td>
 
-<td>
+          <td>
 
-<div class="property-actions">
+            <span class="status">
+              ${escapeHtml(x.estado||'—')}
+            </span>
 
-<button
-class="action-btn action-secondary"
-onclick="editarPropiedad('${escapeHtml(x.id)}')"
->
-Editar
-</button>
+          </td>
 
-<button
-class="action-btn action-danger"
-onclick="eliminarPropiedad('${escapeHtml(x.id)}')"
->
-Eliminar
-</button>
+          <td>
 
-</div>
+            <div class="property-actions">
 
-</td>
+              <button
+                class="action-btn action-secondary"
+                onclick="editarPropiedad('${escapeHtml(x.id)}')"
+              >
+                Editar
+              </button>
 
-</tr>`;
+              <button
+                class="action-btn action-danger"
+                onclick="eliminarPropiedad('${escapeHtml(x.id)}')"
+              >
+                Eliminar
+              </button>
 
-}).join('');
+            </div>
+
+          </td>
+
+        </tr>
+        `;
+
+      })
+      .join('');
 
 }
 
 
 function abrirNuevaPropiedad(){
 
-document.getElementById(
-'propertyId'
-).value='';
+  document.getElementById(
+    'propertyEditor'
+  ).reset();
 
-document.getElementById(
-'propertyEditor'
-).reset();
 
-document.getElementById(
-'pEstado'
-).value='Disponible';
+  document.getElementById(
+    'propertyId'
+  ).value='';
 
-document.getElementById(
-'propertyFormTitle'
-).textContent='Nueva propiedad';
 
-document.getElementById(
-'propertyFormMessage'
-).textContent='';
+  document.getElementById(
+    'pEstado'
+  ).value='Disponible';
 
-document.getElementById(
-'propertyForm'
-).classList.add('open');
 
-document.getElementById(
-'pTitulo'
-).focus();
+  document.getElementById(
+    'propertyFormTitle'
+  ).textContent='Nueva propiedad';
+
+
+  setFormMessage(
+    'propertyFormMessage',
+    ''
+  );
+
+
+  toggleForm(
+    'propertyForm',
+    true
+  );
+
+
+  document.getElementById(
+    'pTitulo'
+  ).focus();
 
 }
 
 
 async function editarPropiedad(id){
 
-const {
-data,
-error
-}=await supabaseClient
-.from('inmuebles')
-.select('*')
-.eq('id',id)
-.single();
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('inmuebles')
+      .select('*')
+      .eq('id',id)
+      .single();
 
 
-if(error||!data){
+  if(error||!data){
 
-alert(
-'No se pudo cargar la propiedad.'
-);
+    alert(
+      'No se pudo cargar la propiedad.'
+    );
 
-return;
+    return;
 
-}
+  }
 
 
-document.getElementById(
-'propertyId'
-).value=data.id||'';
+  document.getElementById(
+    'propertyId'
+  ).value=data.id||'';
 
-document.getElementById(
-'pTitulo'
-).value=data.titulo||'';
 
-document.getElementById(
-'pTipo'
-).value=data.tipo||'';
+  document.getElementById(
+    'pTitulo'
+  ).value=data.titulo||'';
 
-document.getElementById(
-'pOperacion'
-).value=data.operacion||'';
 
-document.getElementById(
-'pUbicacion'
-).value=data.ubicacion||'';
+  document.getElementById(
+    'pTipo'
+  ).value=data.tipo||'';
 
-document.getElementById(
-'pPrecio'
-).value=data.precio||'';
 
-document.getElementById(
-'pSuperficie'
-).value=data.superficie||'';
+  document.getElementById(
+    'pOperacion'
+  ).value=data.operacion||'';
 
-document.getElementById(
-'pWhatsapp'
-).value=data.whatsapp||'';
 
-document.getElementById(
-'pEstado'
-).value=data.estado||'Disponible';
+  document.getElementById(
+    'pUbicacion'
+  ).value=data.ubicacion||'';
 
-document.getElementById(
-'pDescripcion'
-).value=data.descripcion||'';
 
-document.getElementById(
-'pDestacado'
-).checked=!!data.destacado;
+  document.getElementById(
+    'pPrecio'
+  ).value=data.precio||'';
 
-document.getElementById(
-'pImagen'
-).value='';
 
-document.getElementById(
-'propertyFormTitle'
-).textContent='Editar propiedad';
+  document.getElementById(
+    'pSuperficie'
+  ).value=data.superficie||'';
 
-document.getElementById(
-'propertyFormMessage'
-).textContent='';
 
-document.getElementById(
-'propertyForm'
-).classList.add('open');
+  document.getElementById(
+    'pWhatsapp'
+  ).value=data.whatsapp||'';
 
-document.getElementById(
-'pTitulo'
-).focus();
+
+  document.getElementById(
+    'pEstado'
+  ).value=data.estado||'Disponible';
+
+
+  document.getElementById(
+    'pDescripcion'
+  ).value=data.descripcion||'';
+
+
+  document.getElementById(
+    'pDestacado'
+  ).checked=!!data.destacado;
+
+
+  document.getElementById(
+    'pImagen'
+  ).value='';
+
+
+  document.getElementById(
+    'propertyFormTitle'
+  ).textContent='Editar propiedad';
+
+
+  setFormMessage(
+    'propertyFormMessage',
+    data.imagen_principal
+    ?
+    'La imagen actual se conservará si no seleccionas otra.'
+    :
+    ''
+  );
+
+
+  toggleForm(
+    'propertyForm',
+    true
+  );
+
+
+  document.getElementById(
+    'pTitulo'
+  ).focus();
 
 }
 
 
 function cerrarFormularioPropiedad(){
 
-document.getElementById(
-'propertyForm'
-).classList.remove('open');
+  toggleForm(
+    'propertyForm',
+    false
+  );
 
-document.getElementById(
-'propertyEditor'
-).reset();
 
-document.getElementById(
-'propertyId'
-).value='';
+  document.getElementById(
+    'propertyEditor'
+  ).reset();
+
+
+  document.getElementById(
+    'propertyId'
+  ).value='';
 
 }
 
 
 async function guardarImagenPrincipal(file){
 
-if(!file)return null;
+  if(!file){
+    return null;
+  }
 
 
-const extension=
-(file.name.split('.').pop()||'jpg')
-.toLowerCase();
+  const extension =
+    (
+      file.name
+        .split('.')
+        .pop()||'jpg'
+    ).toLowerCase();
 
 
-const path=
-`inmuebles/${Date.now()}-${Math.random().toString(36).slice(2,9)}.${extension}`;
+  const path =
+    `inmuebles/${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2,9)}.${extension}`;
 
 
-const {
-error
-}=await supabaseClient
-.storage
-.from('inmobiliaria')
-.upload(
-path,
-file,
-{
-upsert:false,
-contentType:file.type
-}
-);
+  const {
+    error
+  } =
+    await supabaseClient
+      .storage
+      .from('inmobiliaria')
+      .upload(
+        path,
+        file,
+        {
+          upsert:false,
+          contentType:file.type
+        }
+      );
 
 
-if(error)throw error;
+  if(error){
+    throw error;
+  }
 
-return path;
+
+  return path;
 
 }
 
 
 document
-.getElementById('newPropertyBtn')
-.addEventListener(
-'click',
-abrirNuevaPropiedad
-);
+  .getElementById('newPropertyBtn')
+  .addEventListener(
+    'click',
+    abrirNuevaPropiedad
+  );
 
 
 document
-.getElementById('cancelPropertyBtn')
-.addEventListener(
-'click',
-cerrarFormularioPropiedad
-);
+  .getElementById('cancelPropertyBtn')
+  .addEventListener(
+    'click',
+    cerrarFormularioPropiedad
+  );
 
 
 document
-.getElementById('propertyEditor')
-.addEventListener(
-'submit',
-async e=>{
+  .getElementById('propertyEditor')
+  .addEventListener(
+    'submit',
+    async e=>{
 
-e.preventDefault();
-
-const btn=
-document.getElementById(
-'savePropertyBtn'
-);
-
-const msg=
-document.getElementById(
-'propertyFormMessage'
-);
+      e.preventDefault();
 
 
-btn.disabled=true;
+      const btn =
+        document.getElementById(
+          'savePropertyBtn'
+        );
 
-btn.textContent='GUARDANDO...';
-
-msg.textContent='';
-
-
-try{
-
-const id=
-document.getElementById(
-'propertyId'
-).value.trim();
+      const msg =
+        document.getElementById(
+          'propertyFormMessage'
+        );
 
 
-const file=
-document.getElementById(
-'pImagen'
-).files[0];
+      btn.disabled=true;
+      btn.textContent='GUARDANDO...';
+      msg.textContent='';
 
 
-let imagenPrincipal=null;
+      try{
+
+        const id =
+          document
+            .getElementById('propertyId')
+            .value
+            .trim();
 
 
-if(file){
-
-imagenPrincipal=
-await guardarImagenPrincipal(file);
-
-}
+        const file =
+          document
+            .getElementById('pImagen')
+            .files[0];
 
 
-const payload={
-
-titulo:
-document.getElementById(
-'pTitulo'
-).value.trim(),
-
-tipo:
-document.getElementById(
-'pTipo'
-).value,
-
-operacion:
-document.getElementById(
-'pOperacion'
-).value,
-
-ubicacion:
-document.getElementById(
-'pUbicacion'
-).value.trim(),
-
-precio:
-document.getElementById(
-'pPrecio'
-).value.trim(),
-
-superficie:
-document.getElementById(
-'pSuperficie'
-).value.trim(),
-
-whatsapp:
-document.getElementById(
-'pWhatsapp'
-).value.trim(),
-
-estado:
-document.getElementById(
-'pEstado'
-).value,
-
-descripcion:
-document.getElementById(
-'pDescripcion'
-).value.trim(),
-
-destacado:
-document.getElementById(
-'pDestacado'
-).checked
-
-};
+        let imagenPrincipal=null;
 
 
-if(imagenPrincipal){
+        if(file){
 
-payload.imagen_principal=
-imagenPrincipal;
+          imagenPrincipal =
+            await guardarImagenPrincipal(
+              file
+            );
 
-}
-
-
-let result;
-
-
-if(id){
-
-result=
-await supabaseClient
-.from('inmuebles')
-.update(payload)
-.eq('id',id)
-.select()
-.single();
-
-}else{
-
-result=
-await supabaseClient
-.from('inmuebles')
-.insert(payload)
-.select()
-.single();
-
-}
+        }
 
 
-if(result.error){
-throw result.error;
-}
+        const payload={
+
+          titulo:val('pTitulo'),
+          tipo:val('pTipo'),
+          operacion:val('pOperacion'),
+          ubicacion:val('pUbicacion'),
+          precio:val('pPrecio'),
+          superficie:val('pSuperficie'),
+          whatsapp:val('pWhatsapp'),
+          estado:val('pEstado'),
+          descripcion:val('pDescripcion'),
+          destacado:
+            document.getElementById(
+              'pDestacado'
+            ).checked
+
+        };
 
 
-msg.textContent=
-'✓ Propiedad guardada correctamente.';
+        if(imagenPrincipal){
+
+          payload.imagen_principal =
+            imagenPrincipal;
+
+        }
 
 
-await cargarPropiedades();
-
-await cargarDashboard();
+        let result;
 
 
-setTimeout(
-cerrarFormularioPropiedad,
-500
-);
+        if(id){
+
+          result =
+            await supabaseClient
+              .from('inmuebles')
+              .update(payload)
+              .eq('id',id)
+              .select()
+              .single();
+
+        }else{
+
+          result =
+            await supabaseClient
+              .from('inmuebles')
+              .insert(payload)
+              .select()
+              .single();
+
+        }
 
 
-}catch(error){
+        if(result.error){
 
-console.error(
-'Error guardando propiedad:',
-error
-);
+          throw result.error;
 
-msg.textContent=
-'No se pudo guardar: '+
-(error.message||
-'error desconocido');
+        }
 
 
-}finally{
+        msg.textContent =
+          '✓ Propiedad guardada correctamente.';
 
-btn.disabled=false;
 
-btn.textContent=
-'Guardar propiedad';
+        await cargarPropiedades();
 
-}
+        await cargarDashboard();
 
-});
+
+        setTimeout(
+          cerrarFormularioPropiedad,
+          500
+        );
+
+
+      }catch(error){
+
+        console.error(
+          'Error guardando propiedad:',
+          error
+        );
+
+
+        msg.textContent =
+          'No se pudo guardar: '+
+          (
+            error.message||
+            'error desconocido'
+          );
+
+      }finally{
+
+        btn.disabled=false;
+
+        btn.textContent=
+          'Guardar propiedad';
+
+      }
+
+    }
+  );
 
 
 async function eliminarPropiedad(id){
 
-if(
-!confirm(
-'¿Seguro que deseas eliminar esta propiedad? Esta acción no se puede deshacer.'
-)
-)return;
+  if(
+    !confirm(
+      '¿Seguro que deseas eliminar esta propiedad? Esta acción no se puede deshacer.'
+    )
+  ){
+
+    return;
+
+  }
 
 
-const {
-error
-}=await supabaseClient
-.from('inmuebles')
-.delete()
-.eq('id',id);
+  const {
+    error
+  } =
+    await supabaseClient
+      .from('inmuebles')
+      .delete()
+      .eq('id',id);
 
 
-if(error){
+  if(error){
 
-console.error(
-'Error eliminando propiedad:',
-error
-);
+    console.error(
+      'Error eliminando propiedad:',
+      error
+    );
 
-document.getElementById(
-'propertiesMessage'
-).textContent=
-'No se pudo eliminar: '+
-(error.message||
-'error desconocido');
+    document.getElementById(
+      'propertiesMessage'
+    ).textContent =
+      'No se pudo eliminar: '+
+      (
+        error.message||
+        'error desconocido'
+      );
 
-return;
+    return;
 
-}
-
-
-document.getElementById(
-'propertiesMessage'
-).textContent=
-'✓ Propiedad eliminada.';
+  }
 
 
-await cargarPropiedades();
-
-await cargarDashboard();
-
-}
-
-
-/* =========================
-   DASHBOARD
-========================= */
-
-async function cargarDashboard(){
-
-try{
-
-const [
-properties,
-projects,
-advisors,
-operations
-]=await Promise.all([
-
-supabaseClient
-.from('inmuebles')
-.select(
-'id',
-{count:'exact',head:true}
-),
-
-supabaseClient
-.from('proyectos')
-.select(
-'id',
-{count:'exact',head:true}
-),
-
-supabaseClient
-.from('asesores')
-.select(
-'id',
-{count:'exact',head:true}
-),
-
-supabaseClient
-.from('operaciones')
-.select(
-'id',
-{count:'exact',head:true}
-)
-
-]);
+  document.getElementById(
+    'propertiesMessage'
+  ).textContent =
+    '✓ Propiedad eliminada.';
 
 
-document.getElementById(
-'statProperties'
-).textContent=
-properties.count??0;
+  await cargarPropiedades();
 
-
-document.getElementById(
-'statProjects'
-).textContent=
-projects.count??0;
-
-
-document.getElementById(
-'statAdvisors'
-).textContent=
-advisors.count??0;
-
-
-document.getElementById(
-'statOperations'
-).textContent=
-operations.count??0;
-
-}catch(error){
-
-console.error(
-'Error cargando dashboard:',
-error
-);
-
-}
+  await cargarDashboard();
 
 }
 
 
-/* =========================
+/* =====================================================
    LOGO
-========================= */
+===================================================== */
 
 async function cargarLogo(){
 
-const {
-data,
-error
-}=await supabaseClient
-.from('configuracion_sitio')
-.select('logo_url')
-.eq('id',1)
-.maybeSingle();
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('configuracion_sitio')
+      .select('logo_url')
+      .eq('id',1)
+      .maybeSingle();
 
 
-if(error){
+  if(error){
 
-console.error(
-'Error cargando configuración:',
-error
-);
+    console.error(
+      'Error cargando configuración:',
+      error
+    );
 
-return;
+    return;
 
-}
+  }
 
 
-if(data?.logo_url){
+  if(data?.logo_url){
 
-aplicarLogo(
-data.logo_url
-);
+    aplicarLogo(
+      data.logo_url
+    );
 
-}
+  }
 
 }
 
 
 function aplicarLogo(url){
 
-document.getElementById(
-'loginLogo'
-).innerHTML=
-'<img src="'+
-escapeHtml(url)+
-'" alt="TVEO Business">';
+  const loginLogo =
+    document.getElementById(
+      'loginLogo'
+    );
+
+  const brandLogo =
+    document.getElementById(
+      'brandLogo'
+    );
+
+  const logoPreview =
+    document.getElementById(
+      'logoPreview'
+    );
 
 
-document.getElementById(
-'brandLogo'
-).innerHTML=
-'<img src="'+
-escapeHtml(url)+
-'" alt="TVEO Business">';
+  loginLogo.innerHTML =
+    '<img src="'+
+    escapeHtml(url)+
+    '" alt="TVEO Business">';
 
 
-document.getElementById(
-'logoPreview'
-).innerHTML=
-'<img src="'+
-escapeHtml(url)+
-'" alt="Logo TVEO Business">';
+  brandLogo.innerHTML =
+    '<img src="'+
+    escapeHtml(url)+
+    '" alt="TVEO Business">';
+
+
+  logoPreview.innerHTML =
+    '<img src="'+
+    escapeHtml(url)+
+    '" alt="Logo TVEO Business">';
 
 }
 
 
 document
-.getElementById('logoInput')
-.addEventListener(
-'change',
-async function(){
+  .getElementById('logoInput')
+  .addEventListener(
+    'change',
+    async function(){
 
-const file=this.files[0];
+      const file=this.files[0];
 
-if(!file)return;
-
-
-const message=
-document.getElementById(
-'logoMessage'
-);
-
-message.textContent=
-'Subiendo logo...';
+      if(!file){
+        return;
+      }
 
 
-try{
-
-const extension=
-file.name
-.split('.')
-.pop()
-.toLowerCase();
+      const message =
+        document.getElementById(
+          'logoMessage'
+        );
 
 
-const filePath=
-'configuracion/logo-tveo-'+
-Date.now()+
-'.'+
-extension;
+      message.textContent =
+        'Subiendo logo...';
 
 
-const {
-error:uploadError
-}=await supabaseClient
-.storage
-.from('inmobiliaria')
-.upload(
-filePath,
-file,
-{
-upsert:true,
-contentType:file.type
-}
-);
+      try{
+
+        const extension =
+          file.name
+            .split('.')
+            .pop()
+            .toLowerCase();
 
 
-if(uploadError){
-throw uploadError;
-}
+        const filePath =
+          'configuracion/logo-tveo-'+
+          Date.now()+
+          '.'+
+          extension;
 
 
-const {data}=
-supabaseClient
-.storage
-.from('inmobiliaria')
-.getPublicUrl(
-filePath
-);
+        const {
+          error:uploadError
+        } =
+          await supabaseClient
+            .storage
+            .from('inmobiliaria')
+            .upload(
+              filePath,
+              file,
+              {
+                upsert:true,
+                contentType:file.type
+              }
+            );
 
 
-const logoUrl=
-data.publicUrl;
+        if(uploadError){
+          throw uploadError;
+        }
 
 
-const {
-error:saveError
-}=await supabaseClient
-.from('configuracion_sitio')
-.upsert({
-id:1,
-logo_url:logoUrl
-});
+        const {
+          data
+        } =
+          supabaseClient
+            .storage
+            .from('inmobiliaria')
+            .getPublicUrl(
+              filePath
+            );
 
 
-if(saveError){
-throw saveError;
-}
+        const logoUrl =
+          data.publicUrl;
 
 
-aplicarLogo(
-logoUrl
-);
+        const {
+          error:saveError
+        } =
+          await supabaseClient
+            .from('configuracion_sitio')
+            .upsert({
+              id:1,
+              logo_url:logoUrl
+            });
 
-message.textContent=
-'✓ Logo guardado correctamente.';
+
+        if(saveError){
+          throw saveError;
+        }
 
 
-}catch(error){
+        aplicarLogo(
+          logoUrl
+        );
 
-console.error(
-'Error guardando logo:',
-error
-);
 
-message.textContent=
-'No se pudo guardar el logo: '+
-(error.message||
-'error desconocido');
+        message.textContent =
+          '✓ Logo guardado correctamente.';
 
-}
 
-});
+      }catch(error){
+
+        console.error(
+          'Error guardando logo:',
+          error
+        );
+
+
+        message.textContent =
+          'No se pudo guardar el logo: '+
+          (
+            error.message||
+            'error desconocido'
+          );
+
+      }
+
+    }
+  );
 
 
 /* =====================================================
-   MÓDULOS ADMINISTRATIVOS
+   TABLAS GENERALES
 ===================================================== */
 
 function tableHTML(
-data,
-table,
-container,
-cols
+  data,
+  table,
+  container,
+  cols
 ){
 
-const el=
-document.getElementById(
-container
-);
+  const el =
+    document.getElementById(
+      container
+    );
 
 
-if(!el)return;
+  if(!el){
+    return;
+  }
 
 
-if(!data?.length){
+  if(!data?.length){
 
-el.innerHTML=
-'<div class="empty-state">No hay registros todavía.</div>';
+    el.innerHTML =
+      '<div class="empty-state">No hay registros todavía.</div>';
 
-return;
+    return;
+
+  }
+
+
+  const shown =
+    cols.filter(
+      c=>
+        data.some(
+          r=>
+            Object.prototype.hasOwnProperty.call(
+              r,
+              c.key
+            )
+        )
+    );
+
+
+  const head =
+    shown
+      .map(
+        c=>
+          `<th>${escapeHtml(c.label)}</th>`
+      )
+      .join('')+
+      '<th>Acciones</th>';
+
+
+  const rows =
+    data
+      .map(
+        r=>{
+
+          const cells =
+            shown
+              .map(
+                c=>{
+
+                  let v=r[c.key];
+
+
+                  if(typeof v==='boolean'){
+
+                    v=v?'Sí':'No';
+
+                  }
+
+
+                  if(
+                    c.key==='imagen_url'||
+                    c.key==='foto_url'
+                  ){
+
+                    if(v){
+
+                      const url =
+                        publicImageUrl(v);
+
+                      return `
+                        <td>
+                          <img
+                            class="property-thumb"
+                            src="${escapeHtml(url)}"
+                            onerror="this.style.display='none'"
+                          >
+                        </td>
+                      `;
+
+                    }
+
+                  }
+
+
+                  return `
+                    <td>
+                      ${escapeHtml(v??'')}
+                    </td>
+                  `;
+
+                }
+              )
+              .join('');
+
+
+          return `
+            <tr>
+
+              ${cells}
+
+              <td>
+
+                <div class="property-actions">
+
+                  <button
+                    class="action-btn action-secondary"
+                    onclick="editRecord('${escapeHtml(table)}','${escapeHtml(r.id)}')"
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    class="action-btn action-danger"
+                    onclick="deleteRecord('${escapeHtml(table)}','${escapeHtml(r.id)}')"
+                  >
+                    Eliminar
+                  </button>
+
+                </div>
+
+              </td>
+
+            </tr>
+          `;
+
+        }
+      )
+      .join('');
+
+
+  el.innerHTML = `
+    <table class="data-table">
+
+      <thead>
+        <tr>
+          ${head}
+        </tr>
+      </thead>
+
+      <tbody>
+        ${rows}
+      </tbody>
+
+    </table>
+  `;
 
 }
 
 
-const shown=
-cols.filter(
-c=>
-data.some(
-r=>
-Object.prototype.hasOwnProperty.call(
-r,
-c.key
-)
-)
-);
-
-
-const head=
-shown
-.map(
-c=>
-`<th>${escA(c.label)}</th>`
-)
-.join('')+
-'<th>Acciones</th>';
-
-
-const rows=
-data.map(
-r=>
-'<tr>'+
-shown.map(
-c=>{
-
-let v=r[c.key];
-
-if(typeof v==='boolean'){
-
-v=v?'Sí':'No';
-
-}
-
-return `<td>${escA(v)}</td>`;
-
-}
-)
-.join('')+
-
-`<td>
-
-<div class="property-actions">
-
-<button
-class="action-btn action-secondary"
-onclick="editRecord('${table}','${escA(r.id)}')"
->
-Editar
-</button>
-
-<button
-class="action-btn action-danger"
-onclick="deleteRecord('${table}','${escA(r.id)}')"
->
-Eliminar
-</button>
-
-</div>
-
-</td>
-
-</tr>`
-)
-.join('');
-
-
-el.innerHTML=
-`<table class="data-table">
-
-<thead>
-
-<tr>
-${head}
-</tr>
-
-</thead>
-
-<tbody>
-${rows}
-</tbody>
-
-</table>`;
-
-}
-
+/* =====================================================
+   CARGAR MÓDULO
+===================================================== */
 
 async function loadModule(key){
 
-const c=
-configs[key];
-
-if(!c)return;
+  const c =
+    configs[key];
 
 
-const el=
-document.getElementById(
-c.container
-);
+  if(!c){
+    return;
+  }
 
 
-if(el){
-
-el.innerHTML=
-'<div class="empty-state">Cargando...</div>';
-
-}
+  const el =
+    document.getElementById(
+      c.container
+    );
 
 
-const {
-data,
-error
-}=await supabaseClient
-.from(c.table)
-.select('*')
-.order(
-'created_at',
-{ascending:false}
-);
+  if(el){
+
+    el.innerHTML =
+      '<div class="empty-state">Cargando...</div>';
+
+  }
 
 
-if(error){
-
-if(el){
-
-el.innerHTML=
-`<div class="error-box">
-No se pudo cargar ${escA(c.table)}.
-${escA(error.message)}
-</div>`;
-
-}
-
-return;
-
-}
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from(c.table)
+      .select('*')
+      .order(
+        'created_at',
+        {ascending:false}
+      );
 
 
-tableHTML(
-data,
-c.table,
-c.container,
-c.cols.map(
-x=>({
-key:x[0],
-label:x[1]
-})
-)
-);
+  if(error){
+
+    /*
+      Algunas tablas podrían no tener created_at.
+      Si ocurre, hacemos una segunda consulta simple.
+    */
+
+    const retry =
+      await supabaseClient
+        .from(c.table)
+        .select('*');
+
+
+    if(retry.error){
+
+      if(el){
+
+        el.innerHTML =
+          `<div class="error-box">
+            No se pudo cargar ${escapeHtml(c.table)}.
+            ${escapeHtml(retry.error.message)}
+          </div>`;
+
+      }
+
+      return;
+
+    }
+
+
+    tableHTML(
+      retry.data,
+      c.table,
+      c.container,
+      c.cols.map(
+        x=>({
+          key:x[0],
+          label:x[1]
+        })
+      )
+    );
+
+    return;
+
+  }
+
+
+  tableHTML(
+    data,
+    c.table,
+    c.container,
+    c.cols.map(
+      x=>({
+        key:x[0],
+        label:x[1]
+      })
+    )
+  );
 
 }
 
 
 async function refreshAllModules(){
 
-await Promise.all([
-loadModule('proyectos'),
-loadModule('asesores'),
-loadModule('operaciones'),
-loadModule('comisiones'),
-loadModule('imagenes')
-]);
+  await Promise.all([
 
-}
+    loadModule('proyectos'),
+    loadModule('asesores'),
+    loadModule('operaciones'),
+    loadModule('comisiones'),
+    loadModule('imagenes')
 
-
-async function insertData(
-table,
-payload,
-msgId,
-after
-){
-
-const clean={};
-
-
-Object.entries(payload)
-.forEach(
-([k,v])=>{
-
-if(
-v!==''&&
-v!==null&&
-v!==undefined
-){
-
-clean[k]=v;
-
-}
-
-});
-
-
-const {
-error
-}=await supabaseClient
-.from(table)
-.insert(clean);
-
-
-if(error){
-
-setMsg(
-msgId,
-error.message,
-true
-);
-
-return false;
-
-}
-
-
-setMsg(
-msgId,
-'Guardado correctamente.'
-);
-
-
-if(after){
-
-await after();
-
-}
-
-
-return true;
-
-}
-
-
-async function updateData(
-table,
-id,
-payload,
-msgId,
-after
-){
-
-const clean={};
-
-
-Object.entries(payload)
-.forEach(
-([k,v])=>{
-
-if(
-v!==''&&
-v!==null&&
-v!==undefined
-){
-
-clean[k]=v;
-
-}
-
-});
-
-
-const {
-error
-}=await supabaseClient
-.from(table)
-.update(clean)
-.eq('id',id);
-
-
-if(error){
-
-setMsg(
-msgId,
-error.message,
-true
-);
-
-return false;
-
-}
-
-
-setMsg(
-msgId,
-'Actualizado correctamente.'
-);
-
-
-if(after){
-
-await after();
-
-}
-
-
-return true;
+  ]);
 
 }
 
 
 /* =====================================================
-   ELIMINAR REGISTROS
+   INSERTAR
 ===================================================== */
 
-window.deleteRecord=
-async function(
-table,
-id
+async function insertData(
+  table,
+  payload,
+  msgId,
+  after
 ){
 
-if(
-!confirm(
-'¿Eliminar este registro?'
-)
+  const clean={};
+
+
+  Object.entries(payload)
+    .forEach(
+      ([k,v])=>{
+
+        if(
+          v!=='' &&
+          v!==null &&
+          v!==undefined
+        ){
+
+          clean[k]=v;
+
+        }
+
+      }
+    );
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from(table)
+      .insert(clean);
+
+
+  if(error){
+
+    setMsg(
+      msgId,
+      error.message,
+      true
+    );
+
+    return false;
+
+  }
+
+
+  setMsg(
+    msgId,
+    'Guardado correctamente.'
+  );
+
+
+  if(after){
+
+    await after();
+
+  }
+
+
+  return true;
+
+}
+
+
+/* =====================================================
+   ACTUALIZAR
+===================================================== */
+
+async function updateData(
+  table,
+  id,
+  payload,
+  msgId,
+  after
 ){
 
-return;
+  const clean={};
+
+
+  Object.entries(payload)
+    .forEach(
+      ([k,v])=>{
+
+        if(
+          v!=='' &&
+          v!==null &&
+          v!==undefined
+        ){
+
+          clean[k]=v;
+
+        }
+
+      }
+    );
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from(table)
+      .update(clean)
+      .eq('id',id);
+
+
+  if(error){
+
+    setMsg(
+      msgId,
+      error.message,
+      true
+    );
+
+    return false;
+
+  }
+
+
+  setMsg(
+    msgId,
+    'Actualizado correctamente.'
+  );
+
+
+  if(after){
+
+    await after();
+
+  }
+
+
+  return true;
 
 }
 
 
-const {
-error
-}=await supabaseClient
-.from(table)
-.delete()
-.eq('id',id);
+/* =====================================================
+   ELIMINAR
+===================================================== */
+
+window.deleteRecord =
+  async function(
+    table,
+    id
+  ){
+
+    if(
+      !confirm(
+        '¿Eliminar este registro? Esta acción no se puede deshacer.'
+      )
+    ){
+
+      return;
+
+    }
 
 
-if(error){
-
-alert(error.message);
-
-return;
-
-}
-
-
-const key=
-Object.keys(configs)
-.find(
-k=>
-configs[k].table===table
-);
+    const {
+      error
+    } =
+      await supabaseClient
+        .from(table)
+        .delete()
+        .eq('id',id);
 
 
-if(key){
+    if(error){
 
-await loadModule(key);
+      alert(
+        'No se pudo eliminar:\n'+
+        error.message
+      );
 
-}
+      return;
+
+    }
 
 
-await cargarDashboard();
+    const key =
+      Object.keys(configs)
+        .find(
+          k=>
+            configs[k].table===table
+        );
 
-};
+
+    if(key){
+
+      await loadModule(key);
+
+    }
+
+
+    await cargarDashboard();
+
+  };
 
 
 /* =====================================================
    EDITAR PROYECTO
 ===================================================== */
 
-window.editProject=
-async function(id){
+window.editProject =
+  async function(id){
 
-const {
-data,
-error
-}=await supabaseClient
-.from('proyectos')
-.select('*')
-.eq('id',id)
-.single();
-
-
-if(error||!data){
-
-console.error(
-'Error cargando proyecto:',
-error
-);
-
-alert(
-'No se pudo cargar el proyecto.'
-);
-
-return;
-
-}
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('proyectos')
+        .select('*')
+        .eq('id',id)
+        .single();
 
 
-moduleState.projectEdit=id;
+    if(error||!data){
+
+      console.error(
+        'Error cargando proyecto:',
+        error
+      );
+
+      alert(
+        'No se pudo cargar el proyecto.'
+      );
+
+      return;
+
+    }
 
 
-document.getElementById(
-'prNombre'
-).value=
-data.nombre||'';
+    moduleState.projectEdit=id;
 
 
-document.getElementById(
-'prCategoria'
-).value=
-data.categoria||'';
+    document.getElementById(
+      'prNombre'
+    ).value=data.nombre||'';
 
 
-document.getElementById(
-'prUbicacion'
-).value=
-data.ubicacion||'';
+    document.getElementById(
+      'prCategoria'
+    ).value=data.categoria||'';
 
 
-document.getElementById(
-'prPrecio'
-).value=
-data.precio||'';
+    document.getElementById(
+      'prUbicacion'
+    ).value=data.ubicacion||'';
 
 
-document.getElementById(
-'prWhatsapp'
-).value=
-data.whatsapp||'';
+    document.getElementById(
+      'prPrecio'
+    ).value=data.precio||'';
 
 
-document.getElementById(
-'prEstado'
-).value=
-data.estado||'Publicado';
+    document.getElementById(
+      'prWhatsapp'
+    ).value=data.whatsapp||'';
 
 
-/*
-El navegador no permite colocar
-una ruta dentro del input file.
+    /*
+      IMPORTANTE:
+      Estados permitidos por Supabase:
+      Disponible
+      Reservado
+      Agotado
+      Oculto
+    */
 
-Si no seleccionamos una nueva foto,
-la foto existente se conserva.
-*/
-
-document.getElementById(
-'prImagen'
-).value='';
-
-
-document.getElementById(
-'prDestacado'
-).value=
-data.destacado
-?'true'
-:'false';
+    const estadosPermitidos=[
+      'Disponible',
+      'Reservado',
+      'Agotado',
+      'Oculto'
+    ];
 
 
-document.getElementById(
-'prDesc'
-).value=
-data.descripcion_corta||'';
+    const estadoActual =
+      estadosPermitidos.includes(
+        data.estado
+      )
+      ?
+      data.estado
+      :
+      'Disponible';
 
 
-toggleForm(
-'projectForm',
-true
-);
+    document.getElementById(
+      'prEstado'
+    ).value=estadoActual;
 
 
-setMsg(
-'projectMsg',
-'Editando proyecto: '+
-(data.nombre||'')+
-(
-data.imagen_principal
-?
-' · La foto actual se conservará si no seleccionas otra.'
-:
-''
-)
-);
+    document.getElementById(
+      'prImagen'
+    ).value='';
 
 
-document.getElementById(
-'prNombre'
-).focus();
+    document.getElementById(
+      'prDestacado'
+    ).value =
+      data.destacado
+      ?
+      'true'
+      :
+      'false';
 
-};
+
+    document.getElementById(
+      'prDesc'
+    ).value =
+      data.descripcion_corta||'';
+
+
+    toggleForm(
+      'projectForm',
+      true
+    );
+
+
+    setMsg(
+      'projectMsg',
+      'Editando proyecto: '+
+      (data.nombre||'')+
+      (
+        data.imagen_principal
+        ?
+        ' · La foto actual se conservará si no seleccionas otra.'
+        :
+        ''
+      )
+    );
+
+
+    document.getElementById(
+      'prNombre'
+    ).focus();
+
+  };
+
+
+/* =====================================================
+   EDITAR ASESOR
+===================================================== */
+
+window.editAdvisor =
+  async function(id){
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('asesores')
+        .select('*')
+        .eq('id',id)
+        .single();
+
+
+    if(error||!data){
+
+      alert(
+        'No se pudo cargar el asesor.'
+      );
+
+      return;
+
+    }
+
+
+    moduleState.advisorEdit=id;
+
+
+    document.getElementById(
+      'aNombre'
+    ).value=data.nombre||'';
+
+
+    document.getElementById(
+      'aFoto'
+    ).value=data.foto_url||'';
+
+
+    document.getElementById(
+      'aTelefono'
+    ).value=data.telefono||'';
+
+
+    document.getElementById(
+      'aWhatsapp'
+    ).value=data.whatsapp||'';
+
+
+    document.getElementById(
+      'aCargo'
+    ).value=data.cargo||'';
+
+
+    document.getElementById(
+      'aEstado'
+    ).value=data.estado||'Activo';
+
+
+    toggleForm(
+      'advisorForm',
+      true
+    );
+
+
+    setMsg(
+      'advisorMsg',
+      'Editando asesor: '+
+      (data.nombre||'')
+    );
+
+  };
+
+
+/* =====================================================
+   EDITAR OPERACIÓN
+===================================================== */
+
+window.editOperation =
+  async function(id){
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('operaciones')
+        .select('*')
+        .eq('id',id)
+        .single();
+
+
+    if(error||!data){
+
+      alert(
+        'No se pudo cargar la operación.'
+      );
+
+      return;
+
+    }
+
+
+    moduleState.operationEdit=id;
+
+
+    document.getElementById(
+      'oInmueble'
+    ).value=data.inmueble_id||'';
+
+
+    document.getElementById(
+      'oProyecto'
+    ).value=data.proyecto_id||'';
+
+
+    document.getElementById(
+      'oCaptador'
+    ).value=data.captador_id||'';
+
+
+    document.getElementById(
+      'oColocador'
+    ).value=data.colocador_id||'';
+
+
+    document.getElementById(
+      'oPrecio'
+    ).value=data.precio||'';
+
+
+    document.getElementById(
+      'oFecha'
+    ).value=data.fecha||'';
+
+
+    document.getElementById(
+      'oEstado'
+    ).value=data.estado||'En proceso';
+
+
+    toggleForm(
+      'operationForm',
+      true
+    );
+
+
+    setMsg(
+      'operationMsg',
+      'Editando operación.'
+    );
+
+  };
+
+
+/* =====================================================
+   EDITAR COMISIÓN
+===================================================== */
+
+window.editCommission =
+  async function(id){
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('comisiones')
+        .select('*')
+        .eq('id',id)
+        .single();
+
+
+    if(error||!data){
+
+      alert(
+        'No se pudo cargar la comisión.'
+      );
+
+      return;
+
+    }
+
+
+    moduleState.commissionEdit=id;
+
+
+    document.getElementById(
+      'cAsesor'
+    ).value=data.asesor_id||'';
+
+
+    document.getElementById(
+      'cRol'
+    ).value=data.rol||'';
+
+
+    document.getElementById(
+      'cPorcentaje'
+    ).value=data.porcentaje||'';
+
+
+    document.getElementById(
+      'cMonto'
+    ).value=data.monto||'';
+
+
+    document.getElementById(
+      'cEstado'
+    ).value=data.estado||'Pendiente';
+
+
+    document.getElementById(
+      'cFecha'
+    ).value=data.fecha_pago||'';
+
+
+    toggleForm(
+      'commissionForm',
+      true
+    );
+
+
+    setMsg(
+      'commissionMsg',
+      'Editando comisión.'
+    );
+
+  };
+
+
+/* =====================================================
+   EDITAR IMAGEN
+===================================================== */
+
+window.editImage =
+  async function(id){
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('inmueble_imagenes')
+        .select('*')
+        .eq('id',id)
+        .single();
+
+
+    if(error||!data){
+
+      alert(
+        'No se pudo cargar la imagen.'
+      );
+
+      return;
+
+    }
+
+
+    moduleState.imageEdit=id;
+
+
+    document.getElementById(
+      'iInmueble'
+    ).value=data.inmueble_id||'';
+
+
+    document.getElementById(
+      'iProyecto'
+    ).value=data.proyecto_id||'';
+
+
+    document.getElementById(
+      'iUrl'
+    ).value=data.imagen_url||'';
+
+
+    document.getElementById(
+      'iOrden'
+    ).value=data.orden??0;
+
+
+    toggleForm(
+      'imageForm',
+      true
+    );
+
+
+    setMsg(
+      'imageMsg',
+      'Editando imagen.'
+    );
+
+  };
 
 
 /* =====================================================
    EDITOR GENERAL
 ===================================================== */
 
-window.editRecord=
-async function(
-table,
-id
-){
+window.editRecord =
+  async function(
+    table,
+    id
+  ){
 
-if(table==='proyectos'){
+    if(table==='proyectos'){
 
-await window.editProject(id);
+      await window.editProject(id);
+      return;
 
-return;
-
-}
-
-
-alert(
-'La edición de este módulo todavía utiliza el formulario existente.'
-);
-
-};
+    }
 
 
-function clearForm(
-prefix,
-ids
-){
+    if(table==='asesores'){
 
-ids.forEach(
-id=>{
+      await window.editAdvisor(id);
+      return;
 
-const e=
-document.getElementById(id);
+    }
 
-if(e){
 
-e.value='';
+    if(table==='operaciones'){
 
-}
+      await window.editOperation(id);
+      return;
 
-});
+    }
 
-}
+
+    if(table==='comisiones'){
+
+      await window.editCommission(id);
+      return;
+
+    }
+
+
+    if(table==='inmueble_imagenes'){
+
+      await window.editImage(id);
+      return;
+
+    }
+
+
+    alert(
+      'Este módulo no tiene edición configurada.'
+    );
+
+  };
 
 
 /* =====================================================
@@ -3685,307 +4487,304 @@ e.value='';
 ===================================================== */
 
 document
-.getElementById('newProjectBtn')
-?.addEventListener(
-'click',
-()=>{
+  .getElementById('newProjectBtn')
+  ?.addEventListener(
+    'click',
+    ()=>{
 
-moduleState.projectEdit=null;
+      moduleState.projectEdit=null;
 
-document.getElementById(
-'prNombre'
-).value='';
 
-document.getElementById(
-'prCategoria'
-).value='';
+      clearFields([
+        'prNombre',
+        'prCategoria',
+        'prUbicacion',
+        'prPrecio',
+        'prWhatsapp',
+        'prDesc'
+      ]);
 
-document.getElementById(
-'prUbicacion'
-).value='';
 
-document.getElementById(
-'prPrecio'
-).value='';
+      document.getElementById(
+        'prImagen'
+      ).value='';
 
-document.getElementById(
-'prWhatsapp'
-).value='';
 
-document.getElementById(
-'prImagen'
-).value='';
+      document.getElementById(
+        'prDestacado'
+      ).value='false';
 
-document.getElementById(
-'prDesc'
-).value='';
 
-document.getElementById(
-'prDestacado'
-).value='false';
+      document.getElementById(
+        'prEstado'
+      ).value='Disponible';
 
-document.getElementById(
-'prEstado'
-).value='Publicado';
 
-setMsg(
-'projectMsg',
-''
-);
+      setMsg(
+        'projectMsg',
+        ''
+      );
 
-toggleForm(
-'projectForm',
-true
-);
 
-document.getElementById(
-'prNombre'
-).focus();
+      toggleForm(
+        'projectForm',
+        true
+      );
 
-}
-);
+
+      document.getElementById(
+        'prNombre'
+      ).focus();
+
+    }
+  );
 
 
 document
-.getElementById('cancelProjectBtn')
-?.addEventListener(
-'click',
-()=>{
+  .getElementById('cancelProjectBtn')
+  ?.addEventListener(
+    'click',
+    ()=>{
 
-moduleState.projectEdit=null;
+      moduleState.projectEdit=null;
 
-toggleForm(
-'projectForm',
-false
-);
+      toggleForm(
+        'projectForm',
+        false
+      );
 
-}
-);
+      setMsg(
+        'projectMsg',
+        ''
+      );
 
+    }
+  );
 
-/* =====================================================
-   GUARDAR PROYECTO
-===================================================== */
 
 document
-.getElementById('saveProjectBtn')
-?.addEventListener(
-'click',
-async()=>{
+  .getElementById('saveProjectBtn')
+  ?.addEventListener(
+    'click',
+    async()=>{
 
-const payload={
+      const payload={
 
-nombre:
-val('prNombre'),
+        nombre:val('prNombre'),
+        categoria:val('prCategoria'),
+        ubicacion:val('prUbicacion'),
+        precio:val('prPrecio'),
+        whatsapp:val('prWhatsapp'),
+        estado:val('prEstado'),
+        destacado:boolVal('prDestacado'),
+        descripcion_corta:val('prDesc')
 
-categoria:
-val('prCategoria'),
+      };
 
-ubicacion:
-val('prUbicacion'),
 
-precio:
-val('prPrecio'),
+      if(!payload.nombre){
 
-whatsapp:
-val('prWhatsapp'),
+        setMsg(
+          'projectMsg',
+          'El nombre es obligatorio.',
+          true
+        );
 
-estado:
-val('prEstado'),
+        return;
 
-destacado:
-boolVal('prDestacado'),
+      }
 
-descripcion_corta:
-val('prDesc')
 
-};
+      const estadosPermitidos=[
+        'Disponible',
+        'Reservado',
+        'Agotado',
+        'Oculto'
+      ];
 
 
-if(!payload.nombre){
+      if(
+        !estadosPermitidos.includes(
+          payload.estado
+        )
+      ){
 
-setMsg(
-'projectMsg',
-'El nombre es obligatorio.',
-true
-);
+        setMsg(
+          'projectMsg',
+          'Estado de proyecto no válido.',
+          true
+        );
 
-return;
+        return;
 
-}
+      }
 
 
-const btn=
-document.getElementById(
-'saveProjectBtn'
-);
+      const btn =
+        document.getElementById(
+          'saveProjectBtn'
+        );
 
 
-btn.disabled=true;
+      btn.disabled=true;
 
-btn.textContent='GUARDANDO...';
+      btn.textContent='GUARDANDO...';
 
 
-try{
+      try{
 
-const file=
-document
-.getElementById('prImagen')
-?.files?.[0];
+        const file =
+          document
+            .getElementById('prImagen')
+            ?.files?.[0];
 
 
-if(file){
+        if(file){
 
-const ext=
-(
-file.name
-.split('.')
-.pop()||
-'jpg'
-)
-.toLowerCase();
+          const ext =
+            (
+              file.name
+                .split('.')
+                .pop()||
+              'jpg'
+            ).toLowerCase();
 
 
-const path=
-`proyectos/${Date.now()}-${Math.random().toString(36).slice(2,9)}.${ext}`;
+          const path =
+            `proyectos/${Date.now()}-${Math.random()
+              .toString(36)
+              .slice(2,9)}.${ext}`;
 
 
-const {
-error:uploadError
-}=await supabaseClient
-.storage
-.from('inmobiliaria')
-.upload(
-path,
-file,
-{
-upsert:false,
-contentType:file.type
-}
-);
+          const {
+            error:uploadError
+          } =
+            await supabaseClient
+              .storage
+              .from('inmobiliaria')
+              .upload(
+                path,
+                file,
+                {
+                  upsert:false,
+                  contentType:file.type
+                }
+              );
 
 
-if(uploadError){
+          if(uploadError){
 
-throw uploadError;
+            throw uploadError;
 
-}
+          }
 
 
-payload.imagen_principal=
-path;
+          payload.imagen_principal =
+            path;
 
-}
+        }
 
 
-let ok=false;
+        let ok=false;
 
 
-if(moduleState.projectEdit){
+        if(moduleState.projectEdit){
 
-ok=
-await updateData(
-'proyectos',
-moduleState.projectEdit,
-payload,
-'projectMsg',
-()=>loadModule('proyectos')
-);
+          ok =
+            await updateData(
+              'proyectos',
+              moduleState.projectEdit,
+              payload,
+              'projectMsg',
+              ()=>loadModule('proyectos')
+            );
 
-}else{
+        }else{
 
-ok=
-await insertData(
-'proyectos',
-payload,
-'projectMsg',
-()=>loadModule('proyectos')
-);
+          ok =
+            await insertData(
+              'proyectos',
+              payload,
+              'projectMsg',
+              ()=>loadModule('proyectos')
+            );
 
-}
+        }
 
 
-if(ok){
+        if(ok){
 
-moduleState.projectEdit=null;
+          moduleState.projectEdit=null;
 
 
-clearForm(
-'',
-[
-'prNombre',
-'prCategoria',
-'prUbicacion',
-'prPrecio',
-'prWhatsapp',
-'prDesc'
-]
-);
+          clearFields([
+            'prNombre',
+            'prCategoria',
+            'prUbicacion',
+            'prPrecio',
+            'prWhatsapp',
+            'prDesc'
+          ]);
 
 
-const img=
-document.getElementById(
-'prImagen'
-);
+          document.getElementById(
+            'prImagen'
+          ).value='';
 
 
-if(img){
+          document.getElementById(
+            'prDestacado'
+          ).value='false';
 
-img.value='';
 
-}
+          document.getElementById(
+            'prEstado'
+          ).value='Disponible';
 
 
-document.getElementById(
-'prDestacado'
-).value='false';
+          toggleForm(
+            'projectForm',
+            false
+          );
 
 
-document.getElementById(
-'prEstado'
-).value='Publicado';
+          await loadModule(
+            'proyectos'
+          );
 
 
-toggleForm(
-'projectForm',
-false
-);
+          await cargarDashboard();
 
+        }
 
-await loadModule(
-'proyectos'
-);
 
+      }catch(error){
 
-await cargarDashboard();
+        console.error(
+          'Error guardando proyecto:',
+          error
+        );
 
-}
 
-}catch(error){
+        setMsg(
+          'projectMsg',
+          'No se pudo guardar: '+
+          (
+            error.message||
+            'error desconocido'
+          ),
+          true
+        );
 
-console.error(
-'Error guardando proyecto:',
-error
-);
+      }finally{
 
+        btn.disabled=false;
+        btn.textContent='Guardar';
 
-setMsg(
-'projectMsg',
-'No se pudo guardar: '+
-(error.message||
-'error desconocido'),
-true
-);
+      }
 
-}finally{
-
-btn.disabled=false;
-
-btn.textContent='Guardar';
-
-}
-
-});
+    }
+  );
 
 
 /* =====================================================
@@ -3993,105 +4792,129 @@ btn.textContent='Guardar';
 ===================================================== */
 
 document
-.getElementById('newAdvisorBtn')
-?.addEventListener(
-'click',
-()=>{
+  .getElementById('newAdvisorBtn')
+  ?.addEventListener(
+    'click',
+    ()=>{
 
-moduleState.advisorEdit=null;
+      moduleState.advisorEdit=null;
 
-toggleForm(
-'advisorForm'
-);
+      clearFields([
+        'aNombre',
+        'aFoto',
+        'aTelefono',
+        'aWhatsapp',
+        'aCargo'
+      ]);
 
-}
-);
+      document.getElementById(
+        'aEstado'
+      ).value='Activo';
+
+      setMsg(
+        'advisorMsg',
+        ''
+      );
+
+      toggleForm(
+        'advisorForm',
+        true
+      );
+
+    }
+  );
 
 
 document
-.getElementById('cancelAdvisorBtn')
-?.addEventListener(
-'click',
-()=>toggleForm(
-'advisorForm',
-false
-)
-);
+  .getElementById('cancelAdvisorBtn')
+  ?.addEventListener(
+    'click',
+    ()=>{
+
+      moduleState.advisorEdit=null;
+
+      toggleForm(
+        'advisorForm',
+        false
+      );
+
+    }
+  );
 
 
 document
-.getElementById('saveAdvisorBtn')
-?.addEventListener(
-'click',
-async()=>{
+  .getElementById('saveAdvisorBtn')
+  ?.addEventListener(
+    'click',
+    async()=>{
 
-const p={
+      const payload={
 
-nombre:
-val('aNombre'),
+        nombre:val('aNombre'),
+        foto_url:val('aFoto'),
+        telefono:val('aTelefono'),
+        whatsapp:val('aWhatsapp'),
+        cargo:val('aCargo'),
+        estado:val('aEstado')
 
-foto_url:
-val('aFoto'),
-
-telefono:
-val('aTelefono'),
-
-whatsapp:
-val('aWhatsapp'),
-
-cargo:
-val('aCargo'),
-
-estado:
-val('aEstado')
-
-};
+      };
 
 
-if(!p.nombre){
+      if(!payload.nombre){
 
-setMsg(
-'advisorMsg',
-'El nombre es obligatorio.',
-true
-);
+        setMsg(
+          'advisorMsg',
+          'El nombre es obligatorio.',
+          true
+        );
 
-return;
+        return;
 
-}
+      }
 
 
-if(
-await insertData(
-'asesores',
-p,
-'advisorMsg',
-()=>loadModule('asesores')
-)
-){
+      let ok;
 
-clearForm(
-'',
-[
-'aNombre',
-'aFoto',
-'aTelefono',
-'aWhatsapp',
-'aCargo'
-]
-);
 
-toggleForm(
-'advisorForm',
-false
-);
+      if(moduleState.advisorEdit){
 
-await cargarDashboard();
+        ok =
+          await updateData(
+            'asesores',
+            moduleState.advisorEdit,
+            payload,
+            'advisorMsg',
+            ()=>loadModule('asesores')
+          );
 
-}
+      }else{
 
-}
-);
+        ok =
+          await insertData(
+            'asesores',
+            payload,
+            'advisorMsg',
+            ()=>loadModule('asesores')
+          );
+
+      }
+
+
+      if(ok){
+
+        moduleState.advisorEdit=null;
+
+        toggleForm(
+          'advisorForm',
+          false
+        );
+
+        await cargarDashboard();
+
+      }
+
+    }
+  );
 
 
 /* =====================================================
@@ -4099,78 +4922,131 @@ await cargarDashboard();
 ===================================================== */
 
 document
-.getElementById('newOperationBtn')
-?.addEventListener(
-'click',
-()=>toggleForm(
-'operationForm'
-)
-);
+  .getElementById('newOperationBtn')
+  ?.addEventListener(
+    'click',
+    ()=>{
+
+      moduleState.operationEdit=null;
+
+      clearFields([
+        'oInmueble',
+        'oProyecto',
+        'oCaptador',
+        'oColocador',
+        'oPrecio',
+        'oFecha'
+      ]);
+
+      document.getElementById(
+        'oEstado'
+      ).value='En proceso';
+
+      setMsg(
+        'operationMsg',
+        ''
+      );
+
+      toggleForm(
+        'operationForm',
+        true
+      );
+
+    }
+  );
 
 
 document
-.getElementById('cancelOperationBtn')
-?.addEventListener(
-'click',
-()=>toggleForm(
-'operationForm',
-false
-)
-);
+  .getElementById('cancelOperationBtn')
+  ?.addEventListener(
+    'click',
+    ()=>{
+
+      moduleState.operationEdit=null;
+
+      toggleForm(
+        'operationForm',
+        false
+      );
+
+    }
+  );
 
 
 document
-.getElementById('saveOperationBtn')
-?.addEventListener(
-'click',
-async()=>{
+  .getElementById('saveOperationBtn')
+  ?.addEventListener(
+    'click',
+    async()=>{
 
-const p={
+      const payload={
 
-inmueble_id:
-val('oInmueble')||null,
+        inmueble_id:
+          val('oInmueble')||null,
 
-proyecto_id:
-val('oProyecto')||null,
+        proyecto_id:
+          val('oProyecto')||null,
 
-captador_id:
-val('oCaptador')||null,
+        captador_id:
+          val('oCaptador')||null,
 
-colocador_id:
-val('oColocador')||null,
+        colocador_id:
+          val('oColocador')||null,
 
-precio:
-val('oPrecio'),
+        precio:
+          val('oPrecio'),
 
-fecha:
-val('oFecha'),
+        fecha:
+          val('oFecha'),
 
-estado:
-val('oEstado')
+        estado:
+          val('oEstado')
 
-};
+      };
 
 
-if(
-await insertData(
-'operaciones',
-p,
-'operationMsg',
-()=>loadModule('operaciones')
-)
-){
+      let ok;
 
-toggleForm(
-'operationForm',
-false
-);
 
-await cargarDashboard();
+      if(moduleState.operationEdit){
 
-}
+        ok =
+          await updateData(
+            'operaciones',
+            moduleState.operationEdit,
+            payload,
+            'operationMsg',
+            ()=>loadModule('operaciones')
+          );
 
-}
-);
+      }else{
+
+        ok =
+          await insertData(
+            'operaciones',
+            payload,
+            'operationMsg',
+            ()=>loadModule('operaciones')
+          );
+
+      }
+
+
+      if(ok){
+
+        moduleState.operationEdit=null;
+
+        toggleForm(
+          'operationForm',
+          false
+        );
+
+        await cargarDashboard();
+
+      }
+
+    }
+  );
 
 
 /* =====================================================
@@ -4178,73 +5054,125 @@ await cargarDashboard();
 ===================================================== */
 
 document
-.getElementById('newCommissionBtn')
-?.addEventListener(
-'click',
-()=>toggleForm(
-'commissionForm'
-)
-);
+  .getElementById('newCommissionBtn')
+  ?.addEventListener(
+    'click',
+    ()=>{
+
+      moduleState.commissionEdit=null;
+
+      clearFields([
+        'cAsesor',
+        'cRol',
+        'cPorcentaje',
+        'cMonto',
+        'cFecha'
+      ]);
+
+      document.getElementById(
+        'cEstado'
+      ).value='Pendiente';
+
+      setMsg(
+        'commissionMsg',
+        ''
+      );
+
+      toggleForm(
+        'commissionForm',
+        true
+      );
+
+    }
+  );
 
 
 document
-.getElementById('cancelCommissionBtn')
-?.addEventListener(
-'click',
-()=>toggleForm(
-'commissionForm',
-false
-)
-);
+  .getElementById('cancelCommissionBtn')
+  ?.addEventListener(
+    'click',
+    ()=>{
+
+      moduleState.commissionEdit=null;
+
+      toggleForm(
+        'commissionForm',
+        false
+      );
+
+    }
+  );
 
 
 document
-.getElementById('saveCommissionBtn')
-?.addEventListener(
-'click',
-async()=>{
+  .getElementById('saveCommissionBtn')
+  ?.addEventListener(
+    'click',
+    async()=>{
 
-const p={
+      const payload={
 
-asesor_id:
-val('cAsesor')||null,
+        asesor_id:
+          val('cAsesor')||null,
 
-rol:
-val('cRol'),
+        rol:
+          val('cRol'),
 
-porcentaje:
-val('cPorcentaje'),
+        porcentaje:
+          val('cPorcentaje'),
 
-monto:
-val('cMonto'),
+        monto:
+          val('cMonto'),
 
-estado:
-val('cEstado'),
+        estado:
+          val('cEstado'),
 
-fecha_pago:
-val('cFecha')
+        fecha_pago:
+          val('cFecha')
 
-};
+      };
 
 
-if(
-await insertData(
-'comisiones',
-p,
-'commissionMsg',
-()=>loadModule('comisiones')
-)
-){
+      let ok;
 
-toggleForm(
-'commissionForm',
-false
-);
 
-}
+      if(moduleState.commissionEdit){
 
-}
-);
+        ok =
+          await updateData(
+            'comisiones',
+            moduleState.commissionEdit,
+            payload,
+            'commissionMsg',
+            ()=>loadModule('comisiones')
+          );
+
+      }else{
+
+        ok =
+          await insertData(
+            'comisiones',
+            payload,
+            'commissionMsg',
+            ()=>loadModule('comisiones')
+          );
+
+      }
+
+
+      if(ok){
+
+        moduleState.commissionEdit=null;
+
+        toggleForm(
+          'commissionForm',
+          false
+        );
+
+      }
+
+    }
+  );
 
 
 /* =====================================================
@@ -4252,126 +5180,175 @@ false
 ===================================================== */
 
 document
-.getElementById('newImageBtn')
-?.addEventListener(
-'click',
-()=>toggleForm(
-'imageForm'
-)
-);
+  .getElementById('newImageBtn')
+  ?.addEventListener(
+    'click',
+    ()=>{
+
+      moduleState.imageEdit=null;
+
+      clearFields([
+        'iInmueble',
+        'iProyecto',
+        'iUrl'
+      ]);
+
+      document.getElementById(
+        'iOrden'
+      ).value='0';
+
+      setMsg(
+        'imageMsg',
+        ''
+      );
+
+      toggleForm(
+        'imageForm',
+        true
+      );
+
+    }
+  );
 
 
 document
-.getElementById('cancelImageBtn')
-?.addEventListener(
-'click',
-()=>toggleForm(
-'imageForm',
-false
-)
-);
+  .getElementById('cancelImageBtn')
+  ?.addEventListener(
+    'click',
+    ()=>{
+
+      moduleState.imageEdit=null;
+
+      toggleForm(
+        'imageForm',
+        false
+      );
+
+    }
+  );
 
 
 document
-.getElementById('saveImageBtn')
-?.addEventListener(
-'click',
-async()=>{
+  .getElementById('saveImageBtn')
+  ?.addEventListener(
+    'click',
+    async()=>{
 
-const p={
+      const payload={
 
-inmueble_id:
-val('iInmueble')||null,
+        inmueble_id:
+          val('iInmueble')||null,
 
-proyecto_id:
-val('iProyecto')||null,
+        proyecto_id:
+          val('iProyecto')||null,
 
-imagen_url:
-val('iUrl'),
+        imagen_url:
+          val('iUrl'),
 
-orden:
-val('iOrden')||0
+        orden:
+          val('iOrden')||0
 
-};
-
-
-if(!p.imagen_url){
-
-setMsg(
-'imageMsg',
-'La ruta o URL de imagen es obligatoria.',
-true
-);
-
-return;
-
-}
+      };
 
 
-if(
-await insertData(
-'inmueble_imagenes',
-p,
-'imageMsg',
-()=>loadModule('imagenes')
-)
-){
+      if(!payload.imagen_url){
 
-toggleForm(
-'imageForm',
-false
-);
+        setMsg(
+          'imageMsg',
+          'La ruta o URL de imagen es obligatoria.',
+          true
+        );
 
-}
+        return;
 
-}
-);
+      }
+
+
+      let ok;
+
+
+      if(moduleState.imageEdit){
+
+        ok =
+          await updateData(
+            'inmueble_imagenes',
+            moduleState.imageEdit,
+            payload,
+            'imageMsg',
+            ()=>loadModule('imagenes')
+          );
+
+      }else{
+
+        ok =
+          await insertData(
+            'inmueble_imagenes',
+            payload,
+            'imageMsg',
+            ()=>loadModule('imagenes')
+          );
+
+      }
+
+
+      if(ok){
+
+        moduleState.imageEdit=null;
+
+        toggleForm(
+          'imageForm',
+          false
+        );
+
+      }
+
+    }
+  );
 
 
 /* =====================================================
    SESIÓN INICIAL
-   IMPORTANTE:
-   Se ejecuta AL FINAL, cuando todas las
-   funciones, configuraciones y módulos
-   ya están cargados.
 ===================================================== */
 
 (async()=>{
 
-try{
+  try{
 
-const {
-data:{session},
-error
-}=await supabaseClient.auth.getSession();
-
-
-if(error){
-
-console.error(
-'Error obteniendo sesión:',
-error
-);
-
-return;
-
-}
+    const {
+      data:{session},
+      error
+    } =
+      await supabaseClient
+        .auth
+        .getSession();
 
 
-if(session){
+    if(error){
 
-await verificarAdministrador();
+      console.error(
+        'Error obteniendo sesión:',
+        error
+      );
 
-}
+      return;
 
-}catch(error){
+    }
 
-console.error(
-'Error comprobando sesión inicial:',
-error
-);
 
-}
+    if(session){
+
+      await verificarAdministrador();
+
+    }
+
+  }catch(error){
+
+    console.error(
+      'Error comprobando sesión inicial:',
+      error
+    );
+
+  }
 
 })();
 
