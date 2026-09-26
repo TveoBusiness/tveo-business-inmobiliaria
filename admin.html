@@ -754,6 +754,7 @@ button{
   <button
     class="logout-btn"
     id="logoutBtn"
+    type="button"
   >
     Cerrar sesión
   </button>
@@ -772,6 +773,7 @@ button{
   <button
     class="menu-btn active"
     data-section="dashboard"
+    type="button"
   >
     📊 Dashboard
   </button>
@@ -779,6 +781,7 @@ button{
   <button
     class="menu-btn"
     data-section="propiedades"
+    type="button"
   >
     🏠 Propiedades
   </button>
@@ -786,6 +789,7 @@ button{
   <button
     class="menu-btn"
     data-section="proyectos"
+    type="button"
   >
     🏗️ Proyectos
   </button>
@@ -793,6 +797,7 @@ button{
   <button
     class="menu-btn"
     data-section="asesores"
+    type="button"
   >
     👥 Asesores
   </button>
@@ -800,6 +805,7 @@ button{
   <button
     class="menu-btn"
     data-section="operaciones"
+    type="button"
   >
     💰 Operaciones
   </button>
@@ -807,6 +813,7 @@ button{
   <button
     class="menu-btn"
     data-section="comisiones"
+    type="button"
   >
     💵 Comisiones
   </button>
@@ -818,6 +825,7 @@ button{
   <button
     class="menu-btn"
     data-section="imagenes"
+    type="button"
   >
     🖼️ Imágenes
   </button>
@@ -825,6 +833,7 @@ button{
   <button
     class="menu-btn"
     data-section="configuracion"
+    type="button"
   >
     ⚙️ Configuración
   </button>
@@ -930,6 +939,7 @@ button{
       <button
         class="action-btn action-primary"
         id="newPropertyBtn"
+        type="button"
       >
         ＋ Nueva propiedad
       </button>
@@ -1084,12 +1094,12 @@ button{
                 required
               >
 
-                <option>Disponible</option>
-                <option>Reservado</option>
-                <option>Vendido</option>
-                <option>Alquilado</option>
-                <option>Anticrético</option>
-                <option>Oculto</option>
+                <option value="Disponible">Disponible</option>
+                <option value="Reservado">Reservado</option>
+                <option value="Vendido">Vendido</option>
+                <option value="Alquilado">Alquilado</option>
+                <option value="Anticrético">Anticrético</option>
+                <option value="Oculto">Oculto</option>
 
               </select>
 
@@ -1234,6 +1244,7 @@ button{
       <button
         class="action-btn action-primary"
         id="newProjectBtn"
+        type="button"
       >
         + Nuevo proyecto
       </button>
@@ -1279,6 +1290,16 @@ button{
         <div class="field">
 
           <label>Estado</label>
+
+          <!--
+            IMPORTANTE:
+            Estos son exactamente los estados
+            permitidos por la restricción de Supabase:
+            Disponible
+            Reservado
+            Agotado
+            Oculto
+          -->
 
           <select id="prEstado">
 
@@ -1364,6 +1385,7 @@ button{
         <button
           class="action-btn action-primary"
           id="saveProjectBtn"
+          type="button"
         >
           Guardar
         </button>
@@ -1371,6 +1393,7 @@ button{
         <button
           class="action-btn action-secondary"
           id="cancelProjectBtn"
+          type="button"
         >
           Cancelar
         </button>
@@ -1422,6 +1445,7 @@ button{
       <button
         class="action-btn action-primary"
         id="newAdvisorBtn"
+        type="button"
       >
         + Nuevo asesor
       </button>
@@ -1473,8 +1497,13 @@ button{
 
           <select id="aEstado">
 
-            <option>Activo</option>
-            <option>Inactivo</option>
+            <option value="Activo">
+              Activo
+            </option>
+
+            <option value="Inactivo">
+              Inactivo
+            </option>
 
           </select>
 
@@ -1488,6 +1517,7 @@ button{
         <button
           class="action-btn action-primary"
           id="saveAdvisorBtn"
+          type="button"
         >
           Guardar
         </button>
@@ -1495,6 +1525,7 @@ button{
         <button
           class="action-btn action-secondary"
           id="cancelAdvisorBtn"
+          type="button"
         >
           Cancelar
         </button>
@@ -1547,6 +1578,7 @@ button{
       <button
         class="action-btn action-primary"
         id="newOperationBtn"
+        type="button"
       >
         + Nueva operación
       </button>
@@ -1597,10 +1629,21 @@ button{
 
           <select id="oEstado">
 
-            <option>En proceso</option>
-            <option>Reservado</option>
-            <option>Concretado</option>
-            <option>Cancelado</option>
+            <option value="En proceso">
+              En proceso
+            </option>
+
+            <option value="Reservado">
+              Reservado
+            </option>
+
+            <option value="Concretado">
+              Concretado
+            </option>
+
+            <option value="Cancelado">
+              Cancelado
+            </option>
 
           </select>
 
@@ -1614,6 +1657,7 @@ button{
         <button
           class="action-btn action-primary"
           id="saveOperationBtn"
+          type="button"
         >
           Guardar
         </button>
@@ -1621,6 +1665,7 @@ button{
         <button
           class="action-btn action-secondary"
           id="cancelOperationBtn"
+          type="button"
         >
           Cancelar
         </button>
@@ -1673,6 +1718,7 @@ button{
       <button
         class="action-btn action-primary"
         id="newCommissionBtn"
+        type="button"
       >
         + Nueva comisión
       </button>
@@ -1713,9 +1759,17 @@ button{
 
           <select id="cEstado">
 
-            <option>Pendiente</option>
-            <option>Pagada</option>
-            <option>Anulada</option>
+            <option value="Pendiente">
+              Pendiente
+            </option>
+
+            <option value="Pagada">
+              Pagada
+            </option>
+
+            <option value="Anulada">
+              Anulada
+            </option>
 
           </select>
 
@@ -1740,6 +1794,7 @@ button{
         <button
           class="action-btn action-primary"
           id="saveCommissionBtn"
+          type="button"
         >
           Guardar
         </button>
@@ -1747,6 +1802,7 @@ button{
         <button
           class="action-btn action-secondary"
           id="cancelCommissionBtn"
+          type="button"
         >
           Cancelar
         </button>
@@ -1799,6 +1855,7 @@ button{
       <button
         class="action-btn action-primary"
         id="newImageBtn"
+        type="button"
       >
         + Registrar imagen
       </button>
@@ -1847,6 +1904,7 @@ button{
         <button
           class="action-btn action-primary"
           id="saveImageBtn"
+          type="button"
         >
           Guardar
         </button>
@@ -1854,6 +1912,7 @@ button{
         <button
           class="action-btn action-secondary"
           id="cancelImageBtn"
+          type="button"
         >
           Cancelar
         </button>
@@ -2072,6 +2131,18 @@ const configs = {
   }
 
 };
+
+
+/* =====================================================
+   ESTADOS PERMITIDOS DE PROYECTOS
+===================================================== */
+
+const ESTADOS_PROYECTO = [
+  'Disponible',
+  'Reservado',
+  'Agotado',
+  'Oculto'
+];
 
 
 /* =====================================================
@@ -2731,8 +2802,10 @@ async function cargarPropiedades(){
 
     message.textContent =
       'Error: '+
-      (error.message||
-      'No se pudo consultar inmuebles.');
+      (
+        error.message||
+        'No se pudo consultar inmuebles.'
+      );
 
     return;
 
@@ -2822,6 +2895,7 @@ async function cargarPropiedades(){
 
               <button
                 class="action-btn action-secondary"
+                type="button"
                 onclick="editarPropiedad('${escapeHtml(x.id)}')"
               >
                 Editar
@@ -2829,6 +2903,7 @@ async function cargarPropiedades(){
 
               <button
                 class="action-btn action-danger"
+                type="button"
                 onclick="eliminarPropiedad('${escapeHtml(x.id)}')"
               >
                 Eliminar
@@ -3031,7 +3106,8 @@ async function guardarImagenPrincipal(file){
     (
       file.name
         .split('.')
-        .pop()||'jpg'
+        .pop()||
+      'jpg'
     ).toLowerCase();
 
 
@@ -3584,11 +3660,16 @@ function tableHTML(
                             class="property-thumb"
                             src="${escapeHtml(url)}"
                             onerror="this.style.display='none'"
+                            alt="Imagen"
                           >
                         </td>
                       `;
 
                     }
+
+                    return `
+                      <td>—</td>
+                    `;
 
                   }
 
@@ -3615,6 +3696,7 @@ function tableHTML(
 
                   <button
                     class="action-btn action-secondary"
+                    type="button"
                     onclick="editRecord('${escapeHtml(table)}','${escapeHtml(r.id)}')"
                   >
                     Editar
@@ -3622,6 +3704,7 @@ function tableHTML(
 
                   <button
                     class="action-btn action-danger"
+                    type="button"
                     onclick="deleteRecord('${escapeHtml(table)}','${escapeHtml(r.id)}')"
                   >
                     Eliminar
@@ -3701,11 +3784,6 @@ async function loadModule(key){
 
 
   if(error){
-
-    /*
-      Algunas tablas podrían no tener created_at.
-      Si ocurre, hacemos una segunda consulta simple.
-    */
 
     const retry =
       await supabaseClient
@@ -3860,6 +3938,13 @@ async function updateData(
   after
 ){
 
+  /*
+    A diferencia del INSERT:
+    en una edición permitimos guardar
+    campos vacíos para que el administrador
+    pueda borrar o modificar un dato existente.
+  */
+
   const clean={};
 
 
@@ -3868,8 +3953,6 @@ async function updateData(
       ([k,v])=>{
 
         if(
-          v!=='' &&
-          v!==null &&
           v!==undefined
         ){
 
@@ -4046,24 +4129,14 @@ window.editProject =
 
 
     /*
-      IMPORTANTE:
-      Estados permitidos por Supabase:
-      Disponible
-      Reservado
-      Agotado
-      Oculto
+      Si existiera un registro antiguo con
+      Publicado o Borrador, lo mostramos como
+      Disponible para que pueda volver a guardarse
+      usando un estado válido.
     */
 
-    const estadosPermitidos=[
-      'Disponible',
-      'Reservado',
-      'Agotado',
-      'Oculto'
-    ];
-
-
     const estadoActual =
-      estadosPermitidos.includes(
+      ESTADOS_PROYECTO.includes(
         data.estado
       )
       ?
@@ -4595,23 +4668,21 @@ document
       }
 
 
-      const estadosPermitidos=[
-        'Disponible',
-        'Reservado',
-        'Agotado',
-        'Oculto'
-      ];
-
+      /*
+        SEGURIDAD:
+        Nunca se enviará a Supabase un estado
+        distinto a los cuatro permitidos.
+      */
 
       if(
-        !estadosPermitidos.includes(
+        !ESTADOS_PROYECTO.includes(
           payload.estado
         )
       ){
 
         setMsg(
           'projectMsg',
-          'Estado de proyecto no válido.',
+          'Estado de proyecto no válido. Selecciona Disponible, Reservado, Agotado u Oculto.',
           true
         );
 
@@ -4838,6 +4909,11 @@ document
         false
       );
 
+      setMsg(
+        'advisorMsg',
+        ''
+      );
+
     }
   );
 
@@ -4967,6 +5043,11 @@ document
       toggleForm(
         'operationForm',
         false
+      );
+
+      setMsg(
+        'operationMsg',
+        ''
       );
 
     }
@@ -5100,6 +5181,11 @@ document
         false
       );
 
+      setMsg(
+        'commissionMsg',
+        ''
+      );
+
     }
   );
 
@@ -5222,6 +5308,11 @@ document
       toggleForm(
         'imageForm',
         false
+      );
+
+      setMsg(
+        'imageMsg',
+        ''
       );
 
     }
