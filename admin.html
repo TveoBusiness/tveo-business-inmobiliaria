@@ -689,17 +689,53 @@ async function insertData(table,payload,msgId,after){
  setMsg(msgId,'Guardado correctamente.'); if(after)await after(); return true;
 }
 async function updateData(table,id,payload,msgId,after){const clean={};Object.entries(payload).forEach(([k,v])=>{if(v!==''&&v!==null&&v!==undefined)clean[k]=v});const {error}=await supabaseClient.from(table).update(clean).eq('id',id);if(error){setMsg(msgId,error.message,true);return false}setMsg(msgId,'Actualizado correctamente.');if(after)await after();return true}
-window.deleteRecord=async function(table,id){if(!confirm('¿Eliminar este registro?'))return;const {error}=await supabaseClient.from(table).delete().eq('id',id);if(error){alert(error.message);return}const key=Object.keys(configs).find(k=>configs[k].table===table);if(key)loadModule(key);refreshDashboard()}
-window.editRecord=async function(table,id){alert('Edición rápida: abre el formulario de '+table+' para crear/editar. El registro seleccionado es '+id+'.')}
+window.deleteRecord=async function(table,id){if(!confirm('¿Eliminar este registro?'))return;const {error}=await supabaseClient.from(table).delete().eq('id',id);if(error){alert(error.message);return}const key=Object.keys(configs).find(k=>configs[k].table===table);if(key)loadModule(key);cargarDashboard()}
+window.editProject=async function(id){
+ const {data,error}=await supabaseClient.from('proyectos').select('*').eq('id',id).single();
+ if(error||!data){alert('No se pudo cargar el proyecto.');return}
+ moduleState.projectEdit=id;
+ document.getElementById('prNombre').value=data.nombre||'';
+ document.getElementById('prCategoria').value=data.categoria||'';
+ document.getElementById('prUbicacion').value=data.ubicacion||'';
+ document.getElementById('prPrecio').value=data.precio||'';
+ document.getElementById('prWhatsapp').value=data.whatsapp||'';
+ document.getElementById('prEstado').value=data.estado||'Publicado';
+ document.getElementById('prImagen').value=data.imagen_principal||'';
+ document.getElementById('prDestacado').value=data.destacado?'true':'false';
+ document.getElementById('prDesc').value=data.descripcion_corta||'';
+ toggleForm('projectForm',true);
+ setMsg('projectMsg','Editando proyecto: '+(data.nombre||''));
+ document.getElementById('prNombre').focus();
+};
+window.editRecord=async function(table,id){
+ if(table==='proyectos'){await window.editProject(id);return}
+ alert('La edición de este módulo todavía utiliza el formulario existente.');
+}
 function clearForm(prefix,ids){ids.forEach(id=>{const e=document.getElementById(id);if(e)e.value=''})}
 
 document.getElementById('newProjectBtn')?.addEventListener('click',()=>{moduleState.projectEdit=null;toggleForm('projectForm');});
 document.getElementById('cancelProjectBtn')?.addEventListener('click',()=>toggleForm('projectForm',false));
-document.getElementById('saveProjectBtn')?.addEventListener('click',async()=>{const payload={nombre:val('prNombre'),categoria:val('prCategoria'),ubicacion:val('prUbicacion'),precio:val('prPrecio'),whatsapp:val('prWhatsapp'),estado:val('prEstado'),imagen_principal:val('prImagen'),destacado:boolVal('prDestacado'),descripcion_corta:val('prDesc')};if(!payload.nombre)return setMsg('projectMsg','El nombre es obligatorio.',true);if(await insertData('proyectos',payload,'projectMsg',()=>loadModule('proyectos'))){clearForm('', ['prNombre','prCategoria','prUbicacion','prPrecio','prWhatsapp','prImagen','prDesc']);toggleForm('projectForm',false);refreshDashboard()}});
+document.getElementById('saveProjectBtn')?.addEventListener('click',async()=>{
+ const payload={nombre:val('prNombre'),categoria:val('prCategoria'),ubicacion:val('prUbicacion'),precio:val('prPrecio'),whatsapp:val('prWhatsapp'),estado:val('prEstado'),imagen_principal:val('prImagen'),destacado:boolVal('prDestacado'),descripcion_corta:val('prDesc')};
+ if(!payload.nombre)return setMsg('projectMsg','El nombre es obligatorio.',true);
+ const id=moduleState.projectEdit;
+ const ok=id
+  ? await updateData('proyectos',id,payload,'projectMsg',()=>loadModule('proyectos'))
+  : await insertData('proyectos',payload,'projectMsg',()=>loadModule('proyectos'));
+ if(ok){
+  moduleState.projectEdit=null;
+  clearForm('', ['prNombre','prCategoria','prUbicacion','prPrecio','prWhatsapp','prImagen','prDesc']);
+  document.getElementById('prDestacado').value='false';
+  document.getElementById('prEstado').value='Publicado';
+  toggleForm('projectForm',false);
+  await loadModule('proyectos');
+  await cargarDashboard();
+ }
+});
 
-document.getElementById('newAdvisorBtn')?.addEventListener('click',()=>toggleForm('advisorForm'));document.getElementById('cancelAdvisorBtn')?.addEventListener('click',()=>toggleForm('advisorForm',false));document.getElementById('saveAdvisorBtn')?.addEventListener('click',async()=>{const p={nombre:val('aNombre'),foto_url:val('aFoto'),telefono:val('aTelefono'),whatsapp:val('aWhatsapp'),cargo:val('aCargo'),estado:val('aEstado')};if(!p.nombre)return setMsg('advisorMsg','El nombre es obligatorio.',true);if(await insertData('asesores',p,'advisorMsg',()=>loadModule('asesores'))){clearForm('', ['aNombre','aFoto','aTelefono','aWhatsapp','aCargo']);toggleForm('advisorForm',false);refreshDashboard()}});
+document.getElementById('newAdvisorBtn')?.addEventListener('click',()=>toggleForm('advisorForm'));document.getElementById('cancelAdvisorBtn')?.addEventListener('click',()=>toggleForm('advisorForm',false));document.getElementById('saveAdvisorBtn')?.addEventListener('click',async()=>{const p={nombre:val('aNombre'),foto_url:val('aFoto'),telefono:val('aTelefono'),whatsapp:val('aWhatsapp'),cargo:val('aCargo'),estado:val('aEstado')};if(!p.nombre)return setMsg('advisorMsg','El nombre es obligatorio.',true);if(await insertData('asesores',p,'advisorMsg',()=>loadModule('asesores'))){clearForm('', ['aNombre','aFoto','aTelefono','aWhatsapp','aCargo']);toggleForm('advisorForm',false);cargarDashboard()}});
 
-document.getElementById('newOperationBtn')?.addEventListener('click',()=>toggleForm('operationForm'));document.getElementById('cancelOperationBtn')?.addEventListener('click',()=>toggleForm('operationForm',false));document.getElementById('saveOperationBtn')?.addEventListener('click',async()=>{const p={inmueble_id:val('oInmueble')||null,proyecto_id:val('oProyecto')||null,captador_id:val('oCaptador')||null,colocador_id:val('oColocador')||null,precio:val('oPrecio'),fecha:val('oFecha'),estado:val('oEstado')};if(await insertData('operaciones',p,'operationMsg',()=>loadModule('operaciones'))){toggleForm('operationForm',false);refreshDashboard()}});
+document.getElementById('newOperationBtn')?.addEventListener('click',()=>toggleForm('operationForm'));document.getElementById('cancelOperationBtn')?.addEventListener('click',()=>toggleForm('operationForm',false));document.getElementById('saveOperationBtn')?.addEventListener('click',async()=>{const p={inmueble_id:val('oInmueble')||null,proyecto_id:val('oProyecto')||null,captador_id:val('oCaptador')||null,colocador_id:val('oColocador')||null,precio:val('oPrecio'),fecha:val('oFecha'),estado:val('oEstado')};if(await insertData('operaciones',p,'operationMsg',()=>loadModule('operaciones'))){toggleForm('operationForm',false);cargarDashboard()}});
 
 document.getElementById('newCommissionBtn')?.addEventListener('click',()=>toggleForm('commissionForm'));document.getElementById('cancelCommissionBtn')?.addEventListener('click',()=>toggleForm('commissionForm',false));document.getElementById('saveCommissionBtn')?.addEventListener('click',async()=>{const p={asesor_id:val('cAsesor')||null,rol:val('cRol'),porcentaje:val('cPorcentaje'),monto:val('cMonto'),estado:val('cEstado'),fecha_pago:val('cFecha')};if(await insertData('comisiones',p,'commissionMsg',()=>loadModule('comisiones'))){toggleForm('commissionForm',false)}});
 
